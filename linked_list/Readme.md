@@ -6,6 +6,7 @@
 5. [Add last](#add-last)
 6. [delete first](#delete-first)
 7. [delete last](#delete-last)
+8. [Linked List package](#linkedlist-using-package)
 
 # INTRODUCTION
 A linked list is a data structure used in computer science to organize and store data. Unlike arrays, where elements are stored contiguously in memory, a linked list stores elements (called nodes) that are connected to each other in a sequence using pointers or references.
@@ -157,3 +158,37 @@ public void deleteLast(){
     }
 
 ```
+
+# LinkedList Using Package
+```java
+import java.util.LinkedList;
+public class collectionFramework {
+
+    public static void main(String[] args) {
+        LinkedList <Integer> list = new LinkedList <Integer> ();
+        list.addFirst(1);
+        list.add(2);
+        list.add(3);
+        list.addFirst(0);
+
+        System.out.println(list);
+
+        System.out.println(list.get(2));
+
+        list.remove(1);
+        System.out.println(list);
+        
+        list.removeLast();
+        list.removeFirst();
+        System.out.println(list);
+    }
+    
+}
+```
+
+- **`.add():`** to add last
+- **`.addFirst():`** to add first
+- **`.get(i):`** to get the element at index i
+- **`.removeFirst():`** to remove the first element
+- **`.removeLast():`** to remove the last element
+- **`.remove(i):`** to remove the element at i'th index
