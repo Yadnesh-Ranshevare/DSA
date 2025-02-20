@@ -9,6 +9,8 @@
 8. [Linked List package](#linkedlist-using-package)
 9. [reverse the LinkedList](#reverse-the-linkedlist)
 
+---
+
 # INTRODUCTION
 A linked list is a data structure used in computer science to organize and store data. Unlike arrays, where elements are stored contiguously in memory, a linked list stores elements (called nodes) that are connected to each other in a sequence using pointers or references.
 
@@ -35,6 +37,8 @@ The linked list structure can be visualized like a chain of nodes, where each no
 
 [Go to Top](#content)
 
+---
+
 # HOW TO INITIALIZE LINKED LIST  
 
 ```java
@@ -59,6 +63,8 @@ public class Linked_list {
 
 [Go to Top](#content)
 
+---
+
 # ADD FIRST
 
 **algorithm:**
@@ -81,6 +87,8 @@ public class Linked_list {
 
 [Go to Top](#content)
 
+---
+
 # PRINT 
 **algorithm**
 1. find the head of the LL
@@ -98,6 +106,8 @@ public void printList(){
 ```
 
 [Go to Top](#content)
+
+---
 
 # add last
 **algorithm**
@@ -122,6 +132,8 @@ public void printList(){
 ```
 
 [Go to Top](#content)
+
+---
 # Delete first
 **algorithm**
 1. check if head == null then list is empty
@@ -137,6 +149,8 @@ public void deleteFirst(){
 ```
 
 [Go to Top](#content)
+
+---
 
 # Delete last
 
@@ -171,6 +185,8 @@ public void deleteLast(){
 }
 ```
 [Go to Top](#content)
+
+---
 
 
 # LinkedList Using Package
@@ -210,6 +226,8 @@ public class collectionFramework {
 [for more info of LinkedList methods visit](https://www.geeksforgeeks.org/linked-list-in-java/)
 
 [Go to Top](#content)
+
+---
 
 # Reverse the LinkedList
 ### iterative approach
@@ -272,3 +290,5 @@ public Node reverseRecursive(Node head){
 
 
 [Go to Top](#content)
+
+---
