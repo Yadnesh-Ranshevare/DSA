@@ -7,6 +7,7 @@
 6. [delete first](#delete-first)
 7. [delete last](#delete-last)
 8. [Linked List package](#linkedlist-using-package)
+9. [reverse the LinkedList](#reverse-the-linkedlist)
 
 # INTRODUCTION
 A linked list is a data structure used in computer science to organize and store data. Unlike arrays, where elements are stored contiguously in memory, a linked list stores elements (called nodes) that are connected to each other in a sequence using pointers or references.
@@ -32,6 +33,8 @@ The linked list structure can be visualized like a chain of nodes, where each no
 - **More memory usage:** Each node requires extra memory to store the pointer/reference to the next (and possibly previous) node.
 - **Access time:** To access a specific element, you must traverse the list from the start, which can be slower compared to arrays where you can directly access an index.
 
+[Go to Top](#content)
+
 # HOW TO INITIALIZE LINKED LIST  
 
 ```java
@@ -54,6 +57,8 @@ public class Linked_list {
 - whenever you create the object for current class you initialize a new empty Linked list
 - head represent the starting point of the linked list
 
+[Go to Top](#content)
+
 # ADD FIRST
 
 **algorithm:**
@@ -74,6 +79,8 @@ public class Linked_list {
     }
 ```
 
+[Go to Top](#content)
+
 # PRINT 
 **algorithm**
 1. find the head of the LL
@@ -89,6 +96,8 @@ public void printList(){
         System.out.println("null");
     }
 ```
+
+[Go to Top](#content)
 
 # add last
 **algorithm**
@@ -111,6 +120,8 @@ public void printList(){
         currNode.next = newNode;
     }
 ```
+
+[Go to Top](#content)
 # Delete first
 **algorithm**
 1. check if head == null then list is empty
@@ -124,6 +135,8 @@ public void deleteFirst(){
         head = head.next;
     }
 ```
+
+[Go to Top](#content)
 
 # Delete last
 
@@ -155,9 +168,10 @@ public void deleteLast(){
             secondLastNode = secondLastNode.next;
         }
         secondLastNode.next = null;
-    }
-
+}
 ```
+[Go to Top](#content)
+
 
 # LinkedList Using Package
 ```java
@@ -194,3 +208,67 @@ public class collectionFramework {
 - **`.remove(i):`** to remove the element at i'th index
 
 [for more info of LinkedList methods visit](https://www.geeksforgeeks.org/linked-list-in-java/)
+
+[Go to Top](#content)
+
+# Reverse the LinkedList
+### iterative approach
+using three pointer approach
+1. **`prevNode:`** represent the previous Node of LL at first it will be a head of LL
+2. **`currNode:`** represent the current Node of the LL at first it will be the 2nd node(head.next) of the LL
+3. **`nextNode:`** represent the next node of the currNode
+
+**algorithm**
+1. traverse over the LL and change the next pointer of currNode to prevNode while keeping the track of the nextNode
+2. update prevNode to currNode and CurrNode to nextNode 
+3. change the position of head
+
+```java
+public void reverseIterate(){
+    // corner case for empty or single valued LL
+    if(head == null || head.next == null){
+        return;
+    }
+
+    Node prevNode = head;
+    Node currNode = head.next;
+    
+    while(currNode != null){
+        Node nextNode = currNode.next; // as we Don't need nextNode outside this loop we declare it inside the loop
+        currNode.next = prevNode;
+        prevNode = currNode;
+        currNode = nextNode; // as currNode.next = prevNode we need to use another Node to keep the trace of the nextNode
+    }
+
+    head.next = null;
+    head = prevNode;
+}
+```
+### Recursive Approach
+- `head.next.next:` \
+les assume LL `1 -> 2 -> 3 -> null` if 1 is head then 2 is head.next and 3 is head.next.next that is next Node of head.next
+- `head.next.next  = head`\
+in previous example head.next is 2 and head is 1 therefor hed.next.next = head means next of node 2 is changes to head that is node 1 (head.next.next = head is use to reverse the link of the Node that is if `1 -> 2` will be changes to `1 <- 2`)  
+
+**algorithm**
+1. get the last Node of the LL 
+2. reverse the link of last Node using head.next.next = head
+3. remove the link of second last node ( head.next = null )
+4. return the last Node as head of reverse LL
+```java
+public Node reverseRecursive(Node head){
+    
+    // corner case and base case
+    if (head == null || head.next == null){
+        return  head;
+    }
+
+    Node newHead = reverseRecursive(head.next);
+    head.next.next  = head;
+    head.next = null;
+    return newHead;
+}
+```
+
+
+[Go to Top](#content)
