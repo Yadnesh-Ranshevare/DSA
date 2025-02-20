@@ -46,7 +46,7 @@ public class Linked_list {
     public void printList(){
         Node currNode = head;
         while(currNode != null){
-            System.out.println(currNode.data);
+            System.out.print(currNode.data + "->");
             currNode = currNode.next;
         }
         System.out.println("null");
