@@ -192,4 +192,5 @@ public class collectionFramework {
 - **`.removeFirst():`** to remove the first element
 - **`.removeLast():`** to remove the last element
 - **`.remove(i):`** to remove the element at i'th index
-[for more info visit](https://www.geeksforgeeks.org/linked-list-in-java/)
+
+[for more info of LinkedList methods visit](https://www.geeksforgeeks.org/linked-list-in-java/)
