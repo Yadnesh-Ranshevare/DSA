@@ -135,6 +135,8 @@ public class quetions {
 
     }
 
+
+    // remove the duplicate value form the sorted LL
     public void deleteDuplicates() {
 
         if(head == null || head.next == null){
@@ -192,6 +194,8 @@ public class quetions {
         }
         return turtle;
     }
+
+    // check is LL palindrome or not 
     public boolean  palindrome(){
         if(head == null || head.next == null){
             return  true;
