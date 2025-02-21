@@ -8,6 +8,8 @@
 7. [delete last](#delete-last)
 8. [Linked List package](#linkedlist-using-package)
 9. [reverse the LinkedList](#reverse-the-linkedlist)
+10. [rotate a LL](#rotate-a-linkedlist)
+11. [palindrome LL](#palindrome-linkedlist)
 
 ---
 
@@ -292,3 +294,174 @@ public Node reverseRecursive(Node head){
 [Go to Top](#content)
 
 ---
+
+# Rotate a LinkedList
+- Given the head of a linked list, rotate the list to the right by n places.
+### Approach:
+1. make the last Node of the LL head 
+2. repeat this step n times recursively with new heads
+
+### Example
+1. assume following LL 
+```
+1 -> 2 -> 3 -> 4 -> 5 -> null
+```
+2. make 5 ( last node of the LL ) head of the LL and make 4(2nd last node of the LL ) point towards null for first rotation
+```
+5 -> 1 -> 2 -> 3 -> 4 -> null
+```
+3. make 4 new head and let 3 point towards null for second rotation
+```
+4 -> 5 -> 1 -> 2 -> 3 -> null
+```
+### code
+```java
+public void rotate(int n){
+    // base condition
+    if(n == 0){
+        return;
+    }
+    // corner case for single value or empty LL
+    if(head.next == null || head == null){
+        System.out.println("can't rotate the LL");
+        return ;
+    }
+    Node prevNode = head;  //node who is going to point towards null
+    Node currNode = head.next;  //node who is going to be new head
+    while(currNode.next != null){
+        prevNode = prevNode.next;
+        currNode = currNode.next;
+    }
+    currNode.next = head;
+    head = currNode;
+    prevNode.next = null;
+    rotate(n-1);
+}
+```
+[Go to Top](#content)
+
+--- 
+
+# palindrome LinkedList
+### Approach:
+split the LL in two half compare the first half of the LL with the reverse of the second half if both are equal then LL is palindrome
+#### example:
+1. consider a LL
+```
+1 -> 2 -> 3 -> 3 -> 2 -> 1 ->  null
+```
+2. split this LL in exactly two half
+```
+1 -> 2 -> 3 -> null     <!-- first half-->
+3 -> 2 -> 1 -> null     <!-- second half-->
+``` 
+3. reverse the second half and compare it with first half
+```
+1 -> 2 -> 3 -> null 
+1 -> 2 -> 3 -> null     <!-- reverse -->
+``` 
+### how to find the mid of LL 
+- **hare-turtle approach:**\
+hare moves with single node and turtle moves with two node
+when hare reach the end of the LL turtle reach the mid of the LL
+```
+1 -> 2 -> 3 -> 3 -> 2 -> 1 ->  null
+^
+hare/
+turtle
+```
+```
+1 -> 2 -> 3 -> 3 -> 2 -> 1 ->  null
+     ^    ^
+  turtle hare 
+```
+```
+1 -> 2 -> 3 -> 3 -> 2 -> 1 ->  null
+          ^         ^
+          turtle    hare   
+```
+as hare cant move further hare reach the end while turtle reach the mid( end of the first half of LL ) of the LL
+ 
+### Code:
+```java
+public  Node findMid(Node head){
+    Node hare = head;
+    Node turtle = head;
+    while(hare.next != null && hare.next.next != null){
+        hare = hare.next.next;      //move with two nodes
+        turtle = turtle.next;       //move with single node
+    }
+    return turtle;  //end of first half
+}
+```
+- `hare.next == null:`\
+if next node hare is null it reach the end of LL
+```
+1 -> 2 -> 3 -> 2 -> 1 ->  null
+          ^         ^
+          turtle    hare   
+```
+
+- `hare.next.next != null:`\
+as hare move with 2 node pre move if hare don't have a node to jump on it reach the end of LL
+```
+1 -> 2 -> 3 -> 3 -> 2 -> 1 ->  null
+          ^         ^
+          turtle    hare    
+```
+
+### How to split the LL
+1. get the next node of middle node of first half of LL 
+2. by considering this node as head reverse the remaining LL
+```
+1 -> 2 -> 3 -> 3 -> 2 -> 1 ->  null
+          ^    ^
+         mid  new head     
+``` 
+```
+1 -> 2 -> 3 -> 3 <- 2 <- 1 
+               |         ^   
+               V      head of second half    
+              null
+```
+3. return the head of the second half
+### Code
+```java
+public  Node reverse(Node h){   //h is mid.next
+    Node prev = null;
+    Node curr = h;
+    while(curr != null){
+        Node next = curr.next;
+        curr.next = prev;
+        prev = curr;
+        curr = next;
+    }
+    return  prev;
+}
+``` 
+[to learn more about how to reverse a LL](#reverse-the-linkedlist)
+
+### code
+```java
+public boolean  palindrome(){
+    //corner case for single valued and empty LL 
+    if(head == null || head.next == null){
+        return  true;
+    }
+
+    Node mid = findMid(head);   //end of the first half
+    Node  secHalf = reverse(mid.next);
+
+    Node firstHalfStart = head;
+
+    while(secHalf != null){
+        if(firstHalfStart.data != secHalf.data){
+            return  false;
+        }
+        firstHalfStart = firstHalfStart.next;
+        secHalf = secHalf.next;
+    }
+
+    return  true;
+}
+```

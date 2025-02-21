@@ -109,7 +109,7 @@ public class reverseLinkedList {
 
         Node newHead = reverseRecursive(head.next);
         head.next.next  = head;
-        head.next = null;
+        head.next = null;   
         return newHead;
     }
 
