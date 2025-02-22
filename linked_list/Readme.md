@@ -547,7 +547,7 @@ public boolean  palindrome(){
 
 ---
 
-# swap adjacent  node in LL 
+# swap adjacent node in LL 
 
 ### approach:
 1. consider a LL with 2 pointer one at head and another aat head.next
@@ -617,3 +617,5 @@ as you can see here `next.next != null` returns false resulting noe executing th
 
 
 [Go to Top](#content)
+
+---
