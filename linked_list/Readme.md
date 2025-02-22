@@ -244,6 +244,28 @@ using three pointer approach
 2. update prevNode to currNode and CurrNode to nextNode 
 3. change the position of head
 
+
+**example:**
+1. pointer allocation
+```
+1 -> 2 -> 3 -> 4 -> 5 -> null
+^    ^    ^
+prv curr  next
+```
+2. ` currNode.next = prevNode;`
+```
+1 <- 2 -> 3 -> 4 -> 5 -> null
+^    ^    ^
+prv curr  next
+```
+3. updating the pointer
+```
+1 <- 2 -> 3 -> 4 -> 5 -> null
+     ^    ^    ^
+     prv curr  next
+```
+4. repeat the step 2 & 3 until you reach the end pf LL 
+
 ```java
 public void reverseIterate(){
     // corner case for empty or single valued LL
@@ -276,6 +298,61 @@ in previous example head.next is 2 and head is 1 therefor hed.next.next = head m
 2. reverse the link of last Node using head.next.next = head
 3. remove the link of second last node ( head.next = null )
 4. return the last Node as head of reverse LL
+
+**example:**
+1. consider a LL
+```
+1 -> 2 -> 3 -> 4 -> 5 -> null
+```
+
+#### first recursive call
+1. consider its last node as head also act as current newHead
+```
+5 -> null
+```
+2. apply `head.next.next  = head`
+```
+5 <- null
+```
+3. apply `head.next = null`
+```
+null <- 5 
+```
+#### second recursive call
+1. this time second last will de the head which is pointing towards 5 ( last node )
+```
+ 4 -> 5 -> null 
+ ^
+head
+```
+2. apply `head.next.next  = head` also 4 is still pointing towards 5
+```
+4 <-> 5
+```
+ 3. apply `head.next = null`
+```
+null <- 4 <- 5 
+```
+#### third recursive call
+1. this time third last will de the head which is pointing towards 4 ( second last node )
+```
+ 3 -> 4 <- 5
+ ^    |
+head  V
+     null  
+```
+2. apply `head.next.next  = head` also 3 is still pointing towards 4
+```
+3 <-> 4 <- 5
+```
+ 3. apply `head.next = null`
+```
+null <- 3 <- 4 <- 5 
+```
+#### continue this cycle until LL set reverse
+
+### code
+
 ```java
 public Node reverseRecursive(Node head){
     
