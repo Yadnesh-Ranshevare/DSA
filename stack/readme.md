@@ -3,6 +3,7 @@
 2. [implementation using LinkedList](#implementation-using-linked-list)
 3. [implementation using ArrayList](#implementation-using-arraylist)
 4. [stack using collection framework](#stack-using-collection-framework)
+5. [Reverse A Stack](#reverse-a-stack)
 # introduction
 stack is a linear data structure that follows the Last In, **First Out (LIFO)** principle. This means that the last element added to the stack is the first one to be removed.
 
@@ -169,6 +170,128 @@ public class StackUsingCollectionFramework {
             System.out.println(s.peek());
             s.pop();
         }
+    }
+}
+```
+
+[Go to Top](#content)
+
+---
+
+# Reverse A Stack
+### Approach:
+1. using the recursion remove all the element of the stack in a sequence
+2. once the stack gets empty fill the stack in opposite order that is the element which is remove the last will get fill first
+3. as you fill the stack try to push the element at the bottom of the stack
+
+### Code:
+```java
+public static void reverse(Stack<Integer> s){
+    if(s.isEmpty()){
+        return;
+    }
+    int top = s.pop();
+    reverse(s);
+    pushAtBottom(top,s);
+}
+```
+
+### how to push data at the bottom:
+1. consider a empty stack:
+```
+top >  []  < bottom
+```
+2. enter the 5 at the bottom as stack is initially empty it will be normal push operation
+```
+[5]
+```
+3. now to enter 4 at the bottom first remove the 5 and make stack empty
+```
+top = 5
+[]
+```
+4. now push the 4 into stack followed by 5
+```
+[5,4]
+```
+5. for 3 remove the 5,4 from the stack recursively\
+```
+<!--first recursion call -->
+top = 5
+[4]
+
+
+<!--second recursion call -->
+top = 4
+[]
+
+
+<!--third recursion call -->
+[3]     //as stack is empty push 3 into it and return
+
+
+<!-- return to second recursion call -->
+[4,3]   //push 4 ( top ) into it and return
+
+
+<!-- return to first recursion call -->
+[5,4,3]   //push 5 ( top ) into it and return
+```
+
+### Code:
+```java
+public static void pushAtBottom(int data,Stack<Integer> s){
+    if(s.isEmpty()){
+        s.push(data);
+        return;
+    }
+    int top = s.pop();
+    pushAtBottom(data, s);
+    s.push(top);
+}
+```
+
+### complete Code:
+```java
+import java.util.Stack;
+public class Questions {
+
+    public static void pushAtBottom(int data,Stack<Integer> s){
+        if(s.isEmpty()){
+            s.push(data);
+            return;
+        }
+        int top = s.pop();
+        pushAtBottom(data, s);
+        s.push(top);
+    }
+
+    public static void reverse(Stack<Integer> s){
+        if(s.isEmpty()){
+            return;
+        }
+        int top = s.pop();
+        reverse(s);
+        pushAtBottom(top,s);
+    }
+
+
+    public static void Print(Stack<Integer> s){
+        while(!s.isEmpty()){
+            System.out.print(s.peek()+" | ");
+            s.pop();
+        }
+    }
+    
+
+    public static void main(String[] args) {
+        Stack<Integer> s = new Stack<>();
+        s.push(1);
+        s.push(2);
+        s.push(3);
+        s.push(4);
+        reverse(s);
+        Print(s);
     }
 }
 ```
