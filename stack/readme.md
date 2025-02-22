@@ -2,6 +2,7 @@
 1. [introduction](#introduction)
 2. [implementation using LinkedList](#implementation-using-linked-list)
 3. [implementation using ArrayList](#implementation-using-arraylist)
+4. [stack using collection framework](#stack-using-collection-framework)
 # introduction
 stack is a linear data structure that follows the Last In, **First Out (LIFO)** principle. This means that the last element added to the stack is the first one to be removed.
 
@@ -104,6 +105,9 @@ An ArrayList in Java is a resizable array that belongs to the Java Collection Fr
 
 ## code:-
 ```java
+import java.util.ArrayList;
+```
+```java
 static  class Stack{
     static ArrayList<Integer> list = new ArrayList<>();
     static int size = 0;
@@ -140,6 +144,34 @@ static  class Stack{
 }
 ```
 **Note:- the first vacant place will act as a top of stack**
+
+[Go to Top](#content)
+
+---
+
+# Stack using collection framework
+### Code:
+```java
+import java.util.Stack;
+public class StackUsingCollectionFramework {
+
+    public static void main(String[] args) {
+
+        Stack<Integer> s = new Stack<>();
+
+        s.push(1);
+        s.push(2);
+        s.push(3);
+        s.push(4);
+        s.push(5);
+
+        while(!s.isEmpty()){
+            System.out.println(s.peek());
+            s.pop();
+        }
+    }
+}
+```
 
 [Go to Top](#content)
 
