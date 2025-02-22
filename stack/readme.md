@@ -1,6 +1,7 @@
 # content
 1. [introduction](#introduction)
 2. [implementation using LinkedList](#implementation-using-linked-list)
+3. [implementation using ArrayList](#implementation-using-arraylist)
 # introduction
 stack is a linear data structure that follows the Last In, **First Out (LIFO)** principle. This means that the last element added to the stack is the first one to be removed.
 
@@ -82,5 +83,64 @@ in Linked List implementation of stack head will be act as a top therefor to pus
 
 [Go to Top](#content)
 
+
+---
+
+# implementation using ArrayList
+### ArrayList
+An ArrayList in Java is a resizable array that belongs to the Java Collection Framework. It allows you to store a dynamic list of elements, where the size of the list can grow or shrink as needed. Unlike arrays, which have a fixed size, an ArrayList automatically adjusts its size when elements are added or removed. It provides methods for adding, removing, accessing, and manipulating elements in the list.
+
+### Key Points:
+- **Resizable:** Can grow or shrink in size.
+- **Indexed:** Elements can be accessed by their index.
+- **Type-Safe:** Works with specific types of elements using Java Generics (e.g., `ArrayList<String>`, `ArrayList<Integer>`).
+- **Ordered:** Maintains the order of elements as they are added.
+
+### some basics method of arrayList
+1.  `.size():-` returns the total length of an arrayList
+2. `.add(i):-` add the value `i` at the end of the list
+3. `.get(i):-` returns the element present at index `i`
+4. `.remove(i):-` remove the element at index `i`
+
+## code:-
+```java
+static  class Stack{
+    static ArrayList<Integer> list = new ArrayList<>();
+    static int size = 0;
+
+    public static boolean  isEmpty(){
+        return list.size() == 0;
+    }
+
+    public static void push(int data){
+        list.add(data);
+        size++;
+    }
+
+    public static int pop(){
+        if(isEmpty()){
+            return -1;
+        }
+        int top = list.get(list.size()-1);
+        list.remove(list.size()-1);
+        size--;
+        return top; 
+    }
+
+    public static int peek(){
+        if(isEmpty()){
+            return -1;
+        }
+        return list.get(list.size()-1);
+    }
+
+    public static int size(){
+        return  size;
+    }
+}
+```
+**Note:- the first vacant place will act as a top of stack**
+
+[Go to Top](#content)
 
 ---
