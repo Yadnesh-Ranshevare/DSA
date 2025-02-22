@@ -213,29 +213,95 @@ public class quetions {
         }
         return  true;
     }
+
+
+
+    public Node mergeTwoLists(Node list1, Node list2) {
+        if (list1 == null) return list2;
+        if (list2 == null) return list1;
+        Node dummy = new Node(0);
+        Node curr = dummy;
+
+        while (list1 != null ) {
+            curr.next = list1;
+            list1 = list1.next;
+            curr = curr.next; // Move to the next node
+        }
+        while (list2 != null ) {
+            curr.next = list2;
+            list2 = list2.next;
+            curr = curr.next; // Move to the next node
+        }
+
+        curr = dummy.next;
+        while(curr != null){
+            Node next = curr;
+            while(next != null){
+                if(curr.data >= next.data){
+                    System.out.println(curr.data);
+                    int temp = curr.data;
+                    curr.data = next.data;
+                    next.data = temp;
+                }
+                next = next.next;
+            }
+            curr = curr.next;
+        }
+        
+        return  dummy.next;    
+    }
+
+    
+
+    public Node swapPairs(Node head) {
+        if(head == null || head.next == null) return head;
+
+        Node curr = head;
+        Node next = head.next;
+        while(true){
+            int temp = curr.data;
+            curr.data = next.data;
+            next.data = temp;
+            
+            if( next.next != null && next.next.next != null){
+                curr = curr.next.next;
+                next = next.next.next;
+                System.out.println(next.data);
+            }else{
+                break;
+            }
+            
+        }
+        return head; 
+    }
     
 
 
     public static void main(String[] args) {
-        quetions list = new quetions();
+        quetions list1 = new quetions();
+        quetions list2 = new quetions();
+
+        list1.addFirst(1);
+        list1.addLast(2);
+        list1.addLast(4);
+        list1.addLast(5);
+        list1.addLast(6);
+        list1.addLast(8);
+        // list1.addLast(9);
+
+        // list2.addFirst(1);
+        // list2.addLast(3);
+        // list2.addLast(2);
+        // quetions List3 = new quetions();
+        // List3.head = List3.mergeTwoLists(list1.head, list2.head);
+        // list1.printList();
+        // list2.printList();
         
-        list.addFirst(1);
-        list.addLast(3);
-        list.addLast(1);
-        // list.addLast(2);
-        // list.addLast(4);
-        // list.addLast(4);
-        // list.addLast(5);
-        list.printList();
-        // list.remove(7);
-        // list.size();
-        // list.rotate(2);
-        // list.deleteDuplicates();
-        if(list.palindrome()){
-            System.out.println("palindrome");
-        }else{
-            System.out.println("not ");
-        }
-        list.printList();
+        list1.printList();
+        list1.head = list1.swapPairs(list1.head);
+        list1.printList();
+        
+        
+        // list.printList();
     }
 }

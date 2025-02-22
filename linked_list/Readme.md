@@ -10,6 +10,7 @@
 9. [reverse the LinkedList](#reverse-the-linkedlist)
 10. [rotate a LL](#rotate-a-linkedlist)
 11. [palindrome LL](#palindrome-linkedlist)
+11. [swap adjacent node in LL](#swap-adjacent-node-in-ll)
 
 ---
 
@@ -465,3 +466,77 @@ public boolean  palindrome(){
     return  true;
 }
 ```
+[Go to Top](#content)
+
+---
+
+# swap adjacent  node in LL 
+
+### approach:
+1. consider a LL with 2 pointer one at head and another aat head.next
+```
+1 -> 2 -> 3 -> 4 -> 2 -> 1 ->  null
+^    ^
+pt1 pt2  
+``` 
+2. swap the data between the pointer
+```
+2 -> 1 -> 3 -> 4 -> 2 -> 1 ->  null
+^    ^
+pt1 pt2  
+``` 
+3. update the pointers 
+```
+2 -> 1 -> 3 -> 4 -> 2 -> 1 ->  null
+          ^    ^
+          pt1 pt2
+``` 
+4. repeat the step 2 util you reach the end of the LL
+
+### Code:
+```java
+public Node swapPairs(Node head) {
+    if(head == null || head.next == null) return head;
+
+    Node curr = head;
+    Node next = head.next;
+    while(true){
+        int temp = curr.data;
+        curr.data = next.data;
+        next.data = temp;
+        
+        if( next.next != null && next.next.next != null){
+            curr = curr.next.next;
+            next = next.next.next;
+        }else{
+            break;
+        }   
+    }
+    return head; 
+}
+```
+
+#### Note:
+**we are checking is curr and next is upgradeable or not if yes the upgrade and if not then terminate the loop this is because**
+
+considering the while loop like
+```java
+while(next.next != null && next.next.next != null){
+    int temp = curr.data;
+    curr.data = next.data;
+    next.data = temp;
+    
+    curr = curr.next.next;
+    next = next.next.next; 
+}
+```
+it will not swap the last 2 nodes as during last two while loop condition becomes false
+```
+2 -> 1 -> 3 -> 4 -> 2 -> 1 ->  null
+                    ^    ^
+                    curr next
+```
+as you can see here `next.next != null` returns false resulting noe executing the while loop causing last 2 no. not to swap, and if you put or ( || ) operator instead of and ( && ) it will throw `nullPointException` error at `next = next.next.next;` this line as there is no node present at `next.next.next`
+
+
+[Go to Top](#content)
