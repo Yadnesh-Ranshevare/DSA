@@ -4,6 +4,9 @@
 3. [implementation using ArrayList](#implementation-using-arraylist)
 4. [stack using collection framework](#stack-using-collection-framework)
 5. [Reverse A Stack](#reverse-a-stack)
+6. [infix to postfix](#infix-to-postfix)
+
+
 # introduction
 stack is a linear data structure that follows the Last In, **First Out (LIFO)** principle. This means that the last element added to the stack is the first one to be removed.
 
@@ -295,6 +298,169 @@ public class Questions {
     }
 }
 ```
+
+[Go to Top](#content)
+
+---
+
+# Infix to Postfix
+**infix:**\
+normal representation of mathematical expression\
+example:- `a + b`
+
+**postfix:**\
+ A postfix expression (also known as Reverse Polish Notation or RPN) is a mathematical notation in which operands comes first and then come the operator\
+ example:- `a b +`
+
+### Operator Precedence (from highest to lowest):
+- `( )` (brackets) has the most highest precedence.
+- `^` (exponentiation) has the highest precedence.
+- `* and /` (multiplication and division) have the next higher precedence.
+- `+ ans  -` (addition ans subtraction) has the lowest precedence.
+
+**Note:**
+1. **while considering each level of stack operator with low precedence cannot sit on top of the operator with high precedence that is `+ & -` cannot be at top if there exist `* & /` at the bottom level of the stack** 
+2. **also no two operator with same precedence sit on one another that is `+` cannot be at the top of there exist `-` on bottom level of the stack**
+3. **that said only operator with high precedence can allow to sit on top of the operator with low precedence only that is `^` can be at top if `* , +, - , /` is at the bottom levels**
+4. **in case of `()` once the `(` (opening bracket) comes we need to check the precedence of operator from this bracket only (that is `bottom [ * ( + / ] top` this is possible) but once the `)` (closing bracket) comes we need to pop the element from the stack up the `(` (opening bracket) (that is `bottom [ * ( + / ] top` in this example if next character is `)` then we both `+ and /` we get removed and the final stack will be `bottom [ * ] top`)**
+4. **therefor to remove the character from stack as new character `c` comes and want to push itself into the stack it must satisfied this precedence condition `precedence(s.peek()) >= precedence(c) && s.peek() != '('`**
+5. **if you remove the element form the stack it will be added into the stack and at the end if their is any element remaining in the stack then stack must be empty out**
+
+### Algorithm
+1. declare a Stack and empty ans string( string will contain ans )
+```java
+Stack<Character> s = new Stack<>();
+StringBuilder ans = new StringBuilder();
+```
+2. iterate over the whole input string( mathematical expression )
+3. if its operand then append it to the ans string
+```java 
+if (Character.isLetterOrDigit(c)) {
+    ans.append(c);
+}
+```
+4. if its `(` then push it into the stack
+```java
+else if (c == '(') {
+    s.push(c);
+}
+```
+5. if its `)` then pop out all the element from the stack util we reach the `(` ( Also remove `(` ) or until the stack gets empty
+```java
+else if (c == ')') {
+    while (!s.isEmpty() && s.peek() != '(') {
+        ans.append(s.pop());
+    }
+    s.pop();  // Pop the '('
+}
+```
+6. if its another operators then check their precedence
+```java
+public static int precedence(char c) {
+    switch (c) {
+        case '+':
+        case '-':
+            return 1;
+        case '*':
+        case '/':
+            return 2;
+        case '^':
+            return 3;
+        default:
+            return -1;
+    }
+}
+```
+7. insert them into the stack according to their precedence
+```java
+while (!s.isEmpty() && precedence(s.peek()) >= precedence(c) && s.peek() != '(') {
+    ans.append(s.pop());
+}
+s.push(c);  // Push the current operator onto the stack
+```
+`precedence(s.peek()) >= precedence(c)` condition to make sure no low precedence operator can sit on top of the high precedence operator
+
+8. empty out the remaining stack
+```java
+while (!s.isEmpty()) {
+    ans.append(s.pop());
+}
+```
+9. return the ans in string format
+```java
+return ans.toString();
+ ```
+
+
+### Code:
+```java
+import java.util.ArrayList;
+import java.util.Stack;
+
+public class Postfix {
+
+    public static int precedence(char c) {
+        switch (c) {
+            case '+':
+            case '-':
+                return 1;
+            case '*':
+            case '/':
+                return 2;
+            case '^':
+                return 3;
+            default:
+                return -1;
+        }
+    }
+
+    public static String Postfix(String str) {
+        Stack<Character> s = new Stack<>();
+        StringBuilder ans = new StringBuilder();
+
+        for (int i = 0; i < str.length(); i++) {
+            char c = str.charAt(i);
+
+            if (Character.isLetterOrDigit(c)) {
+                ans.append(c);
+            }
+
+            else if (c == '(') {
+                s.push(c);
+            }
+
+            else if (c == ')') {
+                while (!s.isEmpty() && s.peek() != '(') {
+                    ans.append(s.pop());
+                }
+                s.pop();  
+            }
+            
+            else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '^') {
+                while (!s.isEmpty() && precedence(s.peek()) >= precedence(c) && s.peek() != '(') {
+                    ans.append(s.pop());
+                }
+                s.push(c);  
+            }
+        }
+
+        while (!s.isEmpty()) {
+            ans.append(s.pop());
+        }
+
+        return ans.toString();
+    }
+
+    public static void main(String[] args) {
+        String str = "a+b/c^d+e*(f+j)";
+        String ans = Postfix(str);
+        System.out.println(ans);  
+    }
+}
+```
+
+
+
 
 [Go to Top](#content)
 
