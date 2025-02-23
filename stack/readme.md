@@ -324,10 +324,10 @@ example:- `a + b`
 3. **that said only operator with high precedence can allow to sit on top of the operator with low precedence only that is `^` can be at top if `* , +, - , /` is at the bottom levels**
 4. **in case of `()` once the `(` (opening bracket) comes we need to check the precedence of operator from this bracket only (that is `bottom [ * ( + / ] top` this is possible) but once the `)` (closing bracket) comes we need to pop the element from the stack up the `(` (opening bracket) (that is `bottom [ * ( + / ] top` in this example if next character is `)` then both `+ and /` well get removed and the final stack will be `bottom [ * ] top`)**
 4. **therefor to remove the character from stack as new character `c` comes and want to push itself into the stack it must satisfied this precedence condition `precedence(s.peek()) >= precedence(c) `**
-5. **if you remove the element form the stack it will be added into the stack and at the end if their is any element remaining in the stack then stack must be empty out**
+5. **if you remove the element form the stack it will be added into the ans string and at the end if their is any element remaining in the stack then stack must be empty out**
 
 ### Algorithm
-1. declare a Stack and empty ans string( string will contain ans )
+1. declare a Stack and empty ans string
 ```java
 Stack<Character> s = new Stack<>();
 StringBuilder ans = new StringBuilder();
