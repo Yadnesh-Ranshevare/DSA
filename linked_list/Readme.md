@@ -280,7 +280,7 @@ public void reverseIterate(){
         Node nextNode = currNode.next; // as we Don't need nextNode outside this loop we declare it inside the loop
         currNode.next = prevNode;
         prevNode = currNode;
-        currNode = nextNode; // as currNode.next = prevNode we need to use another Node to keep the trace of the nextNode
+        currNode = nextNode; // as currNode.next = prevNode we need to use another Node to keep the track of the nextNode
     }
 
     head.next = null;
@@ -291,10 +291,10 @@ public void reverseIterate(){
 - `head.next.next:` \
 les assume LL `1 -> 2 -> 3 -> null` if 1 is head then 2 is head.next and 3 is head.next.next that is next Node of head.next
 - `head.next.next  = head`\
-in previous example head.next is 2 and head is 1 therefor hed.next.next = head means next of node 2 is changes to head that is node 1 (head.next.next = head is use to reverse the link of the Node that is if `1 -> 2` will be changes to `1 <- 2`)  
+in previous example head.next is 2 and head is 1 therefor hed.next.next = head means next of node 2 is changes to head that is node 1 (head.next.next = head is use to reverse the link of the Node that is if `1 -> 2` will be changes to `1 <-> 2` note that `1 -> 2` link is still exist)  
 
 **algorithm**
-1. get the last Node of the LL 
+1. get the last Node of the LL recursively also keep the track of removed last node during each recursive call 
 2. reverse the link of last Node using head.next.next = head
 3. remove the link of second last node ( head.next = null )
 4. return the last Node as head of reverse LL
@@ -440,8 +440,7 @@ split the LL in two half compare the first half of the LL with the reverse of th
 ``` 
 ### how to find the mid of LL 
 - **hare-turtle approach:**\
-hare moves with single node and turtle moves with two node
-when hare reach the end of the LL turtle reach the mid of the LL
+hare moves with two nodes per round and turtle moves with single node per round when hare reach the end of the LL turtle reach the mid of the LL
 ```
 1 -> 2 -> 3 -> 3 -> 2 -> 1 ->  null
 ^
