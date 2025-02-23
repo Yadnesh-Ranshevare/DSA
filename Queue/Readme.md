@@ -111,7 +111,7 @@ front = 1
                   ^
                  rear
 ```
-5. update the rear and return
+5. update the rear and return first element
 ```
 // rear = rear - 1;
 [ 2 | 3 | 4 | 5 |  ]
