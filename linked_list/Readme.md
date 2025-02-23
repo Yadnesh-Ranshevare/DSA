@@ -23,6 +23,12 @@ Each node in a linked list contains two parts:
 
 The linked list structure can be visualized like a chain of nodes, where each node points to the next one. The last node in the list points to `null` (or `None` in Python) to indicate the end of the list.
 
+### Time complexities
+- addFirst: O[1]
+- addLast: O[n]
+- deleteFirst: O[1]
+- deleteLast: O[n]
+
 ### Types of Linked Lists:
 1. **Singly Linked List:** Each node points to the next node in the list. It’s a one-way link, meaning you can only traverse the list in one direction.
 

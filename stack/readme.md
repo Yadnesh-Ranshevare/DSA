@@ -12,6 +12,11 @@ stack is a linear data structure that follows the Last In, **First Out (LIFO)** 
 
 Think of a stack like a stack of plates: you add plates to the top of the stack, and when you need one, you take the top plate off.
 
+### Time complexities
+- push: O[1]
+- pop: O[1]
+- peek: O[1]
+
 ### Key Operations of a Stack:
 1. Push: Add an element to the top of the stack.
 2. Pop: Remove the top element from the stack.
