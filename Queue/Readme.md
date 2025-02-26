@@ -243,7 +243,7 @@ front           rear
          ^       ^
         front   rear
 ```
-4. add 6 ( to add six we first need to move the rear at the 0th index then we can add the six as in queue we can only add the element from the rear(end) )
+4. add 6 ( to add six we first need to move the rear at the 0th index then we can add six, as in queue we can only add the element at rear(end) )
 ```
 [ 6 |   | 3 | 4 | 5]
   ^       ^       
@@ -314,6 +314,7 @@ public static boolean  isFull(){
     //this condition indicate that the array is full
 }
 ```
+[to see the explanation](#rear--1--size--front)
 
 ### add operation
 **Algorithm**
@@ -323,18 +324,25 @@ public static boolean  isFull(){
 4. add the data at rear
 
 **special condition**\
-since  front and rear initially set to -1 to represent the empty queue we need to update the front pointer as well as we add the data only for the first time in the queue
+since  front and rear initially set to -1 to represent the empty queue we need to update the front pointer as well when we add the data only for the first time in the queue
 ```
 // before adding the first element
     [  |  |  |  |  ]
   ^         
 front\rear = -1
 
-//after adding the first element
+//after adding the element for the first time
 [ 1 |  |  |  |  ]
   ^         
 front\rear = 0     
 ```
+```java
+if(front == -1){    
+    front = 0;
+}
+```
+
+#### code
 ```java
 public static void add(int data){
     if(isFull()){
@@ -342,7 +350,7 @@ public static void add(int data){
         return;
     }
     rear = (rear + 1) % size;
-    if(front == -1){    //special condition
+    if(front == -1){    
         front = 0;
     }
     arr[rear] = data;
@@ -356,7 +364,7 @@ public static void add(int data){
 4. update the front pointer and return the stored value
 
 **special condition**\
-when you first time add the vale both rear and front is set to 0( **the only point where front and rear becomes equal** ) there in this case while performing the remove updating the only  rear is not enough therefor we need to update the front as well
+when you first time add the vale both rear and front is set to 0( **the only point where front and rear becomes equal** ) therefor in this case while performing the remove updating the only  rear is not enough therefor we need to update the front as well
 ```
 [ 1 |  |  |  |  ]
   ^         
@@ -364,7 +372,9 @@ rear\rear
 ```
 ```java
 if(rear == front){
-    rear = front = -1;
+        rear = front = -1;
+}else{
+    front = (front + 1) % size;
 }
 ```
 #### code:
