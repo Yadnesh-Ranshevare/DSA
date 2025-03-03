@@ -3,6 +3,8 @@
 2. [Implementation using Array](#implementation-using-array)
 3. [Implementation Using Circular Array](#implementation-using-circular-array)
 4. [Implementation using Linked List](#implementation-using-linked-list)
+5. [implementation using Collection Framework](#implementation-using-collection-framework)
+
 
 # Introduction:
 In Data Structures and Algorithms (DSA), a queue is an abstract data type (ADT) that follows the First In First Out (FIFO) principle. This means that the first element added to the queue will be the first one to be removed. Think of it like a line at a ticket counter where the first person to get in line is the first one to be served.
@@ -739,5 +741,74 @@ public class QueueUsingLL {
 
 [Go to Top](#content)
 
+
+---
+
+
+# implementation using Collection Framework
+- in java packages queue is a interface due to which we cannot create the object of the queue classes instead we have to implement them using LL or array
+**Syntax**
+```java 
+Queue<Integer> LL = new LinkedList<>();
+Queue<Integer> AA = new ArrayDeque<>();
+```
+1. **LinkedList:**
+- **Data Structure:** It uses a doubly linked list to store elements. Each element (node) contains a reference to the next and previous node.
+- **Memory Efficiency:** Each element requires additional memory for the next and previous pointers in addition to the data stored in the element itself.
+- **Performance:**\
+ **Enqueue (add):** Constant time O(1), because we can add an element to the end (tail) of the linked list without needing to resize or shift elements.\
+**Dequeue (remove):** Constant time O(1), since we can remove an element from the front (head) of the linked list directly.
+- **Limitations:**\
+**Memory Overhead:** Due to the need to store references (pointers) for the next and previous elements, each element consumes more memory compared to an array-based queue.\
+**Extra Complexity:** The linked list introduces extra complexity in terms of handling pointers, which is not an issue with arrays.
+
+2. **Array-based Queue (Circular Queue)**
+- **Data Structure:** It uses a fixed-size array to store elements.
+- **Memory Efficiency:** Memory is allocated at the time of queue creation, and it remains fixed. If the queue becomes full, resizing is necessary (which is not a constant-time operation).
+- **Performance:**\
+**Enqueue (add):** Amortized constant time O(1), but resizing the array may take O(n).\
+**Dequeue (remove):** Constant time O(1), since elements are just shifted forward in the array.
+- **Limitations:**\
+**Fixed Size:** The size of the queue is fixed. Once it's full, you cannot add more elements unless you resize the array (which can be inefficient).\
+**Resizing:** If the queue becomes full and needs resizing, this could lead to performance issues.
+Wasted Space: There might be unused space in the array if fewer elements are stored than the size of the array.
+
+### code
+```java
+import java.util.ArrayDeque;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class QueueUsingCollectionFramework{
+
+    public static void print(Queue q){
+        while(!q.isEmpty()){
+            System.out.print(q.peek()+ " ");
+            q.remove();
+        }
+        System.out.println();
+    } 
+    public static void main(String[] args) {
+        Queue<Integer> LL = new LinkedList<>();
+        LL.add(1);
+        LL.add(2);
+        LL.add(3);
+        LL.add(4);
+        LL.add(5);
+        print(LL);
+
+        Queue<Integer> AA = new ArrayDeque<>();
+        AA.add(1);
+        AA.add(2);
+        AA.add(3);
+        AA.add(4);
+        AA.add(5);
+        print(AA);
+        
+    }
+}
+```
+[for more info](https://www.geeksforgeeks.org/queue-interface-java/)\
+[Go to Top](#content)
 
 ---
