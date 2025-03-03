@@ -2,6 +2,7 @@
 1. [Introduction](#introduction)
 2. [Implementation using Array](#implementation-using-array)
 3. [Implementation Using Circular Array](#implementation-using-circular-array)
+4. [Implementation using Linked List](#implementation-using-linked-list)
 
 # Introduction:
 In Data Structures and Algorithms (DSA), a queue is an abstract data type (ADT) that follows the First In First Out (FIFO) principle. This means that the first element added to the queue will be the first one to be removed. Think of it like a line at a ticket counter where the first person to get in line is the first one to be served.
@@ -487,3 +488,256 @@ public class QueueUsingCircularArray {
 ```
 
 [Go to Top](#content)
+
+
+---
+
+
+# Implementation using Linked List
+
+in LL `head of the LL will act as a front` of queue while `last node of LL act as a rear` of queue
+```
+1 -> 2 -> 3 -> 4 -> null
+^              ^
+front         rear/tail
+```
+
+### initializing the Node class
+```java
+static class Node{
+    int data;
+    Node next;
+    Node(int data){
+        this.data = data;
+        this.next = null;
+    }
+}
+```
+
+### initializing the Queue class
+initialize head and tail with null as at first queue is empty
+```java
+static class Queue{
+    static Node head = null;
+    static Node tail = null;
+}
+```
+
+### to check is queue empty or not
+```java
+public static boolean  isEmpty(){
+    return head == null && tail == null;
+}
+```
+as `head == null` and `tail == null` represent the empty queue
+
+### add operation
+**Algorithm**
+1. create the new Node with given data ( `Node newNode = new Node(data)` )
+```
+1 -> 2 -> 3 -> 4 -> null    5 -> null
+^              ^            ^
+head          tail          newNode
+```
+2. make tail.next as newNode ( `tail.next = newNode` )
+```
+1 -> 2 -> 3 -> 4 -> 5 -> null
+^              ^    ^
+head          tail  newNode
+```
+3. update the newNode as tail( `tail = newNode` )
+```
+1 -> 2 -> 3 -> 4 -> 5 -> null
+^                   ^
+head               tail
+```
+
+**Special condition**\
+in case of empty queue as `tail = null` `tail.next = newNode` will throw an `nullPointException`, also as `queue is empty` when we add data for the first time we need to set `newNode as head` also at this point there is `only one value in queue newNode will also be a tail` of the queue 
+```java
+if(tail == null){
+    tail = head = newNode;
+    return;
+}
+```
+
+#### code
+```java
+ public static void add(int data){
+    Node newNode = new Node(data);
+    if(tail == null){
+        tail = head = newNode;
+        return;
+    }
+    tail.next = newNode;
+    tail = newNode;
+}
+```
+**Note: unlike Array `LL is not of fix size` therefor there is no limit on how big the queue ( how much data can we add ) is as long as memory allow as hence we `don't have to check is queue full` or not while adding the data**
+
+
+### remove Operation
+**Algorithm**
+1. check is  queue empty or not
+2. if empty print "queue is empty" and return
+```java
+if(isEmpty()){
+    System.out.println("queue is already empty");
+    return  -1;
+}
+```
+3. if not then get the value at head
+```java
+int front = head.data;
+```
+4. update the head ( `head = head.next` )
+```
+1 -> 2 -> 3 -> 4 -> 5 -> null
+^                   ^
+head/front         tail
+
+
+// head = head.next
+  1 -> 2 -> 3 -> 4 -> 5 -> null
+  ^    ^              ^
+front  head          tail
+```
+5. return the front
+
+**special condition**\
+if at any point in queue where `head == tail becomes true` that means that there is `only one value in the queue` therefor at this point we need to `set the tail as null` after removing the Node since tail is not getting update during the remove operation, also as there only one node in LL `head.next == null` therefor at step four of remove algorithm head will automatically set to null satisfying the condition of empty queue that is `head == null && tail == null` 
+```java
+if(head == tail){
+    tail = null;
+}
+```
+```
+1 -> null
+^
+head/
+tail
+
+
+//set tail to null
+1 -> null       
+^
+head
+tail = null
+
+
+//step 4: head = head.next
+head = null
+tail = null
+```
+
+#### code
+```java
+public static int remove(){
+    if(isEmpty()){
+        System.out.println("queue is already empty");
+        return  -1;
+    }
+    int front = head.data;
+    if(head == tail){
+        tail = null;
+    }
+    head = head.next;
+    return  front;
+}
+```
+
+### peek operation
+**Algorithm**
+1. check is queue empty or not
+2. if empty print "queue is empty" and return
+3. if not return the `head.data`
+```java
+public static int peek(){
+    if(isEmpty()){
+        System.out.println("queue is empty");
+        return  -1;
+    }
+    return  head.data;
+}
+```
+
+### complete code
+```java
+public class QueueUsingLL {
+    static class Node{
+        int data;
+        Node next;
+        Node(int data){
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    static class Queue{
+        static Node head = null;
+        static Node tail = null;
+
+        public static boolean  isEmpty(){
+            return head == null && tail == null;
+        }
+
+        public static void add(int data){
+            Node newNode = new Node(data);
+            if(tail == null){
+                tail = head = newNode;
+                return;
+            }
+            tail.next = newNode;
+            tail = newNode;
+        }
+
+        public static int remove(){
+            if(isEmpty()){
+                System.out.println("queue is already empty");
+                return  -1;
+            }
+            int front = head.data;
+            if(head == tail){
+                tail = null;
+            }
+            head = head.next;
+            return  front;
+        }
+
+        public static int peek(){
+            if(isEmpty()){
+                System.out.println("queue is empty");
+                return  -1;
+            }
+            return  head.data;
+        }
+
+        public static void print(){
+            while(!isEmpty()){
+                System.out.print(peek()+" -> ");
+                remove();
+            }
+            System.out.println("null");
+        }
+    }
+
+    public static void main(String[] args) {
+        Queue q = new Queue();
+        q.add(1);
+        q.add(2);
+
+        q.remove();
+        
+        q.add(3);
+        q.add(4);
+        q.add(5);
+        q.print();
+    }
+}
+```
+
+
+[Go to Top](#content)
+
+
+---
