@@ -5,6 +5,7 @@
 4. [stack using collection framework](#stack-using-collection-framework)
 5. [Reverse A Stack](#reverse-a-stack)
 6. [infix to postfix](#infix-to-postfix)
+7. [Queue using stack](#queue-using-stack)
 
 
 # introduction
@@ -187,6 +188,7 @@ public class StackUsingCollectionFramework {
 ---
 
 # Reverse A Stack
+
 ### Approach:
 1. using the recursion remove all the element of the stack in a sequence
 2. once the stack gets empty fill the stack in opposite order that is the element which is remove the last will get fill first
@@ -204,7 +206,7 @@ public static void reverse(Stack<Integer> s){
 }
 ```
 
-### how to push data at the bottom:
+### How to push data at the bottom:
 1. consider a empty stack:
 ```
 top >  []  < bottom
@@ -463,6 +465,188 @@ public class Postfix {
     }
 }
 ```
+
+
+
+
+[Go to Top](#content)
+
+---
+
+# Queue using stack
+
+[first learn about the queue](../Queue/Readme.md)
+
+
+**Approach:**\
+consider a stack and whenever you add an element into it try to `push that element at the bottom` which crete the reverse of stack  converting that the stack into queue ( it doesn't covert the actual stack it just that `reverse stack behave similar to queue` )
+```
+// consider a stack with add element in sequence 1,2,3,4,5 
+<bottom> [ 1 , 2 , 3 , 4 , 5 ] <top>
+
+// since we add element in reverse order
+<bottom> [ 5 , 4 , 3 , 2 , 1 ] <top>
+
+//this reverse stack will behave as a queue
+```
+there are two ways of pushing the element at the bottom of the stack
+1. [recursive way](#how-to-push-data-at-the-bottom)
+2. using two stack
+
+### Two Stack Approach
+1. consider two stack:
+```java
+static Stack<Integer> s1 = new Stack<>();
+static Stack<Integer> s2 = new Stack<>();
+```
+2. consider a stack s1 with following element
+
+```
+<bottom>[ 1 , 2 , 3 , 4 ]<top>
+```
+3. to add 5 pop out all the element from the stack s1 and push those elements into the s2
+```
+//s1:
+<bottom>[  ]<top>
+
+//s2
+<bottom>[ 4 , 3 , 2 , 1 ]<top>
+```
+#### code:
+```java
+while(!s1.isEmpty()){
+    s2.push(s1.pop());
+} 
+```
+3. push the 5 at s1
+```
+//s1:
+<bottom>[ 5 ]<top>
+
+//s2
+<bottom>[ 4 , 3 , 2 , 1 ]<top>
+```
+#### code
+```java
+s1.push(data);
+```
+4. now pop out all the element from stack s2 and push them again into the s1
+```
+//s1:
+<bottom>[ 5 , 1 , 2, 3 , 4 ]<top>
+
+//s2
+<bottom>[  ]<top>
+```
+#### code:
+```java
+while(!s2.isEmpty()){
+    s1.push(s2.pop());
+}
+```
+### complete code ( add operation )
+```java
+public static void add(int data){
+    while(!s1.isEmpty()){
+        s2.push(s1.pop());
+    }
+    s1.push(data);
+    while(!s2.isEmpty()){
+        s1.push(s2.pop());
+    }
+}
+```
+### remove operation
+as stack is reverse element which is push first is at the top there stack therefor pop operation will work for queue remove operation
+
+**Algorithm**
+1. check is stack empty or not
+2. if empty print "queue is empty" and return
+3. else return the top most element of the stack
+### code
+```java
+public static int remove(){
+    if(isEmpty()){
+        System.out.println("queue is empty");
+        return  -1;
+    }
+    return s1.pop();
+} 
+```
+
+### peek operation
+it is exactly similar to remove operation the only difference is that instead of pop we perform peek operation of the stack
+### code
+```java
+public static int peek(){
+    if(isEmpty()){
+        System.out.println("queue is empty");
+        return  -1;
+    }
+    return s1.peek();   
+}
+```
+
+## complete code:
+```java
+import java.util.Stack;
+public class QueueUsingStack {
+    static class Queue{
+        static Stack<Integer> s1 = new Stack<>();
+        static Stack<Integer> s2 = new Stack<>();
+
+        public static boolean isEmpty(){
+            return s1.isEmpty();
+        }
+
+        public static void add(int data){
+            while(!s1.isEmpty()){
+                s2.push(s1.pop());
+            }
+            s1.push(data);
+            while(!s2.isEmpty()){
+                s1.push(s2.pop());
+            }
+        }
+
+        public static int remove(){
+            if(isEmpty()){
+                System.out.println("queue is empty");
+                return  -1;
+            }
+            return s1.pop();
+        }
+
+        public static int peek(){
+            if(isEmpty()){
+                System.out.println("queue is empty");
+                return  -1;
+            }
+            return s1.peek();   
+        }
+
+        public static void print(){
+            while(!isEmpty()){
+                System.out.print(s1.peek()+ " | ");
+                s1.pop();
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Queue q = new Queue();
+        q.add(5);
+        q.add(4);
+        q.add(3);
+        q.add(2);
+        q.add(1);
+        q.remove();
+        q.print();
+
+    }
+}
+```
+
 
 
 
