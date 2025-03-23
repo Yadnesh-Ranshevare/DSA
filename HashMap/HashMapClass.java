@@ -60,7 +60,7 @@ public class HashMapClass{
             int bi = HashFunction(key);
             int di = searchInLL(key, bi);
             if(di == -1){
-                bucket[bi].add(new Node);
+                bucket[bi].add(new Node(key,value));
                 n++;
             }else{
                 Node node = bucket[bi].get(di);

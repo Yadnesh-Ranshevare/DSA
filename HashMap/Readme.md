@@ -1,6 +1,7 @@
 # Content
 1. [introduction](#introduction)
 2. [implementation](#implementation)
+3. [put Operation](#put-operation)
 
 
 
@@ -27,6 +28,7 @@ hashmap in implemented as a array of linked list where each index of array conta
 - lambda = n/N represent exactly how full is your hashmap
 - at each index of array there will be only two node of linked list so while performing the search operation the key dose not found at the first index then it will be present at second otherwise it will will be absent 
 - if lambda become grater that a specific threshold value ( as there will be no more space for inserting the key value pair ) then we perform the rehashing to increase the size of the array
+- we use special hash function to get the index of array where we store the key value pair we also use same hash function to find the index of array to search that key-value pair we are looking for 
 
 ### Operations
 1. **put():** insert the key and data
@@ -35,6 +37,8 @@ hashmap in implemented as a array of linked list where each index of array conta
 4. **remove():** remove the respective key value pair
 5. **size():** return the size of hashmap
 6. **keyset():** return the set of key
+
+[Go to Top](#content)
 
 ---
 
@@ -106,5 +110,53 @@ public HashMap(){
     }
 }
 ``` 
-  
+[Go to Top](#content)
+
 ---
+
+# put Operation
+**Algorithm:**
+1. `get the bucket index` of the key with the help of special hashFunction which return the bucket index for a key
+```java
+int bi = HashFunction(key);
+```
+2. check is key exist in the hashmap or not with the help of searchInLL function which returns the `data index` ( index of Linked list at each bucket index ) if it exist else return -1
+```java
+int di = searchInLL(key, bi);
+```
+3. if key doesn't exist the add the new node at the bucket index ad increase the n by 1 as n represent the number of node else change the value of that key
+```java
+if(di == -1){   //key doesn't exist
+    bucket[bi].add(new Node(key,value));
+    n++;
+}else{  //key exist
+    Node node = bucket[bi].get(di);
+    node.value = value;
+}
+```
+4. check the value of lambda and decide whether we need to perform rehashing or not
+```java
+double lambda = (double)n/N;
+if(lambda > k){     //k :- can be any threshold value
+    rehash();       //function that perform the rehashing
+}
+```
+
+### code
+```java
+public void put(k key,v value){
+    int bi = HashFunction(key);
+    int di = searchInLL(key, bi);
+    if(di == -1){
+        bucket[bi].add(new Node(key,value));
+        n++;
+    }else{
+        Node node = bucket[bi].get(di);
+        node.value = value;
+    }
+    double lambda = (double)n/N;
+    if(lambda > 2.0){
+        rehash();
+    }
+}
+```
