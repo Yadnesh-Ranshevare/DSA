@@ -120,7 +120,7 @@ public HashMap(){
 ```java
 int bi = HashFunction(key);
 ```
-2. check is key exist in the hashmap or not with the help of searchInLL function which returns the `data index` ( index of Linked list at each bucket index ) if it exist else return -1
+2. check is key exist at that bucket index in the hashmap or not with the help of searchInLL function which take key and bucket index as an argument and returns the `data index` ( index of Linked list at which the key is present ) if it exist else return -1
 ```java
 int di = searchInLL(key, bi);
 ```
