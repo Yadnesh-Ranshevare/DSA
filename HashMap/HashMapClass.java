@@ -51,7 +51,7 @@ public class HashMapClass{
                 LinkedList<Node> ll = oldBucket[i];
                 for(int j = 0;j<ll.size();j++){
                     Node node = ll.get(i);
-                    put(node key,node value);
+                    put(node.key,node.value);
                 }
             }
         }
@@ -71,10 +71,79 @@ public class HashMapClass{
                 rehash();
             }
         }
+
+        public v get(k key){
+            int bi = HashFunction(key);
+            int di = searchInLL(key, bi);
+            if(di == -1){
+                return  null;
+            }else{
+                Node node = bucket[bi].get(di);
+                return node.value; 
+            }
+        }
+        public boolean  containsKey(k key){
+            int bi = HashFunction(key);
+            int di = searchInLL(key, bi);
+            if(di == -1){
+                return  false;
+            }else{
+                return  true;
+            }
+        }
+
+        public v remove(k key){
+            int bi = HashFunction(key);
+            int di = searchInLL(key, bi);
+            if(di == -1){
+                return  null;
+            }else{
+                Node node = bucket[bi].remove(di);
+                n--;
+                return node.value; 
+            }
+        }
+
+        public boolean isEmpty(){
+            return n==0;
+        }
+
+        public ArrayList<k> keySet(){
+            ArrayList<k> keys = new ArrayList<>();
+            for(int i = 0; i<bucket.length; i++){
+                LinkedList<Node> ll = bucket[i];
+                for(int j=0;j<ll.size();j++){
+                    Node node = ll.get(j);
+                    keys.add(node.key);
+                }
+            }
+            return keys;
+        }
+
+
+        public void print(){
+            ArrayList<k> keys = keySet();
+            for(int i=0; i<keys.size();i++){
+                System.out.println(keys.get(i)+" "+get(keys.get(i)));
+            }
+        }
+
+
     }
 
 
     public static void main(String[] args) {
-        System.out.println("hello");
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("india",100);
+        map.put("china",200);
+        map.put("us",150);
+
+        System.out.println("before removing");
+        map.print();
+
+        map.remove("us");
+
+        System.out.println("\nafter removing");
+        map.print();
     }
 }
