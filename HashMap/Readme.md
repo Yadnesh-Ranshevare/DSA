@@ -14,6 +14,7 @@
 13. [Complete Code](#complete-code)
 14. [Using Collection Framework](#using-collection-framework)
 15. [HashSet Using Collection Framework](#hashset-using-collection-framework)
+16. [Majority Element Question](#majority-element-question)
 
 ---
 
@@ -881,6 +882,155 @@ public class HashSetUsingCollectionFramework {
 4
 ```
 
+
+
+[Go to Top](#content)
+
+---
+# Majority Element Question
+**given an integer array of size n, find all the element that appear more than n/3 times**
+
+**Basics Approach:**
+1. create the hashmap who has all the number from the question array along with there frequency count
+2. for each key in hashmap check whither the value is greater than array size divide by 3 or not
+4. if it is greater then add that value into ans array 
+5. return the ans array
+
+### NOTE: in hashmap you can store value in two ways
+
+lets assume question array to be:
+```
+int num[] = {1,3,1,2,1}
+```
+
+#### 1. frequency as key and number as value:
+
+in this way your hash table will look like this
+
+key(frequency) | value(number)
+---|---
+1 | [3,2]
+3 | 1
+
+as you can see that for key(frequency) 1 we have two values(3,2) and to store them we need our value data type to be array which is space inefficient also the search time for each number in question is high  
+
+#### 2. number as key and frequency as value
+in this way your hash table will look like this
+
+key(number) | value(frequency)
+---|---
+1 | 3
+2 | 1
+3 | 1
+
+in this way although the table size is large but we need Integer datatype to store the value which is more space efficient that array and also with this approach we can perform the search operation in less amount of time
+
+
+**Algorithm:**
+1. create the ans `ArrayList<Integer>` and a `HashMap<Integer,Integer>` to store the ans array and question array respectively
+```java
+ArrayList<Integer> ans = new ArrayList<>();
+HashMap<Integer,Integer> map = new HashMap<>();
+```
+2. traverse over the question array and for every element in question array check whether that number(as key) present in hashmap or not
+```java
+for(int i=0;i<num.length;i++){      // num is a question array
+    if(map.containsKey(num[i])){
+        // key exist
+    }else{
+        // key does not exist
+    }
+}
+```
+3. if key exist then increase it's value(frequency) by 1 
+```java
+for(int i=0;i<num.length;i++){      // num is a question array
+    if(map.containsKey(num[i])){
+        map.put(num[i] , map.get(num[i])+1);   // updating the frequency 
+    }else{
+        // key does not exist
+    }
+}
+```
+4. if key does not exist the create the new key value pair with value (frequency) as 1
+```java
+for(int i=0;i<num.length;i++){      // num is a question array
+    if(map.containsKey(num[i])){
+        map.put(num[i] , map.get(num[i])+1);    
+    }else{
+        map.put(num[i],1);  // creating the new key value pair
+    }
+}
+```
+5. at this point you'll get the hashmap with all the number present inside the question array and there respective frequency
+6. get the keyset of the hashmap and traverse over each key
+```java
+for(int key : map.keySet()){
+    
+}
+```
+7. now for each key in key set check is there any value greater that question array divide by 3 or not
+```java
+for(int key : map.keySet()){
+    if(map.get(key) > num.length / 3){
+        // if value is greater that num.length / 3
+    }
+}
+```
+8. if value is greater that question array divide ny 3 the add that value into the ans ArrayList
+```java
+for(int key : map.keySet()){
+    if(map.get(key) > num.length / 3){
+        ans.add(key);
+    }
+}
+```
+9. return the ans ArrayList
+```java
+return ans;
+```
+
+**Complete code:**
+```java
+import java.util.*;
+
+public class MajorityElement{
+
+    public static ArrayList<Integer> majority(int num[]){
+        ArrayList<Integer> ans = new ArrayList<>();
+        HashMap<Integer,Integer> map = new HashMap<>();
+
+        for(int i=0;i<num.length;i++){
+            if(map.containsKey(num[i])){
+                map.put(num[i] , map.get(num[i])+1);
+            }else{
+                map.put(num[i],1);
+            }
+        }
+
+        
+        for(int key : map.keySet()){
+            if(map.get(key) > num.length / 3){
+                ans.add(key);
+            }
+        }
+
+        return ans;
+    } 
+
+    public static void main(String[] args) {
+        int num[] = {1,3,2,5,1,3,1,3,1,3};
+
+        ArrayList<Integer> ans = majority(num);
+
+        System.out.println(ans);
+    }
+}
+```
+**output:**
+```
+[1, 3]
+```
 
 
 [Go to Top](#content)
