@@ -12,7 +12,7 @@
 11. [keySet Function](#keyset-function)
 12. [How To Print The Hashmap](#how-to-print-the-hashmap)
 13. [Complete Code](#complete-code)
-
+14. [Using Collection Framework](#using-collection-framework)
 
 ---
 
@@ -730,6 +730,80 @@ after removing
 india 100
 china 200
 ```
+[Go to Top](#content)
+
+---
+# Using Collection Framework
+**Most of the methods are work same**
+
+```java
+import java.util.*;
+
+
+public class HashmapUsingCollectionFramework {
+
+    public static void main(String[] args) {
+        HashMap<String,Integer> map = new HashMap<>();
+
+        map.put("india",1000);
+        map.put("us",500);
+        map.put("china",2000);
+
+        System.out.println(map);
+        
+        map.put("us",700);      //update
+        
+        System.out.println(map);
+
+        if(map.containsKey("japan")){
+            System.out.println("key is present in the map");
+        }else{
+            System.out.println("key is not present in the map");
+        }
+
+
+        System.out.println(map.get("india"));   // key exist
+        System.out.println(map.get("japan"));   // key doesn't exist
+
+        // iteration
+        for(Map.Entry<String,Integer> e : map.entrySet()){
+            System.out.println(e.getKey()+" "+e.getValue());
+        }
+
+        Set<String> keys = map.keySet();
+        System.out.println(keys);
+
+        map.remove("china");
+        System.out.println(map);
+    }
+    
+}
+```
+### iteration over hashmap:
+in java there is another syntax for iterating over collection
+```java
+int arr[] = {1,2,3,4};
+for (int val : arr){
+    System.out.println(val);
+}
+```
+**here we get each value from arr array in val variable during each iteration**
+
+**output:**
+```
+1
+2
+3
+4
+```
+**Therefor iteration in hashmap is done as follow**
+```java
+for(Map.Entry<String,Integer> e : map.entrySet()){
+    System.out.println(e.getKey()+" "+e.getValue());
+}
+```
+
+
 [Go to Top](#content)
 
 ---
