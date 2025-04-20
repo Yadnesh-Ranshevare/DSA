@@ -13,6 +13,7 @@
 12. [How To Print The Hashmap](#how-to-print-the-hashmap)
 13. [Complete Code](#complete-code)
 14. [Using Collection Framework](#using-collection-framework)
+15. [HashSet Using Collection Framework](#hashset-using-collection-framework)
 
 ---
 
@@ -802,6 +803,84 @@ for(Map.Entry<String,Integer> e : map.entrySet()){
     System.out.println(e.getKey()+" "+e.getValue());
 }
 ```
+
+
+[Go to Top](#content)
+
+---
+
+# HashSet Using Collection Framework
+A HashSet in Java is a collection that `stores unique elements` and uses hashing to manage them. It is part of the Java Collections Framework and provides `fast performance` for basic operations like adding, removing, and checking if an item exists. It `does not maintain the order` of elements.
+```java
+import java.util.HashSet;
+import java.util.Iterator;
+
+public class HashSetUsingCollectionFramework {
+    public static void main(String[] args) {
+        HashSet<Integer> set = new HashSet<>();
+        set.add(1);   
+        set.add(2);   
+        set.add(3);   
+        set.add(4);   
+        set.add(1);         // will ignore this duplicate  
+
+        System.out.println("size of the set is: "+set.size());
+
+        System.out.println(set);
+
+        if(set.contains(1)){
+            System.out.println("set contains 1");
+        }
+        if(!set.contains(5)){
+            System.out.println("set does not contain 5");
+        }
+        
+        set.remove(1);
+
+        if(!set.contains(1)){
+            System.out.println("set does not contain 1");
+        }
+
+        Iterator it = set.iterator();
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+    }
+}
+```
+### Iterator in java
+An **Iterator** is an object used to **loop through elements of a collection (like ArrayList, HashSet, etc.) one by one**.
+
+**Has two basic method**
+- `.next():` Returns the next element ( also update the Iterator )
+- `.hasNext():` Checks if there is a next element and return true or false accordingly
+```java
+import java.util.HashSet;
+import java.util.Iterator;
+
+public class HashSetUsingCollectionFramework {
+    public static void main(String[] args) {
+        HashSet<Integer> set = new HashSet<>();
+        set.add(1);   
+        set.add(2);   
+        set.add(3);   
+        set.add(4);   
+
+        Iterator it = set.iterator();
+        while(it.hasNext()){
+            System.out.println(it.next());
+        }
+    }
+}
+```
+**output:**
+```
+1
+2
+3
+4
+```
+
 
 
 [Go to Top](#content)
