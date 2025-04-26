@@ -60,7 +60,7 @@ public class UnionOfTwoArray {
         }
 
 
-        for(int i = 0;i<ans.length;i++){
+        for(int i = 0;i<k;i++){
             System.out.print(ans[i]+" ");
         }
         return k;
