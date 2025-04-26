@@ -30,7 +30,7 @@ In Data Structures and Algorithms (DSA), a HashMap (or Hash Table) is a data str
  Key: Student's name (e.g., "Alice")\
  Value: Grade (e.g., 85)
 
-### how hashmap is implementation
+### how hashmap is implemented
 hashmap in implemented as a array of linked list where each index of array contains the linked list
 ```
 [ (node -> node) | (node -> node) | (node -> node) | (node -> node) ]
@@ -928,7 +928,7 @@ in this way although the table size is large but we need Integer datatype to sto
 
 
 **Algorithm:**
-1. create the ans `ArrayList<Integer>` and a `HashMap<Integer,Integer>` to store the ans array and question array respectively
+1. create the ans `ArrayList<Integer>` and a `HashMap<Integer,Integer>` to store the ans array and question array data(number and its frequency) respectively
 ```java
 ArrayList<Integer> ans = new ArrayList<>();
 HashMap<Integer,Integer> map = new HashMap<>();
