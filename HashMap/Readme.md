@@ -15,6 +15,7 @@
 14. [Using Collection Framework](#using-collection-framework)
 15. [HashSet Using Collection Framework](#hashset-using-collection-framework)
 16. [Majority Element Question](#majority-element-question)
+17. [Union Of Two Array](#union-of-two-array)
 
 ---
 
@@ -1030,6 +1031,124 @@ public class MajorityElement{
 **output:**
 ```
 [1, 3]
+```
+
+
+[Go to Top](#content)
+
+---
+
+# Union Of Two Array
+**Given two array perform the union operation on them and count the number of element present inside the union array**
+
+`UNION (All unique elements together)`: Union operation is the process of combining all elements from two or more sets (or collections) into a single set that contains every distinct element from each set, without duplicates.
+
+NOTE: we can also solve this same problem `using nested loops` who has time complexity of `O[n^2]`
+```java
+public static int unionArray(int arr1[],int arr2[]){
+    int ans[] = new int[arr1.length+arr2.length];
+    int k = 0; // for indexing
+
+    for(int i = 0;i<arr1.length;i++){
+        boolean existFlag = false;
+        for(int j = 0;j<ans.length;j++){
+            if(arr1[i] == ans[j]){  // checking is element exist in union array or not
+                existFlag = true;
+            }
+        }
+        if(!existFlag){     // if element does not exist
+            ans[k++] = arr1[i];
+        }
+    }
+    
+    for(int i = 0;i<arr2.length;i++){
+        boolean existFlag = false;
+        for(int j = 0;j<ans.length;j++){    // checking is element exist in union array or not
+            if(arr2[i] == ans[j]){
+                existFlag = true;
+            }
+        }
+        if(!existFlag){     // if element does not exist
+            ans[k++] = arr2[i];
+        }
+    }
+
+    // to print the ans array
+    for(int i = 0;i<ans.length;i++){
+        System.out.print(ans[i]+" ");
+    }
+
+    return k;
+} 
+```
+### Solution using HashSet
+**By using hashSet we can reduce the time complexity to `O[n]` as HashSet doesn't allow the duplicate element** 
+
+**Algorithm:**
+1. create then hashSet to store the ans element
+```java
+HashSet<Integer> u = new HashSet<>();
+```
+2. iterate over the first array and perform the add operation during each iteration
+```java
+for (int i = 0 ; i< arr1.length;i++){
+    u.add(arr1[i]);
+}
+```
+**Note: while performing the add operation on HashSet it skip the element that already present inside the HashSet to avoid adding duplicate element**
+
+3. perform the same operation for second array
+```java
+for(int i = 0;i < arr2.length;i++){
+    u.add(arr2[i]);
+}
+```
+4. return the size of the HashSet
+```java
+return u.size();
+```
+
+**Code:**
+
+
+
+```java
+public static int unionHashSet(int arr1[],int arr2[]){
+    HashSet<Integer> u = new HashSet<>();
+    for (int i = 0 ; i< arr1.length;i++){
+        u.add(arr1[i]);
+    }
+    for(int i = 0;i < arr2.length;i++){
+        u.add(arr2[i]);
+    }
+    // print the ans HashSet
+    System.out.println(u);
+    return u.size();
+}
+```
+
+### Solution Using ArrayList
+**we can use same algorithm as HashSet to solve this problem using ArrayList the only difference is before adding we need to check is element exist in that ans ArrayList or not with the help of `.contains` method**
+
+`.contains():` returns true if element exist inside the arrayList
+```java
+public static int unionArraylist(int arr1[],int arr2[]){
+    ArrayList<Integer> ans = new ArrayList<>();
+    for (int a : arr1){     // iterating over arr1
+        if(!ans.contains(a)){
+            ans.add(a);
+        }
+    }
+    for (int a:arr2){       // iterating over arr2
+        if(!ans.contains(a)){
+            ans.add(a);
+        }
+    }
+
+    //print the ans arrayList
+    System.out.println(ans);
+    return ans.size();
+}
 ```
 
 
