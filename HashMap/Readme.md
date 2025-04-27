@@ -18,6 +18,7 @@
 17. [Union Of Two Array](#union-of-two-array)
 18. [Intersection of Two Array](#intersection-of-two-array)
 19. [Find Itinerary from Tickets](#find-itinerary-from-ticket)
+20. [Count Sub Array](#count-sub-array)
 
 
 ---
@@ -1612,6 +1613,213 @@ public class Itinerary {
 ```
 Mumbai -> Delhi -> Goa -> Chennai -> Bengaluru
 ```
+
+[Go to Top](#content)
+
+---
+
+#  Count Sub Array
+**provided an Array find the maximum number of subArray that can be constructed whose sum is k**
+
+**Prefix Array**\
+it is the array that contains the sum at each index up to that index from original array\
+example:
+```
+// original array
+[1, 2, 3, 4, 5]
+
+// prefix array
+[1, 3, 6, 10, 15]
+
+// explanation
+0 + 1 = 1
+1 + 2 = 3
+3 + 3 = 6
+6 + 4 = 10
+10 + 5 = 15
+```
+**Note: prefix Array is always start from 0 which represent the empty array as at the start sum is always zero**
+### how to find the subArray?
+
+lets assume k=5 and apply equation `k = sum[i] - sum[j-1]` where **j is the starting index of the subArray and i is the last index**\
+example:
+```
+// original array
+[1, 2, 3, 4, 5]
+
+// prefix array
+int sum[] = {1, 3, 6, 10, 15};
+
+k = 5
+
+// at j = 1 and i = 2
+// sum[i] = 6 and sum[j-1] = sum[0] = 1 
+// therefor sum[i] - sum[j-1] = 6 - 1 = 5 == k
+// therefor we get subArray from j to i
+[2, 3]  
+
+//similarly for j = 4 and i = 4 we get
+// sum[i] - sum[j-1] = 15 - 10 = 5 == k
+// therefor we get subArray from j to i
+[5]
+```
+**Note: to solve this problem we just need to find the `sum[i]` term and apply updated formula `sum[i] - k = sum[j-1]` to calculate the `sum[j-1] `and then check is `sum[j-1]` already present in the sum array or not if it exist then we find the subArray from j to i**
+
+### How to Handle duplicate sum values?
+
+lest assume k = 0 for the following array
+```
+// original array
+[1, -1, 1, -1, 1, -1]
+
+// prefix array
+sum = [1, 0, 1, 0, 1, 0]
+
+k = 0
+
+// for i = 5
+// sum[i] = 0
+// sum[i] - k = 0 - 0 = 0 = sum[j - 1]
+// from the sum array we can say that 
+j = 2 or j = 4
+
+// therefor subArray
+[1, -1, 1, -1] and [1, -1]
+```
+**Note: unlike previous example where we have only one unique value of `sum[j-1]` here we have two different values of `sum[j-1]` that says at `i = 5` we can have two different subArray or in general we can say number of subArray at particular index `i` is equal to number of valid `j` index present**
+
+### why to use HashMap?
+
+we use HashMap to store the frequency of the `sum[j-1]` to calculate the valid `j` index from it. That is if the frequency of `sum[j-1]` is 3 that means we can have the 3 unique index of `j` which says 3 unique subArray
+
+by default hasMap contains the 0-1 as a key-value which represent the empty array at start whose sum is zero
+
+your HahMap look like this
+
+key (sum[j-1]) | value (frequency)
+---| ---
+0 | 1
+
+therefor on every time when we calculate the `sum[j-1]` we check is that value present in the hashMap or not
+
+if `sum[j-1]` is present then that means it already exist in sum array and number of valid `j` index is equal to its frequency
+
+if not exist then add it into the HashMap with frequency as 1
+
+
+**Algorithm:**
+1. create the HashMap to store thr `sum[j-1]` and frequency
+```java
+HashMap<Integer,Integer> map = new HashMap<>();
+```
+2. add the default values of HashMap
+```java
+map.put(0, 1);
+```
+3. declarer some general variables
+```java
+int ans = 0;    // represent the number of subArray
+int sum = 0;    // calculate the sum at each index of prefix array
+```
+
+4. traverse over the input array
+```java
+for(int i:arr){
+            
+}
+```
+5. update the sum
+```java
+for(int i:arr){
+    sum+=i;     // same as sum[i]      
+}
+```
+6. check is `sum[j-1] = sum[i] - k` present in the HashMap or not if it exist then add its frequency into the ans value
+```java
+for(int i:arr){
+    sum+=i;
+    if(map.containsKey(sum-k)){
+        ans += map.get(sum-k);
+    }
+}
+```
+7. check is `sum[i]` present in the Hashmap or not
+```java
+for(int i:arr){
+    sum+=i;
+    if(map.containsKey(sum-k)){
+        ans += map.get(sum-k);
+    }
+    if(map.containsKey(sum)){
+        // exist
+    }else{
+       // does not exist 
+    }
+}
+```
+8. if it exist the update its frequency by one as in future this value can be use as `sum[j-1]` else create new key-value pair with frequency equal to 1
+```java
+for(int i:arr){
+    sum+=i;
+    if(map.containsKey(sum-k)){
+        ans += map.get(sum-k);
+    }
+    if(map.containsKey(sum)){
+        map.put(sum, map.get(sum)+1);
+    }else{
+        map.put(sum, 1);
+    }
+}
+```
+9. return the ans value as it represent the number of subArray that can be form
+```java
+return ans;
+```
+**Complete code:**
+```java
+import java.util.*;
+
+public class subArray{
+
+    public static int countSubArray(int arr[],int k){
+        HashMap<Integer,Integer> map = new HashMap<>();
+        map.put(0, 1);
+        int ans = 0;
+        int sum = 0;
+
+        for(int i:arr){
+            sum+=i;
+            if(map.containsKey(sum-k)){
+                ans += map.get(sum-k);
+            }
+            if(map.containsKey(sum)){
+                map.put(sum, map.get(sum)+1);
+            }else{
+                map.put(sum, 1);
+            }
+        }
+        
+
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        int arr1[] = {10, 2, -2, -20, 10};
+        int arr2[] = {1, -1, 1, -1, 1, -1};
+        int count1 = countSubArray(arr1, 10);
+        int count2 = countSubArray(arr2, 0);
+        System.out.println(count1);
+        System.out.println(count2);
+    }
+}
+```
+**Output:**
+```
+3
+9
+```
+
+
 
 [Go to Top](#content)
 
