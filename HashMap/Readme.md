@@ -1459,7 +1459,7 @@ Goa | Delhi
 
 **Note: not all the map can be reverse, we can only reverse the map if value of all the keys in HashMap has a unique value, like in our example according to the given condition all the destinations are unique**
 
-- now as we have both original and reverse map use `.keySet()` method on original map to iterate over the keys and use `.containsKey()` method to check is that key present in the reverse map or not
+- now as we have both original and reverse map, use `.keySet()` method on original map to iterate over the keys of original map and use `.containsKey()` method on reverse map to check is that key (source) from original map present in the reverse map (destination) or not
 
 - if key present then we are reaching that destination from some other places if it not present then we are not reaching that place from anywhere and that place is our starting point
 
