@@ -1436,7 +1436,6 @@ Delhi | Goa
 - therefor to find the starting  point we just need to find the key which is not present in the value column\
 `example: mumbai`
 
-3. **to find the starting point**
 - to find the starting point we use reverse map where we just switch the key value pair of the HashMap i.e, key become value and value become key
 
 **Original map (Source to Destination)**
@@ -1464,13 +1463,9 @@ Goa | Delhi
 
 - if key present then we are reaching that destination from some other places if it not present then we are not reaching that place from anywhere and that place is our starting point
 
-<!-- 4. **print Itinerary**
-- as you have your starting point check do we have any key for that starting point in our original map
-- if key found then print its value and update the starting point to value
-- repeat this step until there is not key found for the starting point
-- print the last destination -->
 
-4. once you find the starting point start travailing from that point and once you reach the destination make that destination your new starting point and repeat this step until you reach the end of your journey \
+
+3. once you find the starting point start travailing from that point and once you reach the destination make that destination your new starting point and repeat this step until you reach the end of your journey \
 **Note: you always travel from keys to value**
 
 
