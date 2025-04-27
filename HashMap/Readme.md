@@ -16,6 +16,8 @@
 15. [HashSet Using Collection Framework](#hashset-using-collection-framework)
 16. [Majority Element Question](#majority-element-question)
 17. [Union Of Two Array](#union-of-two-array)
+18. [Intersection of Two Array](#intersection-of-two-array)
+
 
 ---
 
@@ -1240,6 +1242,159 @@ public class UnionOfTwoArray {
 6
 ```
 
+
+[Go to Top](#content)
+
+---
+
+# Intersection of Two Array
+**given two array return the array of intersection for those two array**
+
+**intersection: set( only contain unique element ) of common element**
+
+**Approach:**
+
+1. iterate over any one array and check is the element present into the another array or not
+2. if it present into the second array then add that element into the ans array
+3. there is no need to perform the iteration on the second array as we have already found all the common element while iterating over the first element
+4. to avoid adding the duplicate element into the ans array we use the HashSet
+5. we convert the any one array into the HashSet and iterate over the second array and check is current element present in HashSet or not
+6. if it present then add that element into the ans array and remove it from HashSet to avoid adding duplicate element
+
+**Note: we can use nested loop to solve this problem and use ArrayList to remove the duplicates but in this way we take `O[n^2]` time which is high**
+
+**Solution Using nested loop**
+```java
+public static ArrayList<Integer> intersectionLoop(int arr1[],int arr2[]){
+    ArrayList<Integer> ans = new ArrayList<>();
+
+    for(int i = 0;i<arr1.length;i++){
+        for (int j=0;j<arr2.length;j++){
+            if(arr1[i]==arr2[j] && !temp.contains(arr1[i])){        // checking is both the element equal or does that element already present within the ans Array or not 
+                temp.add(arr1[i]);
+            }
+        }
+    }
+
+    return ans;
+}
+```
+
+**Algorithm:**
+
+1. declare the temporary HashSet and a ans ArrayList
+```java
+HashSet<Integer> temp = new HashSet<>();
+ArrayList<Integer> ans = new ArrayList<>();
+```
+2. convert the any one array into HashSet
+```java
+for (int i : arr1){     // converting 1st array into HashSet 
+    temp.add(i);
+}
+```
+3. iterate over the second array
+```java
+for (int i : arr2){
+    
+}
+```
+4. during each iteration check whether current element present in the temporary HashSet or not
+```java
+for (int i : arr2){
+    if(temp.contains(i)){
+        
+    }
+}
+```
+5. if it present then add that element into the ans ArrayList and at the end of the loop return the ans ArrayList
+```java
+for (int i : arr2){
+    if(temp.contains(i)){
+        ans.add(i);
+        temp.remove(i);
+    }
+}
+return  ans;
+```
+**Solution using HashSet:**
+```java
+public static ArrayList<Integer> intersection(int arr1[],int arr2[]){
+    HashSet<Integer> temp = new HashSet<>();
+    ArrayList<Integer> ans = new ArrayList<>();
+
+    for (int i : arr1){
+        temp.add(i);
+    }
+
+    for (int i : arr2){
+        if(temp.contains(i)){
+            ans.add(i);
+            temp.remove(i);
+        }
+    }
+
+    return  ans;
+}
+```
+**Comparison between nested approach and HashSet approach**
+Criteria | First Code (intersectionLoop) | Second Code (intersection)
+---|---|---
+Efficiency (Time Complexity) | O(n²) → Two loops inside each other (slow for large arrays) | O(n) → Single loop + HashSet lookup (very fast)
+Duplicate Handling | You check manually using contains, which is O(n) again. | HashSet automatically handles uniqueness efficiently.
+Cleaner Code | Nested loops, extra conditions | Straightforward and clean
+Scalability | Bad for big arrays | Good for big arrays
+
+**Complete code**
+```java
+import java.util.*;
+
+public class Intersection{
+
+    public static ArrayList<Integer> intersection(int arr1[],int arr2[]){
+        HashSet<Integer> temp = new HashSet<>();
+        ArrayList<Integer> ans = new ArrayList<>();
+        for (int i : arr1){
+            temp.add(i);
+        }
+
+        for (int i : arr2){
+            if(temp.contains(i)){
+                ans.add(i);
+                temp.remove(i);
+            }
+        }
+        return  ans;
+    }
+
+    public static ArrayList<Integer> intersectionLoop(int arr1[],int arr2[]){
+        ArrayList<Integer> temp = new ArrayList<>();
+        for(int i = 0;i<arr1.length;i++){
+            for (int j=0;j<arr2.length;j++){
+                if(arr1[i]==arr2[j] && !temp.contains(arr1[i])){
+                    temp.add(arr1[i]);
+                }
+            }
+        }
+
+        return temp;
+    }
+
+    public static void main(String[] args) {
+        int arr1[] = {7,3,9};
+        int arr2[] = {6,3,9,2,9,4};
+        System.out.println(intersection(arr1, arr2));
+        System.out.println(intersectionLoop(arr1, arr2));
+    }
+}
+```
+**Output:**
+```
+[3, 9]
+[3, 9]
+```
+
+ 
 
 [Go to Top](#content)
 
