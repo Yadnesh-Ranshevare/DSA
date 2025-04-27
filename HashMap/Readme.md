@@ -17,6 +17,7 @@
 16. [Majority Element Question](#majority-element-question)
 17. [Union Of Two Array](#union-of-two-array)
 18. [Intersection of Two Array](#intersection-of-two-array)
+19. [Find Itinerary from Tickets](#find-itinerary-from-ticket)
 
 
 ---
@@ -1395,6 +1396,227 @@ public class Intersection{
 ```
 
  
+
+[Go to Top](#content)
+
+---
+
+# find Itinerary from Ticket 
+**you are given the data about the tickets for journey from one place to anther such as**\
+**"Chennai" -> "Bengaluru"\
+"Mumbai" -> "Delhi"\
+"Goa" -> "Chennai"\
+"Delhi" -> "Goa"**\
+**find the path in which the person can travel**
+
+**i.e, your ans is `Mumbai -> Delhi -> Goa -> Chennai -> Bengaluru`**
+
+**Itinerary means a plan or schedule**
+
+**some condition to keep in mind**
+1. there can be no loop in the journey
+2. person can not travel two places from one place, i.e, there is only one source and only one destination
+3. person cannot reach one place fromm two different places
+
+**Approach:**
+1. we'll store the given data in the form of Hashmap where our hashMap look like
+
+key (source/from) | value (destination\to)
+---|---
+Chennai | Bengaluru
+Mumbai | Delhi
+Goa | Chennai
+Delhi | Goa
+
+2. **find the starting point:**
+- in my HashMap key represent the places from where we can start our journal
+- value column represent the places where we can reach from the particular place
+- so if we can reach somewhere from the particular place that place cannot be our starting point therefore all the places mention in the value common cannot be our starting point
+
+- therefor to find the starting  point we just need to find the key which is not present in the value column\
+`example: mumbai`
+
+3. **to find the starting point**
+- to find the starting point we use reverse map where we just switch the key value pair of the HashMap i.e, key become value and value become key
+
+**Original map (Source to Destination)**
+
+key (source/from) | value (destination\to)
+---|---
+Chennai | Bengaluru
+Mumbai | Delhi
+Goa | Chennai
+Delhi | Goa
+
+**reverse map (Destination to source)**
+
+key (destination\to) | value (source/from)
+---|---
+Bengaluru | Chennai
+Delhi | Mumbai
+Chennai | Goa
+Goa | Delhi
+
+
+**Note: not all the map can be reverse, we can only reverse the map if value of all the keys in HashMap has a unique value, like in our example according to the given condition all the destinations are unique**
+
+- now as we have both original and reverse map use `.keySet()` method on original map to iterate over the keys and use `.containsKey()` method to check is that key present in the reverse map or not
+
+- if key present then we are reaching that destination from some other places if it not present then we are not reaching that place from anywhere and that place is our starting point
+
+<!-- 4. **print Itinerary**
+- as you have your starting point check do we have any key for that starting point in our original map
+- if key found then print its value and update the starting point to value
+- repeat this step until there is not key found for the starting point
+- print the last destination -->
+
+4. once you find the starting point start travailing from that point and once you reach the destination make that destination your new starting point and repeat this step until you reach the end of your journey \
+**Note: you always travel from keys to value**
+
+
+**Algorithm:**
+1. get the HashMap with given data
+```java
+HashMap<String,String> tickets = new HashMap<>();
+```
+2. get the starting point of the hashmap\
+[to find the starting point](#to-find-the-starting-point)
+```java
+String startingPoint = getStart(tickets);
+```
+3. traverse over the key (source) of the Hashmap and check is startingPoint present in that hashmap or not (check in the keys/source)
+```java
+while(tickets.containsKey(startingPoint)){
+
+}
+```
+4. if key present then that means you can travel to next location from that place therefor print that startingPoint and travel to next location i.e update the starting point to the next location which is value of key (startingPoint), repeat this until you cannot travel further
+```java
+while(tickets.containsKey(startingPoint)){
+    System.out.print(startingPoint + " -> ");
+    startingPoint = tickets.get(startingPoint );
+}
+```
+5. print the last place you have visited which will be your finl starting point
+```java
+System.out.println(startingPoint);
+```
+**Code:**
+```java
+public static void printPath(HashMap<String,String> originalMap){
+    String startingPoint = getStart(originalMap);
+
+    while(originalMap.containsKey(startingPoint)){
+        System.out.print(startingPoint + " -> ");
+        startingPoint = originalMap.get(startingPoint );
+    }
+
+    System.out.println(startingPoint);
+}
+```
+#### To Find The Starting Point
+1. create the new temporary empty HashMap
+```java
+HashMap<String,String> revMap = new HashMap<>();
+```
+2. traverse over the keyset of the original HashMap
+```java
+for (String key : originalMap.keySet()){
+    
+}
+```
+3. get the key-value pair of each key in the keyset of original HashMap and add it into the reverse HashMap with value of original HashMap as key and key of original HashMap as value
+```java
+for (String key : originalMap.keySet()){
+    revMap.put(originalMap.get(key) , key);
+}
+```
+4. again traverse over the keyset of the original HashMap
+```java
+for (String key : originalMap.keySet()){
+    
+}
+```
+5. check is reverse HashMap has the same key or not, if same key doesn't found in the reverse HashMap then return that key  
+```java
+for (String key : originalMap.keySet()){
+    if(!revMap.containsKey(key)){
+        return key;
+    }
+}
+```
+4. if we doesn't found any key at the end of the loop then return the null
+```java
+return null
+```
+**Code:**
+```java
+public static String getStart(HashMap<String,String> originalMap){
+    HashMap<String,String> revMap = new HashMap<>();
+
+    for (String key : originalMap.keySet()){
+        revMap.put(originalMap.get(key) , key);
+    }
+
+    for (String key : originalMap.keySet()){
+        if(!revMap.containsKey(key)){
+            return key;
+        }
+    }
+    return  null;
+}
+```
+**Complete Code:**
+```java
+import java.util.*;
+
+public class Itinerary {
+
+    public static String getStart(HashMap<String,String> originalMap){
+        HashMap<String,String> revMap = new HashMap<>();
+
+        for (String key : originalMap.keySet()){
+            revMap.put(originalMap.get(key) , key);
+        }
+
+        for (String key : originalMap.keySet()){
+            if(!revMap.containsKey(key)){
+                return key;
+            }
+        }
+        return  null;
+    }
+
+    public static void printPath(HashMap<String,String> originalMap){
+        String startingPoint = getStart(originalMap);
+
+        while(originalMap.containsKey(startingPoint)){
+            System.out.print(startingPoint + " -> ");
+            startingPoint = originalMap.get(startingPoint );
+        }
+
+        System.out.println(startingPoint);
+    }
+
+
+    public static void main(String[] args) {
+        HashMap<String,String> tickets = new HashMap<>();
+
+        tickets.put("Chennai", "Bengaluru");
+        tickets.put("Mumbai", "Delhi");
+        tickets.put("Goa", "Chennai");
+        tickets.put("Delhi", "Goa");
+
+        printPath(tickets);
+
+       
+    }
+}
+```
+**output:**
+```
+Mumbai -> Delhi -> Goa -> Chennai -> Bengaluru
+```
 
 [Go to Top](#content)
 
