@@ -3,3 +3,4 @@
 2. [Stack](./stack/readme.md)
 3. [Queue](./Queue/Readme.md)
 4. [Hash Map](./HashMap/Readme.md)
+5. [Binary tree](./BinaryTree/readme.md)
