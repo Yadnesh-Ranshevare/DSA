@@ -611,7 +611,7 @@ postorder
 456
 ```
 
-unlike normal traversal where we use recursion to get the whole subtree here we **use iteration** and we also gonna **use Queue** to make the use of its FIFO property
+unlike normal traversal where we use recursion to get the whole subtree here we **use iteration** and we also gonna **use Queue** to make the use of its FIFO property\
 [Click here to learn about Queue](../Queue//Readme.md)
 
 **Approach:**
@@ -717,7 +717,7 @@ eighth:- pop 6 (no child)
 after ninth pop operation our queue becomes empty which indicate the end of our solution
 
 **Coding Algorithm:**
-1. condition fro empty tree
+1. condition for empty tree
 ```java
 if(root == null){
     return;
@@ -740,7 +740,7 @@ while(!q.isEmpty()){
 ```java
 Node currNode = q.remove();
 ```
-5. check is the current node null or not
+5. check whether the current node is null or not
 ```java
 if(currNode == null){
     // currNode is null
@@ -748,7 +748,7 @@ if(currNode == null){
     // currNode is not null
 }
 ```
-6. if it is null then go to next line and check whether the q in empty of not after removing the null
+6. if it is null then go to next line and check whether the q in empty or not after removing the null
 ```java
 if(currNode == null){
     System.out.println();   // switching to next line
@@ -761,7 +761,7 @@ if(currNode == null){
     // currNode is not null
 }
 ```
-7. if after removal queue is empty then break terminate the loop else add the null in queue
+7. if after removal queue becomes empty then terminate the loop else reinsert null into queue
 ```java
 if(currNode == null){
     System.out.println();
@@ -788,7 +788,7 @@ if(currNode == null){
     System.out.print(currNode.data+" ");    // printing the  value of currNode
 }
 ```
-9. check whether current node has a left and right child or not
+9. check whether current node has a left/right child or not
  ```java
 if(currNode == null){
     System.out.println();
