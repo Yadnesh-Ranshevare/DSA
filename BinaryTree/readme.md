@@ -295,7 +295,7 @@ static class BinaryTree{
     
 }
 ```
-3. declare the static variable which will represent the index of nodes array at first its value is -1 (it is set to -1 because we want to update this value recursively)
+3. declare the static variable which will represent the index of nodes array which contains the data of tree in the form of array, at first its value is -1 (it is set to -1 because we want to update this value recursively)
 ```java
 static int idx = -1;
 ```
@@ -309,13 +309,13 @@ public static Node buildTree(int nodes[]){
 ```java
 idx++
 ```
-6. return null for -1 value of node
+6. return null for -1 value of node (base case)
 ```java
 if(nodes[idx] == -1){
     return  null;
 }
 ```
-7. make the `node[idx]` where `idx = 0 (1st index od nodes array)` root of the tree
+7. make the `node[idx]` where `idx = 0 (1st index of nodes array)` root of the tree
 ```java
 Node newNode = new Node(nodes[idx]);  // newNode is the actual root of the tree
 ````
@@ -332,7 +332,7 @@ newNode.right = buildTree(nodes); // return the root of right subtree
 return newNode;
 ```
 
-**Complete code:**
+### Complete code:
 ```java
 public class BuildPreOrder{
 
