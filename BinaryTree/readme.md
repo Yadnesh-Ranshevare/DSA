@@ -5,6 +5,7 @@
 4. [Level order traversal](#level-order-traversal)
 5. [Count number of Nodes](#count-number-of-nodes)
 6. [Sum of Nodes](#sum-of-nodes)
+7. [Height of the Tree](#height-of-the-tree)
 # Introduction to Trees
 **A tree is a hierarchical data structure** where elements (nodes) are organized across different levels, with each node connected to its children below it, starting from a single root node at the top.
 
@@ -1075,7 +1076,7 @@ int rightSum = sum(root.right);   // will return the sum of node present in righ
 ```
 4. return the total sum
 ```java
-return leftNodes + rightNode + root.data; 
+return leftSum + rightSum + root.data; 
 ```
 
 **Code:**
@@ -1174,3 +1175,135 @@ sum(1)
 
 ---
 
+# Height of the Tree
+**Given tree find its height (deepest level)**
+
+**Approach:**
+1. by using recursion find the height of left subtree and right subtree
+2. now as you have the height of both left & right subtree check who has large height and add the root height (+1) and return that final height
+
+
+**Algorithm:**
+1. base case, says there is no node present therefor height is zero
+```java
+if(root == null){
+    return 0;
+}
+```
+2. find the height of left subtree
+```java
+int leftHeight = height(root.left);   // will return the height of node present in left subtree
+```
+3. count the height of right subtree
+```java
+int rightHeight = height(root.right);   // will return the height of node present in right subtree
+```
+4. get the largest height it can be the height of the left subtree or can be the height of the right subtree with the help of `Math.max(a,b)`\
+`Math.max(a,b):` return the greatest value among a and b
+```java
+ Math.max(leftHeight, rightHeight)
+``` 
+5. return the total height
+```java
+int myHeight = Math.max(leftHeight, rightHeight) + 1;   // +1 represent the root 
+return myHeight; 
+```
+
+**Code:**
+```java
+public class Height {
+    static  class Node{
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    static class BinaryTree{
+        static int idx = -1;
+        public static Node buildTree(int nodes[]){
+            idx++;
+            if(nodes[idx] == -1){
+                return  null;
+            }
+
+            Node newNode = new Node(nodes[idx]);
+            newNode.left = buildTree(nodes);
+            newNode.right = buildTree(nodes);
+            return newNode;
+        }
+    }
+
+
+    public static int height(Node root){
+        if(root == null){
+            return 0;
+        }
+
+        int leftHeight = height(root.left);
+        int rightHeight = height(root.right);
+
+        int myHeight = Math.max(leftHeight, rightHeight) + 1;
+        return myHeight; 
+    }
+
+    public static void main(String[] args) {
+        int nodes[] = {1, 2, 4, -1, -1, 5, -1, -1, 3, -1, 6, -1, -1};
+
+        BinaryTree tree = new BinaryTree();
+        Node root = tree.buildTree(nodes);
+
+        System.out.println(height(root));
+
+
+    }
+}
+```
+**Output:**
+```
+3
+```
+**Example Tree:**
+```
+      1
+     / \
+    2   3
+   / \   \
+  4   5   6
+```
+**How the code runs step-by-step:**
+```java
+height(1)
+  -> height(2)
+       -> height(4)
+            -> height(null) = 0
+            -> height(null) = 0
+            -> return max(0, 0) + 1 = 1
+       -> height(5)
+            -> height(null) = 0
+            -> height(null) = 0
+            -> return max(0, 0) + 1 = 1
+       -> return max(1, 1) + 1 = 2
+  -> height(3)
+       -> height(null) = 0
+       -> height(6)
+            -> height(null) = 0
+            -> height(null) = 0
+            -> return max(0, 0) + 1 = 1
+       -> return max(0, 1) + 1 = 2
+  -> return max(2, 2) + 1 = 3
+```
+**Note: as we are visiting each node single time the time complexity of this solution will be `O[n]`**
+
+
+
+
+
+[Go To Top](#content)
+
+---
