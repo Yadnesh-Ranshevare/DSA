@@ -4,6 +4,7 @@
 3. [Traversal](#traversal)
 4. [Level order traversal](#level-order-traversal)
 5. [Count number of Nodes](#count-number-of-nodes)
+6. [Sum of Nodes](#sum-of-nodes)
 # Introduction to Trees
 **A tree is a hierarchical data structure** where elements (nodes) are organized across different levels, with each node connected to its children below it, starting from a single root node at the top.
 
@@ -948,7 +949,7 @@ int leftNodes = count(root.left);   // will return the count of node present in 
 ```
 3. count the number of node present in right subtree
 ```java
-int leftNodes = count(root.right);   // will return the count of node present in right subtree
+int rightNode = count(root.right);   // will return the count of node present in right subtree
 ```
 4. return the total sum
 ```java
@@ -1043,6 +1044,131 @@ count(1)
        -> return 0 + 1 + 1 = 2
   -> return 3 + 2 + 1 = 6
 ```
+**Note: as we are visiting each node single time the time complexity of this solution will be `O[n]`**
+
+
+[Go To Top](#content)
+
+---
+# Sum of Nodes
+**given a tree of integer return the sum of all Nodes present int that tree**
+
+**Approach:**
+1. by using recursion find the total sum of nodes present in left subtree and in right subtree
+2. now as you have total sum of left & right subtree add the root and return that sum
+
+
+**Algorithm:**
+1. base case, says there is no node present
+```java
+if(root == null){
+    return 0;
+}
+```
+2. find the sum of node present in left subtree
+```java
+int leftSum = sum(root.left);   // will return the sum of node present in left subtree
+```
+3. count the number of node present in right subtree
+```java
+int rightSum = sum(root.right);   // will return the sum of node present in right subtree
+```
+4. return the total sum
+```java
+return leftNodes + rightNode + root.data; 
+```
+
+**Code:**
+```java
+public class sumNode {
+    static  class Node{
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    static class BinaryTree{
+        static int idx = -1;
+        public static Node buildTree(int nodes[]){
+            idx++;
+            if(nodes[idx] == -1){
+                return  null;
+            }
+
+            Node newNode = new Node(nodes[idx]);
+            newNode.left = buildTree(nodes);
+            newNode.right = buildTree(nodes);
+            return newNode;
+        }
+    }
+
+    public static int sum(Node root){
+        if(root == null){
+            return 0;
+        }
+
+        int leftSum = sum(root.left);
+        int rightSum = sum(root.right);
+        return  leftSum + rightSum + root.data;
+
+    }
+
+    public static void main(String[] args) {
+        int nodes[] = {1, 2, 4, -1, -1, 5, -1, -1, 3, -1, 6, -1, -1};
+
+        BinaryTree tree = new BinaryTree();
+        Node root = tree.buildTree(nodes);
+
+        System.out.println(sum(root));
+
+    }
+}
+```
+**Output:**
+```
+21
+```
+
+**Example Tree:**
+```
+      1
+     / \
+    2   3
+   / \   \
+  4   5   6
+```
+**How the code runs step-by-step:**
+```java
+sum(1)
+  -> sum(2)
+       -> sum(4)
+            -> sum(null) = 0
+            -> sum(null) = 0
+            -> return 0 + 0 + 4 = 4
+       -> sum(5)
+            -> sum(null) = 0
+            -> sum(null) = 0
+            -> return 0 + 0 + 5 = 5
+       -> return 4 + 5 + 2 = 11
+  -> sum(3)
+       -> sum(null) = 0
+       -> sum(6)
+            -> sum(null) = 0
+            -> sum(null) = 0
+            -> return 0 + 0 + 6 = 6
+       -> return 0 + 6 + 3 = 9
+  -> return 11 + 9 + 1 = 21
+```
+**Note: as we are visiting each node single time the time complexity of this solution will be `O[n]`**
+
+
+
 
 [Go To Top](#content)
 
