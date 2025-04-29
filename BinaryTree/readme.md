@@ -3,6 +3,7 @@
 2. [Build Tree Pre order](#build-tree-preorder)
 3. [Traversal](#traversal)
 4. [Level order traversal](#level-order-traversal)
+5. [Count number of Nodes](#count-number-of-nodes)
 # Introduction to Trees
 **A tree is a hierarchical data structure** where elements (nodes) are organized across different levels, with each node connected to its children below it, starting from a single root node at the top.
 
@@ -921,6 +922,127 @@ public class levelOrder{
 
 
 
+
+[Go To Top](#content)
+
+---
+
+# Count number of Nodes
+**Given a tree count the total number of nodes for that tree**
+
+**Approach:**
+1. by using recursion count the total number of nodes present in left subtree and in right subtree
+2. now as you have total count of nodes of left & right subtree add the root (+1) and return that sum
+
+
+**Algorithm:**
+1. base case, says there is no node present
+```java
+if(root == null){
+    return 0;
+}
+```
+2. count the number of node present in left subtree
+```java
+int leftNodes = count(root.left);   // will return the count of node present in left subtree
+```
+3. count the number of node present in right subtree
+```java
+int leftNodes = count(root.right);   // will return the count of node present in right subtree
+```
+4. return the total sum
+```java
+return leftNodes + rightNode + 1; // +1 is for root
+```
+**Code:**
+```java
+public class countNode{
+
+    static  class Node{
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    static class BinaryTree{
+        static int idx = -1;
+        public static Node buildTree(int nodes[]){
+            idx++;
+            if(nodes[idx] == -1){
+                return  null;
+            }
+
+            Node newNode = new Node(nodes[idx]);
+            newNode.left = buildTree(nodes);
+            newNode.right = buildTree(nodes);
+            return newNode;
+        }
+    }
+
+    public static int count(Node root){
+
+        if(root == null){
+            return 0;
+        }
+        int leftNodes = count(root.left);
+        int rightNode = count(root.right);
+
+        return leftNodes + rightNode + 1;
+    }
+
+    public static void main(String[] args) {
+        int nodes[] = {1, 2, 4, -1, -1, 5, -1, -1, 3, -1, 6, -1, -1};
+
+        BinaryTree tree = new BinaryTree();
+        Node root = tree.buildTree(nodes);
+
+        System.out.println(count(root));
+    }
+}
+```
+**Output:**
+```
+6
+```
+
+
+
+**Example Tree:**
+```
+      1
+     / \
+    2   3
+   / \   \
+  4   5   6
+```
+**How the code runs step-by-step:**
+```java
+count(1)
+  -> count(2)   
+       -> count(4)
+            -> count(null) = 0
+            -> count(null) = 0
+            -> return 0 + 0 + 1 = 1
+       -> count(5)
+            -> count(null) = 0
+            -> count(null) = 0
+            -> return 0 + 0 + 1 = 1
+       -> return 1 + 1 + 1 = 3
+  -> count(3)
+       -> count(null) = 0
+       -> count(6)
+            -> count(null) = 0
+            -> count(null) = 0
+            -> return 0 + 0 + 1 = 1
+       -> return 0 + 1 + 1 = 2
+  -> return 3 + 2 + 1 = 6
+```
 
 [Go To Top](#content)
 
