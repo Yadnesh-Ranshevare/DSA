@@ -6,6 +6,7 @@
 5. [Count number of Nodes](#count-number-of-nodes)
 6. [Sum of Nodes](#sum-of-nodes)
 7. [Height of the Tree](#height-of-the-tree)
+8. [calculate Diameter of the tree](#calculate-diameter-of-the-tree)
 # Introduction to Trees
 **A tree is a hierarchical data structure** where elements (nodes) are organized across different levels, with each node connected to its children below it, starting from a single root node at the top.
 
@@ -1303,6 +1304,267 @@ height(1)
 
 
 
+
+[Go To Top](#content)
+
+---
+# calculate Diameter of the tree
+**given a tree find the largest diameter of the tree**
+
+there are tree different possibility in which you can find the largest diameter of the tree
+1. trough root
+```
+    1
+   / \
+  2   3
+ /     \
+4       5
+```
+**here largest diameter is 5:** `4-2-1-3-5`
+
+2. in left subtree
+```
+      1
+     / 
+    2   
+   / \    
+  3   4
+ /     \  
+5       6
+```
+**here largest diameter is 5:** `5-3-2-4-6`
+
+2. in right subtree
+```
+      1
+       \
+        2
+       / \    
+      3   4
+     /     \  
+    5       6
+```
+**here largest diameter is 5:** `5-3-2-4-6`
+
+
+- therefor in general we find all three diameter and return the greatest one among this three as the greatest diameter of the tree
+
+
+
+### 1. to find the demeter passing through root 
+
+- we just calculate the height of the left subtree and right subtree and add the root (+1) and return the overall sum as a diameter\
+[to learn about how to find the height](#height-of-the-tree)
+```
+    1
+   / \
+  2   3
+ /     \
+4       5
+```
+- here height of the left subtree is 3
+- here height of the right subtree is 3
+- add the root i.e `height of left subtree + height of right subtree + 1`
+- after adding the root we get\
+final height = 2 + 2 + 1 = `5`
+- return the 5 as a diameter trough root
+
+**Notes:**\
+**1. this algorithm fails if the diameter is not passing trough root**\
+**2. it has time complexity of `O[n]` as we are visiting each node single time**
+
+### 2. To find the diameter not passing trough root
+- if diameter is not passing through the root at that time we recursively calculate he diameter of the left/right subtree and also calculate the diameter when passing through root
+- [to learn about hoe to calculate the diameter passing through root ](#1-to-find-the-demeter-passing-through-root)
+- and we return the largest diameter among them as a final diameter 
+```
+      1
+     / 
+    2   
+   / \    
+  3   4
+ /     \  
+5       6
+```
+#### 1. **recursively we reach the last node (let say 5) of the left subtree**
+```
+    5
+   / \
+null null 
+```
+As null represent there is no node present we can say that `diameter of null subtree is 0`
+
+therefor dimeter of both **left and right `subtree = 0`**
+
+since there if only one node present we can say that `diameter of single node (passing through root) is 1`
+passing through root| left subtree | right subtree
+---| ---| ---
+1 (greatest) | 0 | 0
+
+therefor `return 1`
+
+#### 2.  **recursive call for node 3**
+```
+  3   
+ / \      
+5  null     
+```
+- as 5 have return the 1 as his diameter, we can say that `dimeter of left subtree is 1`
+
+passing through root| left subtree | right subtree
+---| ---| ---
+2 (greatest) | 1 | 0
+
+- therefor return 2
+#### 3. recursive call for 2
+```  
+    2   
+   / \    
+  3   4
+ /     \  
+5       6
+```
+- the same way we calculate the diameter of the left subtree, we will calculate the diameter of the right subtree
+- Link we will ask node 4 to give his diameter, 4 will as his right child i.e 6 to give his diameter
+- `6 returns 1 to 4 (by following step 1), 4 return 2 as his diameter (by following step 2)`
+
+passing through root| left subtree | right subtree
+---| ---| ---
+5 (greatest) | 2 | 2
+
+- therefor return 5
+#### recursive call for 1
+```
+      1
+     / 
+    2   
+   / \    
+  3   4
+ /     \  
+5       6
+```
+- as 2 have return the 5 as his diameter we can say that `dimeter of left subtree is 5`
+
+passing through root| left subtree | right subtree
+---| ---| ---
+4  | 5 (greatest) | 0
+
+return the 5
+
+**Note:**\
+**1. as this algorithm is also applicable for diameter passing trough root we generally use this algorithm**\
+**2. time complexity of this algorithm is `o[n^2]` as we are traversing over tree twice (1st time to calculate the diameter of left/right subtree, 2nd time to calculate the hight for diameter passing through root)** 
+
+
+### code:
+```java
+public class Diameter {
+    static  class Node{
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    // function to build tree
+    static class BinaryTree{
+        static int idx = -1;
+        public static Node buildTree(int nodes[]){
+            idx++;
+            if(nodes[idx] == -1){
+                return  null;
+            }
+
+            Node newNode = new Node(nodes[idx]);
+            newNode.left = buildTree(nodes);
+            newNode.right = buildTree(nodes);
+            return newNode;
+        }
+    }
+
+
+    // function to calculate the height of the tree
+    public static int height(Node root){
+        if(root == null){
+            return 0;
+        }
+
+        int leftHeight = height(root.left);
+        int rightHeight = height(root.right);
+
+        int myHeight = Math.max(leftHeight, rightHeight) + 1;
+        return myHeight; 
+    }
+
+
+    public static int diameter(Node root){
+        if(root == null){
+            return  0;
+        }
+        int dim1 = diameter(root.left);     // diameter of left subtree   
+        int dim2 = diameter(root.right);    // diameter of right subtree
+        int dim3 = height(root.left) + height(root.right) + 1;  // diameter when passing through root
+
+        return Math.max(dim3, Math.max(dim1, dim2));
+    }
+
+    public static void main(String[] args) {
+        int nodes[] = {1, 2, 4, -1, -1, 5, -1, -1, 3, -1, 6, -1, -1};
+
+        BinaryTree tree = new BinaryTree();
+        Node root = tree.buildTree(nodes);
+
+        System.out.println(diameter(root));
+
+
+    }
+}
+````
+### output
+```
+5
+```
+### Example Tree:
+```
+      1
+     / \
+    2   3
+   / \   \
+  4   5   6
+```
+### How the code runs step-by-step:
+```java
+diameter(1)
+  -> diameter(2)
+       -> diameter(4)
+            -> diameter(null) = 0
+            -> diameter(null) = 0
+            -> dim3 = height(null) + height(null) + 1 = 0 + 0 + 1 = 1
+            -> return max(1, max(0, 0)) = 1
+       -> diameter(5)
+            -> diameter(null) = 0
+            -> diameter(null) = 0
+            -> dim3 = height(null) + height(null) + 1 = 0 + 0 + 1 = 1
+            -> return max(1, max(0, 0)) = 1
+       -> dim3 = height(4) + height(5) + 1 = 1 + 1 + 1 = 3
+       -> return max(3, max(1, 1)) = 3
+  -> diameter(3)
+       -> diameter(null) = 0
+       -> diameter(6)
+            -> diameter(null) = 0
+            -> diameter(null) = 0
+            -> dim3 = height(null) + height(null) + 1 = 0 + 0 + 1 = 1
+            -> return max(1, max(0, 0)) = 1
+       -> dim3 = height(null) + height(6) + 1 = 0 + 1 + 1 = 2
+       -> return max(2, max(0, 1)) = 2
+  -> dim3 = height(2) + height(3) + 1 = 2 + 2 + 1 = 5
+  -> return max(5, max(3, 2)) = 5
+```
 
 [Go To Top](#content)
 
