@@ -1436,8 +1436,8 @@ passing through root| left subtree (3) | right subtree (4)
 #### recursive call for 1
 ```
       1
-     / 
-    2   
+     / \
+    2  null 
    / \    
   3   4
  /     \  
@@ -1445,7 +1445,7 @@ passing through root| left subtree (3) | right subtree (4)
 ```
 - as 2 have return the 5 as his diameter we can say that `dimeter of left subtree is 5`
 
-passing through root| left subtree | right subtree
+passing through root| left subtree (2) | right subtree (null)
 ---| ---| ---
 4  | 5 (greatest) | 0
 
