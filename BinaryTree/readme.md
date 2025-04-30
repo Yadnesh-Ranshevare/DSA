@@ -1362,11 +1362,11 @@ there are tree different possibility in which you can find the largest diameter 
  /     \
 4       5
 ```
-- here height of the left subtree is 3
-- here height of the right subtree is 3
+- here height of the left subtree is 2
+- here height of the right subtree is 2
 - add the root i.e `height of left subtree + height of right subtree + 1`
 - after adding the root we get\
-final height = 2 + 2 + 1 = `5`
+final sum = 2 + 2 + 1 = `5`
 - return the 5 as a diameter trough root
 
 **Notes:**\
@@ -1397,7 +1397,7 @@ As null represent there is no node present we can say that `diameter of null sub
 therefor dimeter of both **left and right `subtree = 0`**
 
 since there if only one node present we can say that `diameter of single node (passing through root) is 1`
-passing through root| left subtree | right subtree
+passing through root| left subtree (null) | right subtree (null)
 ---| ---| ---
 1 (greatest) | 0 | 0
 
@@ -1411,7 +1411,7 @@ therefor `return 1`
 ```
 - as 5 have return the 1 as his diameter, we can say that `dimeter of left subtree is 1`
 
-passing through root| left subtree | right subtree
+passing through root| left subtree (5) | right subtree (null)
 ---| ---| ---
 2 (greatest) | 1 | 0
 
@@ -1428,7 +1428,7 @@ passing through root| left subtree | right subtree
 - Link we will ask node 4 to give his diameter, 4 will as his right child i.e 6 to give his diameter
 - `6 returns 1 to 4 (by following step 1), 4 return 2 as his diameter (by following step 2)`
 
-passing through root| left subtree | right subtree
+passing through root| left subtree (3) | right subtree (4)
 ---| ---| ---
 5 (greatest) | 2 | 2
 
