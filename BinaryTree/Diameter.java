@@ -51,13 +51,45 @@ public class Diameter {
         return Math.max(dim3, Math.max(dim1, dim2));
     }
 
+
+    public static class TreeInfo{
+        int ht;
+        int dim;
+
+        public TreeInfo(int ht,int dim) {
+            this.ht = ht;
+            this.dim = dim;
+        }
+        
+    }
+
+    public static TreeInfo diameter2(Node root){
+        if(root == null){
+            return new TreeInfo(0,0);
+        }
+
+        TreeInfo left = diameter2(root.left);
+        TreeInfo right = diameter2(root.right);
+
+        int myHeight = Math.max(left.ht, right.ht) + 1;
+
+        int dim1 = left.dim;
+        int dim2 = right.dim;
+        int dim3 = left.ht + right.ht + 1;
+
+        int myDim = Math.max(dim3,Math.max(dim1,dim2));
+
+        TreeInfo myInfo = new TreeInfo(myHeight,myDim);
+        return myInfo;
+    }
+
     public static void main(String[] args) {
         int nodes[] = {1, 2, 4, -1, -1, 5, -1, -1, 3, -1, 6, -1, -1};
 
         BinaryTree tree = new BinaryTree();
         Node root = tree.buildTree(nodes);
 
-        System.out.println(diameter(root));
+        System.out.println(diameter2(root).dim);
 
 
     }

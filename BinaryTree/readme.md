@@ -1566,6 +1566,277 @@ diameter(1)
   -> return max(5, max(3, 2)) = 5
 ```
 
+#### In above solution we can see that its time complexity is `O[n^2]` which is not optimize therefor to optimize this solution we use another approach who has time complexity of `O[n]`
+- the main reason why above solution taking the `O[n^2]` of time is because we we are **calculating the height with the help of the another recursive calls**\
+[to learn about how to find the height](#height-of-the-tree)
+```java
+int dim3 = height(root.left) + height(root.right) + 1;  // calling the height function which calculate the height recursively
+```
+- therefor to reduce the time to `O[n]` we just need to avoid the another recursive call for calculating the height
+- to avoid this unnessery recursive call we use class object in which we store the diameter and height of the each node 
+```java
+public static class TreeInfo{
+    int ht;
+    int dim;
+    public TreeInfo(int ht,int dim) {
+        this.ht = ht;
+        this.dim = dim;
+    }  
+}
+```
+- we use similar approach as previous but this time with help of this class we get info about the height and the diameter of the subtrees with only single recursive call  
+
+#### lets take an example
+```
+      1
+     / 
+    2   
+   / \    
+  3   4
+ /     \  
+5       6
+```
+#### 1. you recursively reach the node 5
+```
+    5
+   / \
+null null   
+```
+- we make recursive call for `left subtree which is null` therefor it return the class object with `ht = 0 & dim = 0` to node 5
+- similarly we make recursive call for `right subtree which is also null` therefor it return the same class object with `ht = 0 & dim = 0` to node 5
+- therefor we have following at node 5
+
+subtree   | ht | dim
+--- | --- | ---
+left subtree (null) | 0 | 0
+right subtree (null) | 0 | 0
+
+from above table we can calculate the height and the diameter of the current node in same way you did in pervious approach
+
+therefor we can say that:-
+- `height of node 5` = **Math.max(ht of left subtree, ht of right subtree) + 1 = 0 + 1 = 1**
+- `diameter passing through root` = **ht of left subtree + ht of right subtree + 1  = 0 + 0 + 1 = 1 (greatest)**
+- `diameter of left subtree` = **dim of left subtree = 0** 
+- `diameter of right subtree` = **dim of right subtree = 0**  
+
+from this calculation for node 5 we can construct the treeInfo object as follow:-
+ht | dim
+--- | ---
+1 | 1
+
+we return this object to its parent node which is 3
+
+#### recursive call for 3
+```    
+  3   
+ / \      
+5  null     
+```
+- from node 5 we get the info as `ht = 1 & dim = 1` which is the info left subtree of node 3
+- as for right subtree as it is null it return the `ht = 0 & dim = 0` to node 3
+- therefor we have following at node 3
+
+subtree   | ht | dim
+--- | --- | ---
+left subtree (5) | 1 | 1
+right subtree (null)| 0 | 0
+
+therefor we can say that:-
+- `height of node 3` = **Math.max(ht of left subtree, ht of right subtree) + 1 = 1 + 1 = 2**
+- `diameter passing through root` = **ht of left subtree + ht of right subtree + 1 = 1 + 0 + 1 = 2 (greatest)**
+- `diameter of left subtree` = **dim of left subtree = 1** 
+- `diameter of right subtree` = **dim of right subtree = 0** 
+
+from this calculation for node 3 we can construct the treeInfo object as follow:-
+ht | dim
+--- | ---
+2 | 2
+
+we return this object to its parent node which is 3
+#### recursive call for node 2
+```     
+    2   
+   / \    
+  3   4
+ /     \  
+5       6
+```
+- for node `6` we get info `ht = 1 & dim = 1` **(follow step 1)** which return to node 4
+- for node `4` we get info `ht = 2 & dim = 2` **(follow step 2)** which return to node 2
+- therefor we have following at node 2
+
+subtree   | ht | dim
+--- | --- | ---
+left subtree (3) | 2 | 2
+right subtree (4)| 2 | 2
+
+therefor we can say that:-
+- `height of node 2` = **Math.max(ht of left subtree, ht of right subtree) + 1 =  2 + 1 = 3**
+- `diameter passing through root` = **ht of left subtree + ht of right subtree + 1 = 2 + 2 + 1 = 5 (greatest)**
+- `diameter of left subtree` = **dim of left subtree = 2** 
+- `diameter of right subtree` = **dim of right subtree = 2** 
+
+from this calculation for node 2 we can construct the treeInfo object as follow:-
+ht | dim
+--- | ---
+3 | 5
+
+#### recursive call for node 1
+```
+      1
+     / \
+    2  null 
+   / \    
+  3   4
+ /     \  
+5       6
+```
+- from node 2 we get the info as `ht = 3 & dim = 5`which is the info of left subtree whose root in 2
+- from right subtree of node 1 we get `ht = 0 & dim = 0` as right subtree is null
+- therefor we have following at node 2
+
+subtree   | ht | dim
+--- | --- | ---
+left subtree (2) | 3 | 5
+right subtree (null)| 0 | 0
+
+therefor we can say that:-
+- `height of node 1` = **Math.max(ht of left subtree, ht of right subtree) + 1 =  3 + 1 = 4**
+- `diameter passing through root` = **ht of left subtree + ht of right subtree + 1 = 3 + 0 + 1 = 4**
+- `diameter of left subtree` = **dim of left subtree = 5 (greatest)** 
+- `diameter of right subtree` = **dim of right subtree = 0** 
+
+from this calculation for node 2 we can construct the treeInfo object as follow:-
+ht | dim
+--- | ---
+4 | 5
+
+#### therefor the final ans is height = 4 and dimeter = 5 we get this answer in `O[n]` time which is more optimize than pervious approach who has time complexity of `O[n^2]`
+
+### Code:
+```java
+public class Diameter {
+    static  class Node{
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    static class BinaryTree{
+        static int idx = -1;
+        public static Node buildTree(int nodes[]){
+            idx++;
+            if(nodes[idx] == -1){
+                return  null;
+            }
+
+            Node newNode = new Node(nodes[idx]);
+            newNode.left = buildTree(nodes);
+            newNode.right = buildTree(nodes);
+            return newNode;
+        }
+    }
+
+    public static class TreeInfo{
+        int ht;
+        int dim;
+
+        public TreeInfo(int ht,int dim) {
+            this.ht = ht;
+            this.dim = dim;
+        }
+        
+    }
+
+    public static TreeInfo diameter(Node root){
+        if(root == null){
+            return new TreeInfo(0,0);
+        }
+
+        TreeInfo left = diameter(root.left);  // getting the treInfo of left subtree
+        TreeInfo right = diameter(root.right);  // getting the treInfo of right subtree
+
+        int myHeight = Math.max(left.ht, right.ht) + 1;  // calculating the height
+
+        int dim1 = left.dim;      // diameter of left subtree
+        int dim2 = right.dim;     // diameter of right subtree  
+        int dim3 = left.ht + right.ht + 1;  // diameter through root
+
+        int myDim = Math.max(dim3,Math.max(dim1,dim2));     // final diameter
+
+        TreeInfo myInfo = new TreeInfo(myHeight,myDim);     // current node treeInfo
+        return myInfo;
+    }
+
+    public static void main(String[] args) {
+        int nodes[] = {1, 2, 4, -1, -1, 5, -1, -1, 3, -1, 6, -1, -1};
+
+        BinaryTree tree = new BinaryTree();
+        Node root = tree.buildTree(nodes);
+
+        System.out.println(diameter(root).dim);
+    }
+}
+```
+### output
+```
+5
+```
+### Example Tree:
+```
+      1
+     / \
+    2   3
+   / \   \
+  4   5   6
+```
+### How the code runs step-by-step:
+```java
+diameter(1)
+  -> diameter(2)
+       -> diameter(4)
+            -> diameter(null) = TreeInfo(height=0, diameter=0)
+            -> diameter(null) = TreeInfo(height=0, diameter=0)
+            -> dim3 = 0 + 0 + 1 = 1
+            -> myHeight = max(0, 0) + 1 = 1
+            -> myDiameter = max(1, max(0, 0)) = 1
+            -> return TreeInfo(height=1, diameter=1)
+       -> diameter(5)
+            -> diameter(null) = TreeInfo(height=0, diameter=0)
+            -> diameter(null) = TreeInfo(height=0, diameter=0)
+            -> dim3 = 0 + 0 + 1 = 1
+            -> myHeight = max(0, 0) + 1 = 1
+            -> myDiameter = max(1, max(0, 0)) = 1
+            -> return TreeInfo(height=1, diameter=1)
+       -> dim3 = 1 + 1 + 1 = 3
+       -> myHeight = max(1, 1) + 1 = 2
+       -> myDiameter = max(3, max(1, 1)) = 3
+       -> return TreeInfo(height=2, diameter=3)
+  -> diameter(3)
+       -> diameter(null) = TreeInfo(height=0, diameter=0)
+       -> diameter(6)
+            -> diameter(null) = TreeInfo(height=0, diameter=0)
+            -> diameter(null) = TreeInfo(height=0, diameter=0)
+            -> dim3 = 0 + 0 + 1 = 1
+            -> myHeight = max(0, 0) + 1 = 1
+            -> myDiameter = max(1, max(0, 0)) = 1
+            -> return TreeInfo(height=1, diameter=1)
+       -> dim3 = 0 + 1 + 1 = 2
+       -> myHeight = max(0, 1) + 1 = 2
+       -> myDiameter = max(2, max(0, 1)) = 2
+       -> return TreeInfo(height=2, diameter=2)
+  -> dim3 = 2 + 2 + 1 = 5
+  -> myHeight = max(2, 2) + 1 = 3
+  -> myDiameter = max(5, max(3, 2)) = 5
+  -> return TreeInfo(height=3, diameter=5)
+```
+
 [Go To Top](#content)
 
 ---
