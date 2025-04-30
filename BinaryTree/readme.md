@@ -1567,7 +1567,7 @@ diameter(1)
 ```
 
 #### In above solution we can see that its time complexity is `O[n^2]` which is not optimize therefor to optimize this solution we use another approach who has time complexity of `O[n]`
-- the main reason why above solution taking the `O[n^2]` of time is because we we are **calculating the height with the help of the another recursive calls**\
+- the main reason why above solution taking `O[n^2]` of time is because we are **calculating the height with the help of the another recursive calls**\
 [to learn about how to find the height](#height-of-the-tree)
 ```java
 int dim3 = height(root.left) + height(root.right) + 1;  // calling the height function which calculate the height recursively
@@ -1586,7 +1586,7 @@ public static class TreeInfo{
 ```
 - we use similar approach as previous but this time with help of this class we get info about the height and the diameter of the subtrees with only single recursive call  
 
-#### lets take an example
+### lets take an example
 ```
       1
      / 
@@ -1604,7 +1604,7 @@ null null
 ```
 - we make recursive call for `left subtree which is null` therefor it return the class object with `ht = 0 & dim = 0` to node 5
 - similarly we make recursive call for `right subtree which is also null` therefor it return the same class object with `ht = 0 & dim = 0` to node 5
-- therefor we have following at node 5
+- therefor we have following info at node 5
 
 subtree   | ht | dim
 --- | --- | ---
@@ -1634,7 +1634,7 @@ we return this object to its parent node which is 3
 ```
 - from node 5 we get the info as `ht = 1 & dim = 1` which is the info left subtree of node 3
 - as for right subtree as it is null it return the `ht = 0 & dim = 0` to node 3
-- therefor we have following at node 3
+- therefor we have following info at node 3
 
 subtree   | ht | dim
 --- | --- | ---
@@ -1663,7 +1663,7 @@ we return this object to its parent node which is 3
 ```
 - for node `6` we get info `ht = 1 & dim = 1` **(follow step 1)** which return to node 4
 - for node `4` we get info `ht = 2 & dim = 2` **(follow step 2)** which return to node 2
-- therefor we have following at node 2
+- therefor we have following info at node 2
 
 subtree   | ht | dim
 --- | --- | ---
@@ -1693,7 +1693,7 @@ ht | dim
 ```
 - from node 2 we get the info as `ht = 3 & dim = 5`which is the info of left subtree whose root in 2
 - from right subtree of node 1 we get `ht = 0 & dim = 0` as right subtree is null
-- therefor we have following at node 2
+- therefor we have following info at node 2
 
 subtree   | ht | dim
 --- | --- | ---
