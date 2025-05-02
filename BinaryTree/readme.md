@@ -1912,7 +1912,7 @@ if(root == null){   // hidden condition subRoot != null as we are checking for t
     return  false;
 }
 ```
-2. if we find the match then check whether the subTree is identical or not and return true only if they are identical
+2. if we find the match then check whether the subTree is identical or not and return true `only` if they are identical
 ```java
 if(root.data == subRoot.data){
     if(isIdentical(root, subRoot)){
@@ -1926,8 +1926,8 @@ return  subtree(root.left, subRoot) || subtree(root.right, subRoot);
 ```
 
 **Note:**\
-**1. this statement uses or (||) operator which says search for small tree in left subtree as well as in right subtree and will return true if any subtree contain the given small tree else return false**\
-**2. this line also make sure that you shift back to pervious nodes in case you find matching node but not identical subtree**
+**1. this statement uses or (||) operator which says search for small tree in left subtree as well as in right subtree and will return true if `any one` subtree contain the given small tree else return false**\
+**2. this line also make sure that you shift back to pervious nodes in case you find identical node but not identical subtree**
 
 ### Algorithm to check of identical subtree
 
@@ -1940,7 +1940,7 @@ return  subtree(root.left, subRoot) || subtree(root.right, subRoot);
  if(root == null && subRoot == null){   // both the root are null
     return true;
 }
-// as above condition is false there must be one root with not null value
+// as above condition is false there must be a root with not null value
 if(root == null || subRoot == null){    // only one root is null 
     return  false;
 }
@@ -1960,7 +1960,7 @@ if(root.data == subRoot.data){
 ```
 - `isIdentical(root.left, subRoot.left):` will recursively traverse over the left of the subtrees and return true if data is match over every node else return false
 - `isIdentical(root.right, subRoot.right):` will recursively traverse over the right of the subtrees and return true if data is match over every node else return false
-- `&&:` and operator make sure that both the subtree return the true value, if one return the true and one return the false the and operator return the false as output
+- `&&:` and operator make sure that both the subtree return the true value, if one return true and other one return the false then the operator return false as final output
 4. if data doesn't match then return false
 ```java
 return false
