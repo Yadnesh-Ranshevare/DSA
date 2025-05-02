@@ -7,6 +7,7 @@
 6. [Sum of Nodes](#sum-of-nodes)
 7. [Height of the Tree](#height-of-the-tree)
 8. [calculate Diameter of the tree](#calculate-diameter-of-the-tree)
+9. [Is subtree exist](#is-subtree-exist)
 # Introduction to Trees
 **A tree is a hierarchical data structure** where elements (nodes) are organized across different levels, with each node connected to its children below it, starting from a single root node at the top.
 
@@ -1835,6 +1836,263 @@ diameter(1)
   -> myHeight = max(2, 2) + 1 = 3
   -> myDiameter = max(5, max(3, 2)) = 5
   -> return TreeInfo(height=3, diameter=5)
+```
+
+[Go To Top](#content)
+
+---
+
+# Is subtree exist
+
+**given two trees a big/main one and a small/subtree one verify whether the small tree is a subtree of bigger tree or not?**\
+**example:**
+
+big tree:
+```
+      1
+     / \
+    2   3
+   / \
+  4   5
+```
+small tree
+```
+   2
+  / \
+ 4   5
+```
+**Output:**
+Then the answer is `true` because this exact sub/small tree exists inside the big/main tree
+
+### Approach
+- we compare the root of subtree with each node of main tree 
+- if we find the match then we simultaneously switch over the left & right subtree of the main/big & small tree 
+- and then we compare those subtree
+
+**Illustration**
+
+big tree:
+```
+      1
+     / \
+    2   3
+   / \
+  4   5
+```
+small tree
+```
+   2
+  / \
+ 4   5
+```
+
+1. first we check for 2 (root) from small tree into the big tree by traversing only over the big tree
+    - at first we get 1 (root of big tree) != 2 (root of small tree)
+    - in big tree shift to right subtree
+    - we get 3 != 2 (root of small tree)
+    - as there is no child of node 3 we backtrack and shift over the left subtree i.e, at node 1 (root of the gib tree)
+    - we get 2 == 2 (root of small tree)
+2. as we find the match we shift to right subtree in both big and small tree and then compare 
+    - we get 5 (big tree) == 5 (small tree)
+    - as there is no further nodes available we backtrack to left subtree of both small and big tree
+    - we get 4 (big tree) == 4 (small tree)
+3. as we traverse over the whole small tree and we have verify that all the nodes form the small tree is present in big tree w can say that small tre is a subtree of big tree
+4. if we find the identical root but not identical subtrees then shift the pointers to previous nodes again i.e, back to root and again check of the match like you did in step 1 
+
+### Algorithm:
+1. check for null trees
+    1. small tree = null :- null tree is present in all the trees therefor return true
+    2. small tree = null & big tree = null :- both the trees are equal therefor return true
+    3. small tree != null & big tree = null :- return the false
+```java
+if(subRoot == null){    // also applicable to case when both big & small tree is equal to null 
+    return  true;
+}
+if(root == null){   // hidden condition subRoot != null as we are checking for this condition in above if block
+    return  false;
+}
+```
+2. if we find the match then check whether the subTree is identical or not and return true only if they are identical
+```java
+if(root.data == subRoot.data){
+    if(isIdentical(root, subRoot)){
+        return true;
+    }
+}
+```
+3. if they are not identical perform the same step 1 and 2 for there left and right subtree of big tree 
+```java
+return  subtree(root.left, subRoot) || subtree(root.right, subRoot);
+```
+
+**Note:**\
+**1. this statement uses or (||) operator which says search for small tree in left subtree as well as in right subtree and will return true if any subtree contain the given small tree else return false**\
+**2. this line also make sure that you shift back to pervious nodes in case you find matching node but not identical subtree**
+
+### Algorithm to check of identical subtree
+
+**we use this algorithm to check is small tree identical to subtree of big tree or not in step 2**
+
+1. check for null roots
+    1. both the roots are null:- return true
+    2. only one root is null:- return false
+```java
+ if(root == null && subRoot == null){   // both the root are null
+    return true;
+}
+// as above condition is false there must be one root with not null value
+if(root == null || subRoot == null){    // only one root is null 
+    return  false;
+}
+```
+
+2. if both the root have not null value then check is data of both the root are equal or not
+```java
+if(root.data == subRoot.data){  // root:- big tree, subRoot:- small tree
+            
+}
+```
+3. if data is equal then check for right and left subtrees in both of the trees
+```java
+if(root.data == subRoot.data){
+    return isIdentical(root.left, subRoot.left) && isIdentical(root.right, subRoot.right);
+}
+```
+- `isIdentical(root.left, subRoot.left):` will recursively traverse over the left of the subtrees and return true if data is match over every node else return false
+- `isIdentical(root.right, subRoot.right):` will recursively traverse over the right of the subtrees and return true if data is match over every node else return false
+- `&&:` and operator make sure that both the subtree return the true value, if one return the true and one return the false the and operator return the false as output
+4. if data doesn't match then return false
+```java
+return false
+```
+### Code
+```java
+
+public class subtree {
+    static  class Node{
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    static class BinaryTree{
+        static int idx = -1;
+        public static Node buildTree(int nodes[]){
+            idx++;
+            if(nodes[idx] == -1){
+                return  null;
+            }
+
+            Node newNode = new Node(nodes[idx]);
+            newNode.left = buildTree(nodes);
+            newNode.right = buildTree(nodes);
+            return newNode;
+        }
+    }
+
+    public static boolean isIdentical(Node root, Node subRoot){
+        if(root == null && subRoot == null){
+            return true;
+        }
+        if(root == null || subRoot == null){
+            return  false;
+        }
+
+        if(root.data == subRoot.data){
+            return isIdentical(root.left, subRoot.left) && isIdentical(root.right, subRoot.right);
+        }
+        return false;
+    }
+
+
+   public static  boolean subtree(Node root, Node subRoot){
+        if(subRoot == null){
+            return  true;
+        }
+        if(root == null){
+            return  false;
+        }
+
+        if(root.data == subRoot.data){
+            if(isIdentical(root, subRoot)){
+                return true;
+            }
+        }
+        return  subtree(root.left, subRoot) || subtree(root.right, subRoot);
+   }
+
+    public static void main(String[] args) {
+        int nodes[] = {1, 2, -1, -1, 3, 4, -1, -1, 5, -1, -1 };
+        int subtreeNodes[] = {3, 4, -1, -1, 5, -1, -1 };
+
+        BinaryTree tree = new BinaryTree();
+        Node root = tree.buildTree(nodes);
+
+        BinaryTree.idx = -1; 
+        Node subRoot = tree.buildTree(subtreeNodes);
+        
+        System.out.println(subtree(root, subRoot));
+    }
+}
+```
+### OutPut:
+```
+true
+```
+### Tree Structures:
+**Main Tree (root):**
+```
+      1
+     / \
+    2   3
+       / \
+      4   5
+```
+
+**Subtree (subRoot):**
+```
+    3
+   / \
+  4   5
+```
+
+ ### How the code runs step-by-step:
+```java
+subtree(1, 3)
+  -> root.data != subRoot.data (1 != 3)
+  -> subtree(2, 3) || subtree(3, 3)   
+       -> subtree(2, 3)
+            -> root.data != subRoot.data (2 != 3)
+            -> subtree(null, 3) || subtree(null, 3)
+                 -> subtree(null, 3) = false
+                 -> subtree(null, 3) = false
+                 -> return false
+       -> subtree(3, 3)
+            -> root.data == subRoot.data (3 == 3)
+            -> isIdentical(3, 3)
+                 -> 3 == 3
+                 -> isIdentical(4, 4) && isIdentical(5, 5)   
+                      -> isIdentical(4, 4)
+                           -> 4 == 4
+                           -> isIdentical(null, null) = true
+                           -> isIdentical(null, null) = true
+                           -> return true
+                      -> isIdentical(5, 5)
+                           -> 5 == 5
+                           -> isIdentical(null, null) = true
+                           -> isIdentical(null, null) = true
+                           -> return true
+                      -> return true && true = true
+                 -> return true
+            -> return true
+       -> return true || false = true
+-> return true
 ```
 
 [Go To Top](#content)
