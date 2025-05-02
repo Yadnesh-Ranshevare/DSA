@@ -176,7 +176,7 @@ Right child of 4 is NULL.
     / \
  null  null
 ```
-(4 is complete therefor get back to previous Node i.e, 2)
+(4 is complete therefor backtrack to previous Node i.e, 2)
 ### Step 6: 5
 Create node 5 as right child of 2.
 ```
@@ -212,7 +212,7 @@ Right child of 5 is NULL.
         / \
       null null
 ```
-(5 is complete so go back to previous Node i.e, 2, now as 2 is also complete again go back to previous Node which is 1)
+(5 is complete so backtrack to previous Node i.e, 2, now 2 is also complete again backtrack to previous Node which is 1)
 
 ### Step 9: 3
 Create node 3 as right child of 1.
@@ -279,7 +279,7 @@ right child of 6 is NULL.
 
 ### coding Approach:
 
-**we use recursive approach to solve this problem where we build left side of the tree recursively (we get the left subtree during each recursion call) and once we reach the -1 we return the null and shift to right subtree (we get the right subtree during each recursion call)**
+**we use recursive backtracking approach to solve this problem where we build left side of the tree recursively once we we reach the null or assign 2 child node we backtrack to parent node**
 
 1. create the new Node class to represent the each node of tree
 ```java
