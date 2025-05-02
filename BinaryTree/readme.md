@@ -1397,7 +1397,7 @@ As null represent there is no node present we can say that `diameter of null sub
 
 therefor dimeter of both **left and right `subtree = 0`**
 
-since there if only one node present we can say that `diameter of single node (passing through root) is 1`
+since there is only one node present we can say that `diameter of single node (passing through root) is 1`
 passing through root| left subtree (null) | right subtree (null)
 ---| ---| ---
 1 (greatest) | 0 | 0
