@@ -117,6 +117,7 @@ if(root.data < val){
 }
 ```
 **Note: here `insert(root.left, val)` add the new value into left subtree and create the new subtree while `root.left = insert(root.left, val)` this line make sure that the new subtree attach to old tree**
+
 7. return the root of the BST
 ```java
 return root
