@@ -66,12 +66,12 @@ Example (allowing duplicates on the right):
 
 # Build a BST
 
-1. we start with building the node class for our BST which represent the single node
+1. we start with building the node class for our BST which represent the single node (this class is same as binary tree class)
 ```java
 static  class Node{
-    int data;
-    Node left;
-    Node right;
+    int data; // actual data store at each node
+    Node left;  // left child
+    Node right; // right child
 
     Node(int data){
         this.data = data;
