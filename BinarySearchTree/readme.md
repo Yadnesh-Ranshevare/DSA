@@ -66,6 +66,85 @@ Example (allowing duplicates on the right):
 
 # Build a BST
 
+
+### Approach:
+1. we will start with root being null
+2. then we start adding values one at a time
+3. while adding first value our root is null therefor we make first value as a root of our whole tree
+4. while adding further values we compare that value with root 
+    - value > root : switch to right subtree
+    - value < root : switch to left subtree
+5. compare the value with each root of subtree and repeat step 4 util root becomes null
+6. once we reach the subtree whose root is null then add that value at that node 
+
+
+### illustration
+**Here's a step-by-step illustration for values:** `5, 1, 3, 4, 2, 7`
+
+**1. Insert 5**\
+Tree is empty → insert 5 as root
+```
+5
+```
+**2. Insert 1**\
+1 < 5 → go left
+```
+    5
+   /
+  1
+```
+**3. Insert 3**\
+3 < 5 → go left\
+3 > 1 → go right
+```
+    5
+   /
+  1
+   \
+    3
+```
+**4. Insert 4**\
+4 < 5 → left\
+4 > 1 → right\
+4 > 3 → right
+```
+    5
+   /
+  1
+   \
+    3
+     \
+      4
+```
+**5. Insert 2**\
+2 < 5 → left\
+2 > 1 → right\
+2 < 3 → left
+```
+    5
+   /
+  1
+   \
+    3
+   / \
+  2   4
+```
+**6. Insert 7**\
+7 > 5 → go right
+```
+    5
+   / \
+  1   7
+   \
+    3
+   / \
+  2   4
+```
+
+
+
+### Algorithm:
+
 1. we start with building the node class for our BST which represent the single node (this class is same as binary tree class)
 ```java
 static  class Node{
@@ -123,7 +202,25 @@ if(root.data < val){
 return root
 ```
 
-### Code:
+### Code 
+```java
+public static Node insert(Node root,int val){
+    if(root == null){
+        root = new Node(val);
+        return root;
+    }
+
+    if(root.data > val){
+        root.left = insert(root.left, val);
+    }
+    if(root.data < val){
+        root.right = insert(root.right, val);
+    }
+    return root;
+}
+```
+
+### Complete Code:
 ```java
 public class BuildBST{
     static  class Node{
