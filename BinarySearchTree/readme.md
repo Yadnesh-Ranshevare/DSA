@@ -3,6 +3,7 @@
 1. [Introduction](#introduction)
 2. [Build a BST](#build-a-bst)
 3. [Search in BST](#search-in-bst)
+4. [Delete node](#delete-node)
 
 
 # Introduction
@@ -362,9 +363,9 @@ insert(5, 7)
 
 
 ### Time complexity
-**BST make search efficient, in BST time complexity of search operation is `O[h]` where h is height**
+- **BST make search efficient, in BST time complexity of search operation is `O[h]` where h is height**
 
-**Balanced tree:** It is a binary tree where the **height difference between the left and right subtrees of every node is no more than 1**\
+- **Balanced tree:** It is a binary tree where the **height difference between the left and right subtrees of every node is no more than 1**\
 example:
 ```
     2
@@ -376,7 +377,7 @@ example:
 
 **Note: in most of the cases search time complexity of BST is `O[h]` where h is height because having perfectly balanced BST is extremly rear** 
 
-**skewed tree:** It is a special kind of binary tree where all nodes have only one child, either always on the left or always on the right 
+- **skewed tree:** It is a special kind of binary tree where all nodes have only one child, either always on the left or always on the right 
 
 **Right Skewed Tree:** Every node has only a right child:
 ```
@@ -502,7 +503,7 @@ public class searchBST{
             root = insert(root, value[i]);
         }
 
-        System.out.println(search(root, 3));
+        System.out.println(search(root, 4));
     }
 }
 ```
@@ -511,7 +512,80 @@ public class searchBST{
 true
 ```
 
+### Example BST Structure:
+```
+       5
+     /   \
+    1     7
+     \
+      3
+     / \
+    2   4
+```
+### Step by step execution
+```java
+search(5, 4)
+  -> 5 > 4 → go left
+    -> search(1, 4)
+         -> 1 < 4 → go right
+           -> search(3, 4)
+                -> 3 < 4 → go right
+                  -> search(4, 4)
+                      -> 4 == 4 → return true ✅
+```
 
+
+
+[Go To Top](#content)
+
+---
+
+# Delete node
+
+To delete a node in a Binary Search Tree (BST), you need to consider three possible cases:
+
+Example tree:
+```
+    1         
+   / \
+  2   3      
+ / \   \ 
+4   5   6   
+```
+1. No child (leaf node)
+    - Delete node and return null 
+    - example: delete 4
+```
+      1         
+     / \
+    2   3      
+   / \   \
+null  5   6   
+```
+2. single child
+    - Delete node and replace it with child node
+    - in java garbage collector will automatically free up the space, there is no need to write a extra line to free up the space
+    - example: delete 3
+```
+    1         
+   / \
+  2   \      
+ / \   \ 
+4   5   6   
+```
+3. two child
+    - replace the value with its inorder successor
+    - inorder successor: next node in inorder traversal\
+    eg., let say your inorder traversal is `4, 2, 5, 1, 3, 6`\
+    here,\
+    2 is inorder successor of 4  \
+    5 is inorder successor of 2 \
+    1 is inorder successor of 5 \
+    3 is inorder successor of 1 \
+    6 is inorder successor of 3 
+    - once you replace the value with inorder successor delete that successor
+    - while deleting the successor we will always apply case 1 or 2 
+    - according to this algorithm node with 2 child can never be a inorder successor (inorder algorithm doesn't allow) and inorder successor will always lie in right subtree, if it has left child than according to inorder algorithm that left child becomes successor (this property doesn't apply if node has no child)
 
 [Go To Top](#content)
 
