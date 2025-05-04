@@ -2,6 +2,7 @@
 
 1. [Introduction](#introduction)
 2. [Build a BST](#build-a-bst)
+3. [Search in BST](#search-in-bst)
 
 
 # Introduction
@@ -351,6 +352,165 @@ insert(5, 7)
      / \
     2   4
 ```
+
+
+[Go To Top](#content)
+
+---
+
+# Search in BST
+
+
+### Time complexity
+**BST make search efficient, in BST time complexity of search operation is `O[h]` where h is height**
+
+**Balanced tree:** It is a binary tree where the **height difference between the left and right subtrees of every node is no more than 1**\
+example:
+```
+    2
+   / \
+  1   3
+```
+
+**In a perfectly balanced BST, `h = log₂(n)`, so search is O(log n).** 
+
+**Note: in most of the cases search time complexity of BST is `O[h]` where h is height because having perfectly balanced BST is extremly rear** 
+
+**skewed tree:** It is a special kind of binary tree where all nodes have only one child, either always on the left or always on the right 
+
+**Right Skewed Tree:** Every node has only a right child:
+```
+1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+```
+
+in skewed tree search time complexity in increases to `O[n]` where n in number of node
+
+### Final summary for time complexity
+
+| Type          | Height | Search Time | Optimization |
+| ------------- | ------ | ----------- | ------------ |
+| Normal Tree   | h      | O(h)        | Average      |
+| Balanced Tree | log(n) | O(log n)    | Best         |
+| Skewed Tree   | n      | O(n)        | Worst        |
+
+
+### Approach for search operation
+
+Suppose you want to search for a value `key` in BST:
+
+1. Start at the root node.
+
+2. Compare key with current node value:
+
+    - If **key == node.value**: 🎯 Found it!
+
+    - If **key < node.value**: 🔽 Go to left subtree
+
+    - If **key > node.value**: 🔼 Go to right subtree
+
+3. Repeat step 2 until:
+
+    - You find the value (success)
+
+    - Or reach a `NULL` (value not present)
+
+### Code:
+```java
+public static boolean search(Node root, int key){
+    if(root == null){   // key not found
+        return false;
+    }
+
+    if(root.data == key){   // value found
+        return true;
+    }
+
+    if(root.data > key){    // go to left subtree
+        return search(root.left, key);
+    }
+
+    if(root.data < key){    // go to right subtree
+        return search(root.right, key);
+    }
+
+    return false;  // default return     
+}
+```
+### complete code
+```java
+
+public class searchBST{
+    static  class Node{
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    // code to build tree
+    public static Node insert(Node root,int val){
+        if(root == null){
+            root = new Node(val);
+            return root;
+        }
+
+        if(root.data > val){
+            root.left = insert(root.left, val);
+        }
+        if(root.data < val){
+            root.right = insert(root.right, val);
+        }
+        return root;
+    }
+
+
+    public static boolean search(Node root, int key){
+        if(root == null){
+            return false;
+        }
+        if(root.data == key){
+            return true;
+        }
+        if(root.data > key){
+            return search(root.left, key);
+        }
+        if(root.data < key){
+            return search(root.right, key);
+        }
+        return false;     
+    }
+
+    public static void main(String[] args) {
+        int value[] = {5, 1, 3, 4, 2, 7};
+
+        Node root = null;
+
+        for(int i = 0; i< value.length; i++){
+            root = insert(root, value[i]);
+        }
+
+        System.out.println(search(root, 3));
+    }
+}
+```
+### output:
+```
+true
+```
+
 
 
 [Go To Top](#content)
