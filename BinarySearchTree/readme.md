@@ -4,6 +4,7 @@
 2. [Build a BST](#build-a-bst)
 3. [Search in BST](#search-in-bst)
 4. [Delete node](#delete-node)
+5. [Print in range](#print-in-range)
 
 
 # Introduction
@@ -855,6 +856,167 @@ delete(root, 5)
             -> delete(6, 6)  // Now delete the inorder successor node (6) ✅
                 -> 6 == 6 → node to delete found ✅
                 -> Node has no child → return(null)
+```
+
+
+
+[Go To Top](#content)
+
+---
+
+# Print in range
+**given a root of a tree print all the value which is lie between that range**
+
+
+### Approach:
+- lets assume `x` is the starting range and `y` is the ending range
+- if `x <= root <= y` (root is between the x and y):\
+    - found the value which is lie between the range
+    - further values can be found in both left and right subtree
+- if `x > root` (root is greater than starting range):\
+    - value not found
+    - can be found in right subtree
+- if `y < root` (root is greater than ending range):\
+    - value not found
+    - can be found in left subtree
+
+### Algorithm
+1. check for null root
+```java
+if(root == null){
+    return;
+}
+```
+2. `root.data >= x && root.data <= y`
+    - as you found the value print it
+    - can be found the further values in both left and right subtree
+```java
+if(root.data >= x && root.data <= y){
+    printInRange(root.left, x, y);
+    System.out.print(root.data+" ");
+    printInRange(root.right, x, y);
+}
+```
+**Note: if you change the sequence of this three line it will affect the way output is going to print**\
+**1. our code snippet will print the number in increasing order**\
+**2. if you perform print first then it will print the root first**\
+**3. if you print last  then it will print child node first**\
+**there are still more combination**
+
+3. `root.data > y`
+    - value not found
+    - but can be found in left subtree
+```java
+if(root.data > y){
+    printInRange(root.left, x, y);
+}
+```
+4. `root.data < x`
+    - value not found
+    - but can be found in right subtree
+```java
+if(root.data < x){
+    printInRange(root.right, x, y);
+}
+```   
+### Code:
+```java
+public static void printInRange(Node root,int x, int y){
+    if(root == null){
+        return;
+    }
+
+    if(root.data >= x && root.data <= y){
+        printInRange(root.right, x, y);
+        printInRange(root.left, x, y);
+        System.out.print(root.data+" ");
+    }else if(root.data > y){
+        printInRange(root.left, x, y);
+    }else{  // root.data < x
+        printInRange(root.right, x, y);
+    }
+}
+```
+### Complete code
+```java
+
+
+
+public class printRange{
+    static  class Node{
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    public static Node insert(Node root,int val){
+        if(root == null){
+            root = new Node(val);
+            return root;
+        }
+
+        if(root.data > val){
+            root.left = insert(root.left, val);
+        }
+        if(root.data < val){
+            root.right = insert(root.right, val);
+        }
+        return root;
+    }
+
+    public static void printInRange(Node root,int x, int y){
+        if(root == null){
+            return;
+        }
+
+        if(root.data >= x && root.data <= y){
+            printInRange(root.left, x, y);
+            System.out.print(root.data+" ");
+            printInRange(root.right, x, y);
+        }else if(root.data > y){
+            printInRange(root.left, x, y);
+        }else{
+            printInRange(root.right, x, y);
+        }
+    }
+
+    public static void inOrder(Node root){
+        if(root == null){
+            return;
+        }
+        inOrder(root.left);
+        System.out.print(root.data+" ");
+        inOrder(root.right);
+    }
+
+
+    public static void main(String[] args) {
+        int value[] = {5, 1, 3, 4, 2, 7};
+
+        Node root = null;
+
+        for(int i = 0; i< value.length; i++){
+            root = insert(root, value[i]);
+        }
+
+        inOrder(root);
+
+        System.out.println();
+        printInRange(root, 3, 6);
+
+    }
+}
+```
+### Output:
+```
+1 2 3 4 5 7 
+3 4 5
 ```
 
 
