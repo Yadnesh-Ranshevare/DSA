@@ -574,7 +574,7 @@ null  5   6
 4   5   6   
 ```
 3. two child
-    - replace the value with its inorder successor
+    - replace the value with its **inorder successor**
     - inorder successor: next node in inorder traversal\
     eg., let say your inorder traversal is `4, 2, 5, 1, 3, 6`\
     here,\
@@ -583,9 +583,281 @@ null  5   6
     1 is inorder successor of 5 \
     3 is inorder successor of 1 \
     6 is inorder successor of 3 
-    - once you replace the value with inorder successor delete that successor
+    - once you replace the value with **inorder successor** delete that successor
     - while deleting the successor we will always apply case 1 or 2 
-    - according to this algorithm node with 2 child can never be a inorder successor (inorder algorithm doesn't allow) and inorder successor will always lie in right subtree, if it has left child than according to inorder algorithm that left child becomes successor (this property doesn't apply if node has no child)
+    - according to this algorithm node with 2 child can never be a inorder successor (inorder algorithm doesn't allow) and inorder successor will **always lie in right subtree**, if it has left child than according to inorder algorithm that left child comes before the current node as cannot becomes the successor node (this property doesn't apply if node has no child)
+    - to find the successor node we just need to find the **left most node of right subtree** which is the smallest node in right subtree
+    - to find he left most node in right subtree we continuously traverse in **only** left direction in right subtree until we reach null
+
+
+
+
+### Algorithm to delete the node
+1. search the node in given tree with the help of same approach as search algorithm ([to learn more about search operation](#search-in-bst)) :
+    - If **key < node.value:** 🔽 Go to left subtree
+    - If **key > node.value:** 🔼 Go to right subtree
+    - **else:** 🎯 Found the node
+2. once we found the node then we proceed with delete operation with all this three cases
+    1. **single child:** return null instead of node
+    2. **one child:** return the child node
+    3. **two child:** change the value with its inorder successor and delete the successor
+3. to find the cases:
+    1. `root.left == null && root.right == null` : single child
+    2. `root.left == null` : has right child
+    3. `root.right == null` : ha left child
+    4. if all the above cases fails then  that means root has two child's
+
+**Code:**
+```java
+public static Node delete(Node root, int val){
+    if(root.data > val){
+        root.left = delete(root.left, val);
+    }else if(root.data < val){
+        root.right = delete(root.right, val);
+    }else{  // root.data == val
+        // case 1
+        if(root.left == null && root.right == null){
+            return  null;
+        }
+
+        // case 2
+        if(root.left == null){
+            return root.right;
+        }else if(root.right == null){
+            return  root.left;
+        }
+
+        // case 3
+        Node IS = inorderSuccessor(root.right);     // function that return the inorder successor
+        root.data = IS.data;
+        root.right = delete(root.right, IS.data);
+    }
+    return root;
+}
+```
+
+### Algorithm to find the Inorder successor
+1. get the root of right subtree 
+2. use while loop which will run until `root.left != null`
+3. update the root during each iteration
+4. return the root
+
+**Code**
+```java
+public static Node inorderSuccessor(Node root){
+    while(root.left != null){
+        root = root.left;
+    }
+    return root;
+}
+```
+
+**Note: we are not checking for `root == null` case because in delete node algorithm we are checking for this condition in advance (for single right child)**
+
+### Complete code
+```java
+
+
+public class deleteNode{
+    static  class Node{
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    // function to build tree
+    public static Node insert(Node root,int val){
+        if(root == null){
+            root = new Node(val);
+            return root;
+        }
+
+        if(root.data > val){
+            root.left = insert(root.left, val);
+        }
+        if(root.data < val){
+            root.right = insert(root.right, val);
+        }
+        return root;
+    }
+
+    public static Node delete(Node root, int val){
+        if(root.data > val){
+            root.left = delete(root.left, val);
+        }else if(root.data < val){
+            root.right = delete(root.right, val);
+        }else{  // root.data == val
+            // case 1
+            if(root.left == null && root.right == null){
+                return  null;
+            }
+
+            // case 2
+            if(root.left == null){
+                return root.right;
+            }else if(root.right == null){
+                return  root.left;
+            }
+
+            // case 3
+            Node IS = inorderSuccessor(root.right);
+            root.data = IS.data;
+            root.right = delete(root.right, IS.data);
+        }
+        return root;
+    }
+
+    public static Node inorderSuccessor(Node root){
+        while(root.left != null){
+            root = root.left;
+        }
+        return root;
+    }
+
+    // function to print inorder traversal
+    public static void inOrder(Node root){
+        if(root == null){
+            return;
+        }
+        inOrder(root.left);
+        System.out.print(root.data+" ");
+        inOrder(root.right);
+    }
+
+    public static void main(String[] args) {
+        int value[] = {8, 5, 3, 1, 4, 6, 10, 11, 14};
+
+        Node root = null;
+
+        for(int i = 0; i< value.length; i++){
+            root = insert(root, value[i]);
+        }
+
+        System.out.println("original");
+        inOrder(root);
+        System.out.println("\n \ndelete 4");
+
+        delete(root, 4);
+        inOrder(root);
+        System.out.println("\n \ndelete 10");
+
+        delete(root, 10);
+        inOrder(root);
+        System.out.println("\n \ndelete 5");
+
+        delete(root, 5);
+        inOrder(root);
+
+    }
+}
+```
+### Output:
+```
+original
+1 3 4 5 6 8 10 11 14
+
+delete 4
+1 3 5 6 8 10 11 14
+
+delete 10
+1 3 5 6 8 11 14
+
+delete 5
+1 3 6 8 11 14
+```
+### Illustration of tree
+**original tree**
+```
+        8
+      /   \
+     5     10
+    / \      \
+   3   6     11
+  / \           \
+ 1   4          14
+```
+**After deleting 4**
+```
+        8
+      /   \
+     5     10
+    / \      \
+   3   6     11
+  /             \
+ 1              14
+```
+**After deleting 10**
+```
+        8
+      /   \
+     5     11
+    / \      \
+   3   6     14
+  /
+ 1
+```
+**After deleting 5**
+```
+        8
+      /   \
+     6     11
+    /        \
+   3         14
+  /
+ 1
+```
+
+
+### step by step execution of the code
+**Delete 4**
+```java
+delete(root, 4)
+  -> root = 8
+      -> 8 > 4 → go left
+        -> delete(5, 4)
+            -> 5 > 4 → go left
+              -> delete(3, 4)
+                  -> 3 < 4 → go right
+                    -> delete(4, 4)  // Node to delete found ✅
+                        -> 4 == 4 → node to delete found ✅
+                        -> Node has no children → return null
+              -> return 3 (3.right = null)
+        -> return  5 (5.left = 3)
+    -> return 8 (8.left = 5)
+```
+**Delete 10**
+```java
+delete(root, 10)
+  -> root = 8
+      -> 8 < 10 → go right
+        -> delete(10, 10)  // Node 10 found ✅
+            -> 10 == 10 → node to delete found ✅
+            -> Node has no left child → return right child (11)
+  -> return 8 → 8.right = 11
+        
+```
+**Delete 10**
+```java 
+delete(root, 5)
+  -> root = 8
+      -> 8 > 5 → go left
+        -> delete(5, 5)  // Node 5 found ✅
+            -> 5 == 5 → node to delete found ✅
+            -> Node has two children (left child 3, right child 6) → find inorder successor
+            -> Inorder Successor: 6
+            -> Replace node 5 with 6
+            -> delete(6, 6)  // Now delete the inorder successor node (6) ✅
+                -> 6 == 6 → node to delete found ✅
+                -> Node has no child → return(null)
+```
+
+
 
 [Go To Top](#content)
 
