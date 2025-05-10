@@ -865,7 +865,7 @@ delete(root, 5)
 ---
 
 # Print in range
-**given a root of a tree print all the value which is lie between that range**
+**given a root of a tree print all the value which is lie between the given range**
 
 
 ### Approach:

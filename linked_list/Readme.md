@@ -66,7 +66,7 @@ public class Linked_list {
     }
 }
 ```
-- as next represent the next node of the linked list its data will be Node as well
+- as next represent the next node of the linked list its data type will be Node as well
 - whenever you create the object for current class you initialize a new empty Linked list
 - head represent the starting point of the linked list
 
