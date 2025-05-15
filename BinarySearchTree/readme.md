@@ -5,6 +5,7 @@
 3. [Search in BST](#search-in-bst)
 4. [Delete node](#delete-node)
 5. [Print in range](#print-in-range)
+6. [Print path To leaf from root](#print-path-to-leaf-from-root)
 
 
 # Introduction
@@ -1019,6 +1020,223 @@ public class printRange{
 3 4 5
 ```
 
+
+
+[Go To Top](#content)
+
+---
+# Print path To leaf from root
+
+**You are provided with a random tree find all the path from root that lead to each root in that tree**
+
+### Approach:
+- we use ArrayList to keep the track of the visited nodes
+- once we visit a new node we add that node into the ArrayList
+- And once we backtrack to its parent node we remove that node form the ArrayList
+- once we reach the leaf node we print the whole ArrayList as individual path from root to leaf
+
+- lets assume a tre
+```
+            8
+         /     \
+       5        10
+     /   \         \
+    3     6         11
+   / \                  \
+  1   4                 14
+```
+- **Enter 8:**\
+→ Add to ArrayList: [8]\
+→ Traverse left to 5
+
+- **Enter 5:**\
+→ Add to ArrayList: [8, 5]\
+→ Traverse left to 3
+
+- **Enter 3:**\
+→ Add to ArrayList: [8, 5, 3]\
+→ Traverse left to 1
+
+- **Enter 1 (leaf):**\
+→ Add to ArrayList: [8, 5, 3, 1]\
+✅ Leaf node → Print ArrayList: 8->5->3->1\
+🔁 Backtrack → remove 1 → ArrayList = [8, 5, 3]
+
+- **Back at 3 → Traverse right to 4**
+
+- **Enter 4 (leaf):**\
+→ Add to ArrayList: [8, 5, 3, 4]\
+✅ Leaf node → Print ArrayList: 8->5->3->4\
+🔁 Backtrack → remove 4 → ArrayList = [8, 5, 3]
+
+- **🔁 Backtrack from 3 → remove 3 → ArrayList = [8, 5]**
+
+- **Back at 5 → Traverse right to 6**
+
+- **Enter 6 (leaf):**\
+→ Add to ArrayList: [8, 5, 6]\
+✅ Leaf node → Print ArrayList: 8->5->6->\
+🔁 Backtrack → remove 6 → ArrayList = [8, 5]
+
+- **🔁 Backtrack from 5 → remove 5 → ArrayList = [8]**
+
+- **Back at 8 → Traverse right to 10**
+
+- **Enter 10:**\
+→ Add to ArrayList: [8, 10]\
+→ Traverse right to 11
+
+- **Enter 11:**\
+→ Add to ArrayList: [8, 10, 11]\
+→ Traverse right to 14
+
+- **Enter 14 (leaf):**\
+→ Add to ArrayList: [8, 10, 11, 14]\
+✅ Leaf node → Print ArrayList: 8->10->11->14->\
+🔁 Backtrack → remove 14 → ArrayList = [8, 10, 11]
+
+- **🔁 Backtrack from 11 → remove 11 → ArrayList = [8, 10]**\
+- **🔁 Backtrack from 10 → remove 10 → ArrayList = [8]**\
+- **🔁 Backtrack from 8 → remove 8 → ArrayList = []**
+
+
+### Algorithm
+1. add the current root into the ArrayList
+```java
+path.add(root.data);
+```
+2. check whether the root has left or right child or not
+```java
+if(root.left == null && root.right == null){
+    // child does not exist
+}else{
+    // child exist
+}
+```
+3. if child exist then perform recursively call for left child first then for right child
+```java
+if(root.left == null && root.right == null){
+    // child does noe exist
+}else{
+    PrintToRootNode(root.left, path);
+    PrintToRootNode(root.right, path);
+}
+```
+4. if no child exist then print the ArrayList
+```java
+if(root.left == null && root.right == null){
+    printPath(path);
+}else{
+    PrintToRootNode(root.left, path);
+    PrintToRootNode(root.right, path);
+}
+```
+5. before returning from recursive call stack remove the element added from ArrayList (the last added node will be remove)
+```java
+path.remove(path.size()-1);
+```
+
+### Code
+```java
+public static void PrintToRootNode(Node root, ArrayList<Integer> path){
+
+    if(root == null){   // base case where root is null
+        return;
+    }
+    
+    path.add(root.data);
+
+    if(root.left == null && root.right == null){
+        printPath(path);    // function that print the ArrayList
+    }else{
+        PrintToRootNode(root.left, path);
+        PrintToRootNode(root.right, path);
+    }
+
+
+    path.remove(path.size()-1);
+}
+```
+
+### Complete Code
+```java
+import java.util.ArrayList;
+
+public class PathToRoot{
+    static  class Node{
+        int data;
+        Node left;
+        Node right;
+
+        Node(int data){
+            this.data = data;
+            this.left = null;
+            this.right = null;
+        }
+    }
+
+    // function to add element in BST
+    public static Node insert(Node root,int val){
+        if(root == null){
+            root = new Node(val);
+            return root;
+        }
+
+        if(root.data > val){
+            root.left = insert(root.left, val);
+        }
+        if(root.data < val){
+            root.right = insert(root.right, val);
+        }
+        return root;
+    }
+
+    public static void printPath(ArrayList<Integer> path){
+        for (int node : path){
+            System.out.print(node + "->");
+        }
+        System.out.println();
+    }
+
+    public static void PrintToRootNode(Node root, ArrayList<Integer> path){
+
+        if(root == null){
+            return;
+        }
+        path.add(root.data);
+
+        if(root.left == null && root.right == null){
+            printPath(path);
+        }else{
+            PrintToRootNode(root.left, path);
+            PrintToRootNode(root.right, path);
+        }
+
+
+        path.remove(path.size()-1);
+    }
+
+    public static void main(String[] args) {
+        int value[] = {8, 5, 3, 1, 4, 6, 10, 11, 14};
+
+        Node root = null;
+
+        for(int i = 0; i< value.length; i++){
+            root = insert(root, value[i]);
+        }
+
+        PrintToRootNode(root, new ArrayList<>());
+
+    }
+}
+```
+### Output
+```
+8->5->3->1->
+8->5->3->4->
+8->5->6->
+8->10->11->14->
+```
 
 
 [Go To Top](#content)
