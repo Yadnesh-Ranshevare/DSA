@@ -1143,7 +1143,7 @@ public static void PrintToRootNode(Node root, ArrayList<Integer> path){
     if(root == null){   // base case where root is null
         return;
     }
-    
+
     path.add(root.data);
 
     if(root.left == null && root.right == null){
@@ -1238,6 +1238,68 @@ public class PathToRoot{
 8->10->11->14->
 ```
 
+## Tree in above code
+```
+            8
+         /     \
+       5        10
+     /   \         \
+    3     6         11
+   / \                  \
+  1   4                 14
+```
+
+### Step by step execution of code
+```java
+PrintToRootNode(8, [])  
+  -> path = [8]
+  -> 8 is not a leaf → check left & right
+
+  → PrintToRootNode(5, [8])
+    -> path = [8, 5]
+    -> 5 is not a leaf → check left & right
+
+    → PrintToRootNode(3, [8, 5])
+      -> path = [8, 5, 3]
+      -> 3 is not a leaf → check left & right
+
+      → PrintToRootNode(1, [8, 5, 3])
+        -> path = [8, 5, 3, 1]
+        -> 1 is a leaf → print [8, 5, 3, 1]
+        -> backtrack → path = [8, 5, 3]
+
+      → PrintToRootNode(4, [8, 5, 3])
+        -> path = [8, 5, 3, 4]
+        -> 4 is a leaf → print [8, 5, 3, 4]
+        -> backtrack → path = [8, 5, 3]
+      
+      ← backtrack → path = [8, 5]
+
+    → PrintToRootNode(6, [8, 5])
+      -> path = [8, 5, 6]
+      -> 6 is a leaf → print [8, 5, 6]
+      → backtrack → path = [8, 5]
+
+    ← backtrack → path = [8]
+
+  → PrintToRootNode(10, [8])
+    -> path = [8, 10]
+    -> 10 is not a leaf → check right
+
+    → PrintToRootNode(11, [8, 10])
+      -> path = [8, 10, 11]
+      -> 11 is not a leaf → check right
+
+      → PrintToRootNode(14, [8, 10, 11])
+        -> path = [8, 10, 11, 14]
+        -> 14 is a leaf → print [8, 10, 11, 14]
+        → backtrack → path = [8, 10, 11]
+      
+      ← backtrack → path = [8, 10]
+    ← backtrack → path = [8]
+
+← backtrack → path = []
+```
 
 [Go To Top](#content)
 
