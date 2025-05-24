@@ -1,5 +1,6 @@
 # Content
 1. [Introduction](#introduction)
+2. [Initialization](#initialization)
 
 
 # Introduction
@@ -121,3 +122,64 @@ e*      r*
 - Check if a string exists in a large set of strings
 - Spell checking
 - Pattern matching
+
+
+[Go To Top](#content)
+
+---
+
+
+# Initialization
+
+the node class structure of trie class is different from the class structure of tree class, unlike binary tree here we don't have any right or left child as trie can have multiple child's in trie class we have array of Nodes containing all the child nodes
+```java
+class Node(
+    Node[] children;
+    boolean endOfWord;
+)
+```
+- **children:** array containing all the child nodes where each node represent a single child
+- **endOfWord:** boolean flag to specify the end of word
+- In this class we are not storing any value as root of tries tree in empty
+- Each node has a array containing the info about there child nodes that tells which characters present at the next level 
+- size of children array changes depending upon what kind of strings you wanna store in this tree
+    - for string containing char in range
+        - `a-z` size = 26 (0 - 25) alphabets
+        - `A-Z` size = 26 (0 - 25) alphabets
+        - `a-z + A-Z + all special char like @, #, &, etc` size = 256
+- each index of array represent its respective character is sequence\
+example:
+    - index 0 -> a
+    - index 1 -> b
+    - index 2 -> c
+    - index 25 -> z
+- from above example we can say that if there exist a character at certain index we can find out which character is it just by looking at there index\
+example:\
+if `children[3] != null` then `children[3]` must be equal to `d`\
+if `children[4] == null` then there in no `e` child
+
+### code:
+
+```java
+static class Node{
+    Node[] children;
+    boolean eow;    // endOfWord
+
+    public Node(){
+        children = new Node[26];    // a-z
+        for(int i=0; i<26; i++){
+            children[i] = null;
+        }
+        eow = false;
+    }
+}
+
+static Node head = new Node();
+```
+- in constructor we are first **initializing the children array** for character `a-z` and at first we are **storing null** at each index using for loop to show that there is **no child present** at first, also default value of `eow` if `false`
+- creating the **head** of our trie tree with an **empty children array** and **eow set to false**
+
+
+[Go To Top](#content)
+
+---
