@@ -43,3 +43,4 @@
 4. [Hash Map](./HashMap/Readme.md)
 5. [Binary tree](./BinaryTree/readme.md)
 6. [Binary Search Tree](./BinarySearchTree/readme.md)
+7. [Trie tree](./Trie/readme.md)
