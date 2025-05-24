@@ -131,17 +131,17 @@ e*      r*
 
 # Initialization
 
-the node class structure of trie class is different from the class structure of tree class, unlike binary tree here we don't have any right or left child as trie can have multiple child's in trie class we have array of Nodes containing all the child nodes
+the node class structure of trie class is different from the class structure of tree class, unlike binary tree here we don't have any right or left child as trie can have multiple child's. In trie class we have array of Nodes containing all the child nodes
 ```java
 class Node(
     Node[] children;
     boolean endOfWord;
 )
 ```
-- **children:** array containing all the child nodes where each node represent a single child
+- **children:** array of node where each node represent a single child
 - **endOfWord:** boolean flag to specify the end of word
 - In this class we are not storing any value as root of tries tree in empty
-- Each node has a array containing the info about there child nodes that tells which characters present at the next level 
+- Each node has a array containing the info about there child nodes that tells us which characters present at the next level 
 - size of children array changes depending upon what kind of strings you wanna store in this tree
     - for string containing char in range
         - `a-z` size = 26 (0 - 25) alphabets
@@ -176,7 +176,7 @@ static class Node{
 
 static Node head = new Node();
 ```
-- in constructor we are first **initializing the children array** for character `a-z` and at first we are **storing null** at each index using for loop to show that there is **no child present** at first, also default value of `eow` if `false`
+- in constructor we are first **initializing the children array** for characters in range `a-z` and at first we are **storing null** at each index using for loop to show that there is **no child present** at first, also default value of `eow` if `false`
 - creating the **head** of our trie tree with an **empty children array** and **eow set to false**
 
 
