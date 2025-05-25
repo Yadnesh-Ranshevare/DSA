@@ -373,7 +373,7 @@ public static void insert(String word){
 [chick here to learn about insert operation](#insert)
 - the only difference is we just **check** for each character in given word **sequentially** whether it is present in the children array or not
 - if it present then we move on the next level & if it dose not present then that word does not exist in our tree
-- if all **character present** in the tree then we can say that our word exist in the tree only if last character has its **endOfWord** flag set to **true** 
+- if all **characters are present** in the tree then we can say that our word exist in the tree only if last character has its **endOfWord** flag set to **true** 
 
 ### Illustration
 
@@ -419,7 +419,7 @@ e*      r*
  2. **search for `o`**
     - `'o'`  → index 14 in children
     - at `'h'` `children[14]` is ` null`, that is `o` dose not exist
-    - as `o` dose not exist at this level word `thor` also `not exist` in our trie tree
+    - as `o` dose not exist at this level, we can say that word `thor` also `not exist` in our trie tree
 
 #### in same tree search for `an`
  1. **search for `a`**
@@ -429,7 +429,7 @@ e*      r*
  2. **search for `n`**
     - `'n'`  → index 13 in children
     - at `'n'` `children[13]` is ` not null`, that is `n` exist
-    - at `n` `endOfWord` flag is `false`, not a valid stored word
+    - at `n` `endOfWord` flag is `false`, not a valid stored word (although word `an` exist in our tree its not a valid word)
     - given word does `not exist`
 
 
@@ -465,7 +465,7 @@ if(head.children[idx] == null){ // character does not exist
     return false;
 }
 ```
-5. check whether you are at the last character or not
+5. check whether we are at the last character or not
 ```java
 if(i == key.length() - 1 ){
     // at last character
@@ -501,7 +501,7 @@ public static boolean  search(String key){
         if(i == key.length() - 1 ){
             return head.children[idx].eow;
         }
-        
+
         head = head.children[idx];
     }
     return true;    // to avoid 'missing return statement' error
