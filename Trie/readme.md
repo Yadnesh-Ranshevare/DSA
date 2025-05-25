@@ -2,7 +2,7 @@
 1. [Introduction](#introduction)
 2. [Initialization of node class](#initialization-of-node-class)
 3. [Insert](#insert)
-
+4. [Search Operation](#search-operation)
 
 # Introduction
 - A **Trie** (also called Prefix Tree) is a **tree-like data structure** used to store a set of strings, where each node represents a character of a string.
@@ -291,7 +291,14 @@ e*
 ```
 
 ### Algorithm
-1. traverse over the given word
+1. get the root of tree
+```java
+Node head = root;
+```
+**Note: in our implementation code we have declare root as single static variable, which is use by all the other operations. Therefor changing the root directly may cause some inconsistency in our code, hence we are using the copy of root**
+
+
+2. traverse over the given word
 ```java
 for(int i = 0; i< word.length(); i++){
 
@@ -299,7 +306,7 @@ for(int i = 0; i< word.length(); i++){
 ```
 **Note: the `O[L]`  time complexity of insert operation is because of this for loop**
 
-2. get the index of the current character
+3. get the index of the current character
 ```java
 int idx = word.charAt(i)-'a';
 ```
@@ -309,47 +316,195 @@ int idx = word.charAt(i)-'a';
 **'b' - 'a' = 1**\
 **'c' - 'a' = 2**
 
-3. check for `children[idx] == null` 
+4. check for `children[idx] == null` 
 ```java
-if(root.children[idx] == null){
+if(head.children[idx] == null){
     // create new node
 }
 ```
-4. if `children[idx] == null` then create the new node at `root.children[idx]`
+5. if `children[idx] == null` then create the new node at `head.children[idx]`
 ```java
-if(root.children[idx] == null){
-    root.children[idx] = new Node();
+if(head.children[idx] == null){
+    head.children[idx] = new Node();
 }
 ```
-5. check for eow flag
+6. check for eow flag
 ```java
 if(i == word.length() - 1){
     root.children[idx].eow = true;
 }
 ``` 
-**Note: as we are not yet updated the root, we get the access of current node at `root.children[idx]` where root is previous/parent node**
+**Note: as we are not yet updated the root, we get the access of current node at `head.children[idx]` where root is previous/parent node**
 
-6. update the level of tree (switch to child node form parent node)
+7. update the level of tree (switch to child node form parent node)
 ```java
-root = root.children[idx];
+head = head.children[idx];
 ```
 
 #### Code:
 ```java
 public static void insert(String word){
+    Node head = root;
+
     for(int i = 0; i< word.length(); i++){
         int idx = word.charAt(i)-'a';
 
-        if(root.children[idx] == null){
-            root.children[idx] = new Node();
+        if(head.children[idx] == null){
+            head.children[idx] = new Node();
         }
 
         if(i == word.length() - 1){
-            root.children[idx].eow = true;
+            head.children[idx].eow = true;
         }
 
-        root = root.children[idx];
+        head = head.children[idx];
     }
+}
+```
+
+
+[Go To Top](#content)
+
+---
+
+# Search Operation
+- **time complexity** of search operation in a tries tree ie equal to `O[L]` where L is length of word
+- search operation of trie tree is **similar to insert operation**\
+[chick here to learn about insert operation](#insert)
+- the only difference is we just **check** for each character in given word **sequentially** whether it is present in the children array or not
+- if it present then we move on the next level & if it dose not present then that word does not exist in our tree
+- if all **character present** in the tree then we can say that our word exist in the tree only if last character has its **endOfWord** flag set to **true** 
+
+### Illustration
+
+consider a tree as follow:
+```
+        (root)
+         / \ 
+        t   a*
+       /     \
+      h       n
+     /         \ 
+    e*          y*
+   / \
+  r   i
+ /     \
+e*      r*
+```
+
+#### in the above tree search for word `"the"`
+ 1. **search for `t`**
+    - `'t'`  → index 19 in children
+    - at `'root'` `children[19]` is ` not null`, that is `t` exist
+    - Move to this node.
+ 2. **search for `h`**
+    - `'h'`  → index 7 in children
+    - at `'t'` `children[7]` is ` not null`, that is `h` exist
+    - Move to this node.
+ 2. **search for `e`**
+    - `'e'`  → index 4 in children
+    - at `'h'` `children[4]` is ` not null`, that is `e` exist
+    - at `e` `endOfWord` flag is `true`
+    - given word `exist`
+
+#### in same tree search for `thor`
+ 1. **search for `t`**
+    - `'t'`  → index 19 in children
+    - at `'root'` `children[19]` is ` not null`, that is `t` exist
+    - Move to this node.
+ 2. **search for `h`**
+    - `'h'`  → index 7 in children
+    - at `'t'` `children[7]` is ` not null`, that is `h` exist
+    - Move to this node.
+ 2. **search for `o`**
+    - `'o'`  → index 14 in children
+    - at `'h'` `children[14]` is ` null`, that is `o` dose not exist
+    - as `o` dose not exist at this level word `thor` also `not exist` in our trie tree
+
+#### in same tree search for `an`
+ 1. **search for `a`**
+    - `'a'`  → index o in children
+    - at `'root'` `children[0]` is ` not null`, that is `a` exist
+    - Move to this node.
+ 2. **search for `n`**
+    - `'n'`  → index 13 in children
+    - at `'n'` `children[13]` is ` not null`, that is `n` exist
+    - at `n` `endOfWord` flag is `false`, not a valid stored word
+    - given word does `not exist`
+
+
+### Algorithm
+1. get the root of tree
+```java
+Node head = root;
+```
+**Note: in our implementation code we have declare root as single static variable, which is use by all the other operations. Therefor changing the root directly may cause some inconsistency in our code, hence we are using the copy of root**
+
+
+2. traverse over the given word
+```java
+for(int i = 0; i< word.length(); i++){
+
+}
+```
+**Note: the `O[L]`  time complexity of insert operation is because of this for loop**
+
+3. get the index of the current character
+```java
+int idx = word.charAt(i)-'a';
+```
+**Note: to get the sequence number of any character we simply subtract that characters ASCII value with the ASCII value of `'a'`**\
+**example:**\
+**'a' - 'a' = 0**\
+**'b' - 'a' = 1**\
+**'c' - 'a' = 2**
+
+4. check for `children[idx] == null` return false if true
+```java
+if(head.children[idx] == null){ // character does not exist
+    return false;
+}
+```
+5. check whether you are at the last character or not
+```java
+if(i == key.length() - 1 ){
+    // at last character
+}
+```
+6. return endOfWord flag
+```java
+if(i == key.length() - 1 ){
+    return head.children[idx].eow;
+}
+```
+ **Note :**\
+**If `endOfWord = true` then it is a `valid stored word`**\
+**If `endOfWord = false` then it is `not a valid stored word`**
+
+
+7. update the head
+```java
+head = head.children[idx];
+```
+
+### Code:
+```java
+public static boolean  search(String key){
+    Node head = root;
+    for(int i = 0; i<key.length(); i++){
+        int idx = key.charAt(i) - 'a';
+
+        if(head.children[idx] == null){
+            return  false;
+        }
+
+        if(i == key.length() - 1 ){
+            return head.children[idx].eow;
+        }
+        
+        head = head.children[idx];
+    }
+    return true;    // to avoid 'missing return statement' error
 }
 ```
 

@@ -16,20 +16,38 @@ public class Implementation {
     static Node root = new Node();
 
     public static void insert(String word){
+
+        Node head = root;
         for(int i = 0; i< word.length(); i++){
             int idx = word.charAt(i)-'a';
 
-            if(root.children[idx] == null){
-                root.children[idx] = new Node();
+            if(head.children[idx] == null){
+                head.children[idx] = new Node();
             }
 
             if(i == word.length() - 1){
-                root.children[idx].eow = true;
+                head.children[idx].eow = true;
             }
 
 
-            root = root.children[idx];
+            head = head.children[idx];
         }
+    }
+
+    public static boolean  search(String key){
+        Node head = root;
+        for(int i = 0; i<key.length(); i++){
+            int idx = key.charAt(i) - 'a';
+
+            if(head.children[idx] == null){
+                return  false;
+            }
+            if(i == key.length() - 1 ){
+                return head.children[idx].eow;
+            }
+            head = head.children[idx];
+        }
+        return true;
     }
 
     public static void main(String[] args) {
@@ -39,6 +57,8 @@ public class Implementation {
             insert(word);
         }
 
-        System.out.println("hellow");
+        System.out.println(search("the"));
+        System.out.println(search("thor"));
+        System.out.println(search("an"));
     }   
 }
