@@ -175,7 +175,7 @@ static class Node{
     }
 }
 
-static Node head = new Node();
+static Node root = new Node();
 ```
 - in constructor we are first **initializing the children array** for characters in range `a-z` and at first we are **storing null** at each index using for loop to show that there is **no child present** at first, also default value of `eow` if `false`
 - creating the **head** of our trie tree with an **empty children array** and **eow set to false**
