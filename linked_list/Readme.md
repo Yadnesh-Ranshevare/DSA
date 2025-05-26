@@ -10,7 +10,8 @@
 9. [reverse the LinkedList](#reverse-the-linkedlist)
 10. [rotate a LL](#rotate-a-linkedlist)
 11. [palindrome LL](#palindrome-linkedlist)
-11. [swap adjacent node in LL](#swap-adjacent-node-in-ll)
+12. [swap adjacent node in LL](#swap-adjacent-node-in-ll)
+13. [Add two Numbers](#add-two-numbers)
 
 ---
 
@@ -620,6 +621,314 @@ it will not swap the last 2 nodes as during last two while loop condition become
 ```
 as you can see here `next.next != null` returns false resulting noe executing the while loop causing last 2 no. not to swap, and if you put or ( || ) operator instead of and ( && ) it will throw `nullPointException` error at `next = next.next.next;` this line as there is no node present at `next.next.next`
 
+
+[Go to Top](#content)
+
+---
+# Add Two Numbers
+**You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.**
+
+Example:\
+consider following input LinkedLists
+```
+1 -> 5 -> null
+2 -> 7 -> 4 -> null
+```
+Output LL
+```
+3 -> 2 -> 5 -> null
+```
+Explanation:\
+51 + 472 = 523
+
+
+### Approach
+1. we will start with only single node LL as our ans LL pointing towards null and its value is 0
+2. we will traverse over the both of our given LL
+3. calculate the sum at each nodes and store it in ans LL
+4. during each iteration we will add a new node in our ans LL(only if next Node exist) with value = 0
+3. at some point if sum becomes greater than 9 we will carry the first digit for future addition
+4. while updating the pointer of any LL, if one LL ends while another doesn't then we add the new Node with value 0 to smaller LL to make both LL have similar sizes
+5. finally we will check if we have any carry value then we add that value into our ans LL as well
+
+### Illustration
+consider following input LinkedLists
+```
+1 -> 5 -> null
+2 -> 7 -> 4 -> null
+```
+**1. initialize ans LL**
+```
+0 -> null
+```
+#### for iteration 1
+**1. sum: 1 + 2 = 3**
+```
+carry = 0
+3 -> null
+```
+**2. update ans LL**
+```
+3 -> 0 -> null
+```
+#### for iteration 2
+**1. sum: 5 + 6 = 12 as sum > 9 carry = 1**
+```
+carry = 1
+3 -> 2 -> null
+```
+**2. LL 1 has ended but LL 2 haven't therefor add new node to LL 1**\
+**therefor new LinkedLists re as follow**
+```
+1 -> 5 -> 0 -> null
+2 -> 6 -> 4 -> null
+```
+**3. update ans LL**
+```
+3 -> 2 -> 0 -> null
+```
+#### for iteration 3
+**1. sum: 0 + 4 + 1 (carry) = 5**
+```
+carry = 0
+3 -> 2 -> 5 -> null
+```
+**2. as both LL has ended and carry = 0 final ans is**
+```
+3 -> 2 -> 5 -> null
+```
+
+### Algorithm
+1. initiate some basics variables
+```java
+Node ans = new Node(0);
+Node curr = ans;
+int carry = 0;
+```
+**ans:- head of ans LL** \
+**curr:- LL in which we are gonna store our sum, also copy of head to upgrade next pointer without loosing the head**
+
+2. traverse over the given LL
+```java
+while(l1 != null && l2 != null){
+
+} 
+```
+3. calculate the sum
+```java
+curr.data = l1.data  + l2.data + carry;
+carry = 0;
+```
+**As we have use the carry reset carry to 0**
+
+4. check for sum > 9
+```java
+if(curr.data > 9){
+    // greater than 9
+}
+```
+
+5. calculate the actual sum and carry 
+```java
+if(curr.data > 9){
+    carry = curr.data/10;   // last digit
+    curr.data = curr.data % 10;     //first digit
+}
+```
+
+6. case where only one LL is ending
+```java
+if(l1.next == null && l2.next != null){
+    l1.next = new Node(0);  // adding new node with its value equal to 0
+}
+            
+if(l2.next == null && l1.next != null){
+    l2.next = new Node(0);  // adding new node with its value equal to 0
+}
+```
+
+7. updating the ans LL
+```java
+if(l1.next != null && l2.next != null){
+    curr.next = new Node(0);    // adding new node with its value equal to 0
+    curr = curr.next;
+}
+```
+8. updating the input LL
+```java
+l1 = l1.next;
+l2 = l2.next;
+```
+9. once loop ended add carry if it has some valid value
+```java
+if(carry != 0){ // has some valid value
+    curr.next = new Node(0);
+    curr = curr.next;
+    curr.data = carry;
+}
+```
+
+### code
+```java
+public static Node add(Node l1, Node l2){
+    Node ans = new Node(0);
+    Node curr = ans;
+    int carry = 0;
+    while(l1 != null && l2 != null){
+        // calculating sum
+        curr.data = l1.data  + l2.data + carry;
+        carry = 0;
+
+        // sum > 9
+        if(curr.data > 9){
+            carry = curr.data/10;
+            curr.data = curr.data % 10;
+        }
+
+        // only one LL has ended
+        if(l1.next == null && l2.next != null){
+            l1.next = new Node(0);
+        }
+        
+        if(l2.next == null && l1.next != null){
+            l2.next = new Node(0);
+        }
+
+        // update ans LL
+        if(l1.next != null && l2.next != null){
+            curr.next = new Node(0);
+            curr = curr.next;
+        }
+         
+        l1 = l1.next;
+        l2 = l2.next;
+    }
+
+    if(carry != 0){
+        curr.next = new Node(0);
+        curr = curr.next;
+        curr.data = carry;
+    }
+
+    return ans;
+}
+```
+### Complete Code
+```java
+public class AddTwoNum {
+    Node head;
+
+    static class Node{
+        int data;
+        Node next;
+    
+        public Node(int data) {
+            this.data = data;
+            this.next = null;
+        }
+        
+    }
+
+    // add first
+    public void addFirst(int data){
+        Node newNode = new Node(data);
+        if(head == null){
+            head = newNode;
+            return;
+        }
+
+        newNode.next = head;
+        head = newNode;
+    }
+
+    // print Linked list
+    public void printList(){
+        Node currNode = head;
+        while(currNode != null){
+            System.out.print(currNode.data + "->");
+            currNode = currNode.next;
+        }
+        System.out.println("null");
+    }
+
+    public static Node add(Node l1, Node l2){
+        Node ans = new Node(0);
+        Node curr = ans;
+        int carry = 0;
+        while(l1 != null && l2 != null){
+            curr.data = l1.data  + l2.data + carry;
+            carry = 0;
+
+            if(curr.data > 9){
+                carry = curr.data/10;
+                curr.data = curr.data % 10;
+            }
+
+            if(l1.next == null && l2.next != null){
+                l1.next = new Node(0);
+            }
+            
+            if(l2.next == null && l1.next != null){
+                l2.next = new Node(0);
+            }
+
+            if(l1.next != null && l2.next != null){
+                curr.next = new Node(0);
+                curr = curr.next;
+            }
+         
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+
+        if(carry != 0){
+            curr.next = new Node(0);
+            curr = curr.next;
+            curr.data = carry;
+        }
+
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        AddTwoNum list1 = new AddTwoNum();
+        AddTwoNum list2 = new AddTwoNum();
+        list1.addFirst(9);
+        list1.addFirst(9);
+        list1.addFirst(9);
+        list1.addFirst(9);
+        list1.addFirst(9);
+        list1.addFirst(9);
+        list1.addFirst(9);
+
+        list2.addFirst(9);
+        list2.addFirst(9);
+        list2.addFirst(9);
+        list2.addFirst(9);
+
+        System.out.println("input LL");
+        list1.printList();
+        list2.printList();
+
+        AddTwoNum List3 = new AddTwoNum();
+        List3.head = add(list1.head, list2.head);
+
+        System.out.println("sum:");
+        List3.printList();
+    }
+}
+
+```
+### Output
+```
+input LL
+9->9->9->9->9->9->9->null
+9->9->9->9->null
+sum:
+8->9->9->9->0->0->0->1->null
+```
+### verification
+9999999 + 9999 = 89990001
 
 [Go to Top](#content)
 
