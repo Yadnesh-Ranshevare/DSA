@@ -678,7 +678,7 @@ carry = 1
 3 -> 2 -> null
 ```
 2. LL 1 has ended but LL 2 haven't therefor add new node to LL 1\
-therefor new LinkedLists re as follow
+therefor new LinkedLists are as follow
 ```
 1 -> 5 -> 0 -> null
 2 -> 6 -> 4 -> null
