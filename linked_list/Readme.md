@@ -662,38 +662,38 @@ consider following input LinkedLists
 0 -> null
 ```
 #### for iteration 1
-**1. sum: 1 + 2 = 3**
+1. sum: 1 + 2 = 3
 ```
 carry = 0
 3 -> null
 ```
-**2. update ans LL**
+2. update ans LL
 ```
 3 -> 0 -> null
 ```
 #### for iteration 2
-**1. sum: 5 + 6 = 12 as sum > 9 carry = 1**
+1. sum: 5 + 6 = 12 as sum > 9 carry = 1
 ```
 carry = 1
 3 -> 2 -> null
 ```
-**2. LL 1 has ended but LL 2 haven't therefor add new node to LL 1**\
-**therefor new LinkedLists re as follow**
+2. LL 1 has ended but LL 2 haven't therefor add new node to LL 1\
+therefor new LinkedLists re as follow
 ```
 1 -> 5 -> 0 -> null
 2 -> 6 -> 4 -> null
 ```
-**3. update ans LL**
+3. update ans LL
 ```
 3 -> 2 -> 0 -> null
 ```
 #### for iteration 3
-**1. sum: 0 + 4 + 1 (carry) = 5**
+1. sum: 0 + 4 + 1 (carry) = 5
 ```
 carry = 0
 3 -> 2 -> 5 -> null
 ```
-**2. as both LL has ended and carry = 0 final ans is**
+2. as both LL has ended and carry = 0 final ans is
 ```
 3 -> 2 -> 5 -> null
 ```
