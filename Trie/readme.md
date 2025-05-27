@@ -5,6 +5,8 @@
 4. [Search Operation](#search-operation)
 5. [Word Break Problem](#word-break-problem)
 6. [start with problem](#starts-with-problem)
+7. [Count unique Substring](#count-unique-substring)
+
 
 # Introduction
 - A **Trie** (also called Prefix Tree) is a **tree-like data structure** used to store a set of strings, where each node represents a character of a string.
@@ -1020,6 +1022,251 @@ public class StartWithPrblm {
     }   
 }
 ```
+
+[Go To Top](#content)
+
+---
+# Count unique Substring
+**Given a string of length n of lowercase alphabet characters, we need to count total number of distinct substring of this string**
+
+**Example:**\
+**Str = 'ababa'**\
+**ans = 10**\
+**all the possible substrings: 'a', 'ab', 'aba', 'abab', 'ababa', 'ba', 'bab', 'baba', 'b', ' '**
+
+
+### prefix of all the suffix
+- **Prefix:** A prefix is something added at the beginning of a string
+
+- **suffix:** A suffix is something added at the end of a string
+
+- first find all the suffix of given string then for each suffix we find there prefix
+
+| suffix | all possible prefix |
+| --- | ---|
+|ababa | a, ab, aba, abab, ababa|
+| baba | b, ba, bab, baba |
+| aba | a, ab, aba |
+| ba | b, ba |
+| a | a |
+| ' '(empty string) | ' ' (empty string) |
+
+- combine all the unique prefix\
+form above table: `'a', 'ab', 'aba', 'abab', 'ababa', 'b', 'ba', 'bab', 'baba', ''`\
+this uniquely combined prefix are our unique substrings which is the actual ans of our question
+
+### Why use this Approach
+
+By using trie tree if we store all the suffix into a tree then number of nodes will be our count of subString
+
+from above table we get:\
+**words[] = {'ababa, 'baba', 'aba', 'ba', 'a', ' '}**
+
+```
+        (root)
+         / \
+        a*  b
+       /     \
+      b       a
+     /         \
+    a*          b
+   /             \
+  b               a*  
+ /
+a*
+```
+As you can see from in above tree number of nodes is `10`
+
+each node from the root represent the unique prefix
+sr | path | prefix
+--- | --- | ---
+1 | (root) | " " 
+2 | (root) -> a* | a
+3 | (root) -> a* -> b | ab
+4 | (root) -> a* -> b -> a* | aba
+5 | (root) -> a* -> b -> a* -> b | abab
+6 | (root) -> a* -> b -> a* -> b -> a* | ababa
+7 | (root) -> b | b
+8 | (root) -> b -> a | ba
+9 | (root) -> b -> a -> b | bab
+10 | (root) -> b -> a -> b -> a* | baba
+
+
+
+### How this work
+In trie tree we uniquely store the prefix that is if two word having same prefix we store that prefix only once
+
+example:\
+consider two words `'there'` and `'their'` who have same prefix `'the'`
+```
+  (root)
+    |
+    t
+    |
+    h
+    |
+    e
+   / \
+  r   i
+ /     \ 
+e       r
+```
+from above tree we can say that our prefix `'the'` has only store single time
+
+**Therefor from above example we can say that by using trie data structure we can store duplicate prefix of all the suffix single time**
+
+
+### How to count the number of nodes
+- The approach to count the number of node in trie tree is similar to the count algorithm of binary tree\
+[to learn about how to count number of node in binary tree](../BinaryTree/readme.md#count-number-of-nodes)
+- the only difference is that we recursively get the count of left and right subtree only but in trie tree we get the count of all the subtree (can be greater that 2) present
+- use loop to traverse over a children array and if at any index of we get a valid node then that means at that index there exist a new subtree
+
+### Approach
+1. find all the suffix of given string
+2. create the trie tree from the suffix
+3. count the number of node in tree
+
+
+### Algorithm
+1. get all the suffix of input string and insert it into the trie tree
+```java
+for(int i = 0; i< str.length(); i++){
+    String suf = str.substring(i);
+    insert(suf);
+}
+```
+2. initiate count variable
+```java
+int count = 0;
+```
+3. traverse over the children array
+```java
+for(int i = 0; i < 26; i++){
+    
+}
+```
+4. check for `children[i] != null` which says at index `i` there exist a valid subtree
+```java
+for(int i = 0; i < 26; i++){
+    if(root.children[i] != null){
+        // subtree exist
+    }
+}
+```
+5. make the recursive call to get the count for that subtree and add it  into the count
+```java
+for(int i = 0; i < 26; i++){
+    if(root.children[i] != null){
+        count += countNode(root.children[i]);
+    }
+}
+```
+6. if there is no further node present the return the `count + 1`
+```java 
+return count + 1
+```
+count: previous count of the node\
++1 : add the count of root into previous count
+
+7. base case for empty tree (no nodes are present)
+```java
+if(root == null){
+    return 0;
+}
+```
+### Code
+```java
+public static int countSubString(String str){
+    for(int i = 0; i< str.length(); i++){
+        String suf = str.substring(i);
+        insert(suf);
+    }
+    return  countNode(root);
+}
+
+public static int countNode(Node root){
+    if(root == null){
+        return 0;
+    }
+    int count = 0;
+    for(int i = 0; i < 26; i++){
+        if(root.children[i] != null){
+            count += countNode(root.children[i]);
+        }
+    }
+    return count + 1;
+}
+```
+### Complete code
+```java
+public class CountUniqueSubString {
+
+    static class Node{
+        Node[] children;
+        boolean eow;
+
+        public Node(){
+            children = new Node[26];
+            for(int i=0; i<26; i++){
+                children[i] = null;
+            }
+            eow = false;
+        }
+    }
+
+    static Node root = new Node();
+
+    public static void insert(String word){
+
+        Node head = root;
+        for(int i = 0; i< word.length(); i++){
+            int idx = word.charAt(i)-'a';
+
+            if(head.children[idx] == null){
+                head.children[idx] = new Node();
+            }
+
+            if(i == word.length() - 1){
+                head.children[idx].eow = true;
+            }
+
+            head = head.children[idx];
+        }
+    }
+
+    public static int countSubString(String str){
+        for(int i = 0; i< str.length(); i++){
+            String suf = str.substring(i);
+            insert(suf);
+        }
+        return  countNode(root);
+    }
+
+    public static int countNode(Node root){
+        if(root == null){
+            return 0;
+        }
+        int count = 0;
+        for(int i = 0; i < 26; i++){
+            if(root.children[i] != null){
+                count += countNode(root.children[i]);
+            }
+        }
+        return count + 1;
+    }
+
+    public static void main(String[] args) {
+        String str = "ababa";
+        System.out.println(countSubString(str));
+    }   
+}
+```
+### Output
+```
+10
+```
+
 
 [Go To Top](#content)
 
