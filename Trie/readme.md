@@ -4,6 +4,7 @@
 3. [Insert](#insert)
 4. [Search Operation](#search-operation)
 5. [Word Break Problem](#word-break-problem)
+6. [start with problem](#starts-with-problem)
 
 # Introduction
 - A **Trie** (also called Prefix Tree) is a **tree-like data structure** used to store a set of strings, where each node represents a character of a string.
@@ -362,7 +363,54 @@ public static void insert(String word){
     }
 }
 ```
+#### complete code
+```java
+public class Implementation {
 
+    static class Node{
+        Node[] children;
+        boolean eow;
+
+        public Node(){
+            children = new Node[26];
+            for(int i=0; i<26; i++){
+                children[i] = null;
+            }
+            eow = false;
+        }
+    }
+
+    static Node root = new Node();
+
+    public static void insert(String word){
+
+        Node head = root;
+        for(int i = 0; i< word.length(); i++){
+            int idx = word.charAt(i)-'a';
+
+            if(head.children[idx] == null){
+                head.children[idx] = new Node();
+            }
+
+            if(i == word.length() - 1){
+                head.children[idx].eow = true;
+            }
+
+
+            head = head.children[idx];
+        }
+    }
+
+    public static void main(String[] args) {
+        String words[] = {"the", "a", "there", "their", "any"};
+
+        for(String word : words){
+            insert(word);
+        }
+    }   
+}
+
+```
 
 [Go To Top](#content)
 
@@ -508,7 +556,79 @@ public static boolean  search(String key){
     return true;    // to avoid 'missing return statement' error
 }
 ```
+### complete code
+```java
+public class Implementation {
 
+    static class Node{
+        Node[] children;
+        boolean eow;
+
+        public Node(){
+            children = new Node[26];
+            for(int i=0; i<26; i++){
+                children[i] = null;
+            }
+            eow = false;
+        }
+    }
+
+    static Node root = new Node();
+
+    public static void insert(String word){
+
+        Node head = root;
+        for(int i = 0; i< word.length(); i++){
+            int idx = word.charAt(i)-'a';
+
+            if(head.children[idx] == null){
+                head.children[idx] = new Node();
+            }
+
+            if(i == word.length() - 1){
+                head.children[idx].eow = true;
+            }
+
+
+            head = head.children[idx];
+        }
+    }
+
+    public static boolean  search(String key){
+        Node head = root;
+        for(int i = 0; i<key.length(); i++){
+            int idx = key.charAt(i) - 'a';
+
+            if(head.children[idx] == null){
+                return  false;
+            }
+            if(i == key.length() - 1 ){
+                return head.children[idx].eow;
+            }
+            head = head.children[idx];
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String words[] = {"the", "a", "there", "their", "any"};
+
+        for(String word : words){
+            insert(word);
+        }
+
+        System.out.println(search("the"));
+        System.out.println(search("thor"));
+        System.out.println(search("an"));
+    }   
+}
+```
+### output:
+```
+true
+false
+false
+```
 
 [Go To Top](#content)
 
@@ -574,7 +694,7 @@ key = 'ilikesamsung'
 - **fifth break**: `samsu` -> not present
 - **sixth break**: `samsun` -> not present
 - **seventh break**: `samsung` ->  present
-- since there is no further partitioning is possible w can say that our key present
+- since there is no further partitioning is possible we can say that our key present
 
 example 2:\
 words[] = {'i', 'like', 'sam', 'samsung', 'mobile'}\
@@ -676,6 +796,228 @@ public static boolean word(String key){
         }
     }
     return false;
+}
+```
+### complete code
+```java
+public class WordBreak {
+
+    static class Node{
+        Node[] children;
+        boolean eow;
+
+        public Node(){
+            children = new Node[26];
+            for(int i=0; i<26; i++){
+                children[i] = null;
+            }
+            eow = false;
+        }
+    }
+
+    static Node root = new Node();
+
+    public static void insert(String word){
+
+        Node head = root;
+        for(int i = 0; i< word.length(); i++){
+            int idx = word.charAt(i)-'a';
+
+            if(head.children[idx] == null){
+                head.children[idx] = new Node();
+            }
+
+            if(i == word.length() - 1){
+                head.children[idx].eow = true;
+            }
+
+            head = head.children[idx];
+        }
+    }
+
+    public static boolean  search(String key){
+        Node head = root;
+        for(int i = 0; i<key.length(); i++){
+            int idx = key.charAt(i) - 'a';
+
+            if(head.children[idx] == null){
+                return  false;
+            }
+            if(i == key.length() - 1 ){
+                return head.children[idx].eow;
+            }
+            head = head.children[idx];
+        }
+        return true;
+    }
+
+
+    public static boolean word(String key){
+        if(key.length() == 0){
+            return  true;
+        }
+        for(int i = 1; i<= key.length(); i++){
+            String firstPart = key.substring(0,i);
+            String secondPArt = key.substring(i);
+            if(search(firstPart) && word(secondPArt)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        String words[] = {"i", "like", "sam", "samsung", "mobile"};
+
+        for(String word : words){
+            insert(word);
+        }
+
+        String key = "ilikesamsung";
+
+        System.out.println(word(key));
+    }   
+}
+```
+### output:
+```
+true
+```
+
+
+
+[Go To Top](#content)
+
+---
+# Starts With Problem
+**Create a function boolean startWith(String prefix) for a trie. return true if there is a previously inserted string word that has the prefix, and false otherwise**
+
+**Example:**\
+**words = {'apple', 'app', 'mango', 'man', 'women'}**\
+**Prefix = "app"    output = tree (apple and app has a prefix 'app')**\
+**Prefix = "moon"    output = false**
+
+- the approach and code to solve ths problem is **exactly** same as search operation\
+[to learn about search operation](#search-operation)
+- the only difference here is we ignore the endOfWord flag
+
+### Algorithm
+1. get the root of tree
+```java
+Node head = root;
+```
+**Note: in our implementation code we have declare root as single static variable, which is use by all the other operations. Therefor changing the root directly may cause some inconsistency in our code, hence we are using the copy of root**
+
+
+2. traverse over the given prefix
+```java
+for(int i = 0; i< prefix.length(); i++){
+
+}
+```
+
+3. get the index of the current character
+```java
+int idx = prefix.charAt(i)-'a';
+```
+**Note: to get the sequence number of any character we simply subtract that characters ASCII value with the ASCII value of `'a'`**\
+**example:**\
+**'a' - 'a' = 0**\
+**'b' - 'a' = 1**\
+**'c' - 'a' = 2**
+
+4. check for `children[idx] == null` return false as given prefix doesn't exist in our tree
+```java
+if(head.children[idx] == null){ // character does not exist
+    return false;
+}
+```
+5. update the head
+```java
+head = head.children[idx];
+```
+6. if all the character exist in our tree then return tree aas there exist a word with given prefix
+```java
+return true
+```
+### code
+```java
+public static boolean startWith(String prefix){
+    Node head = root;
+    for(int i = 0; i<prefix.length(); i++){
+        int idx = prefix.charAt(i) - 'a';
+
+        if(head.children[idx] == null){
+            return  false;
+        }
+
+        head = head.children[idx];
+    }
+    return true;
+}
+```
+### Complete code
+```java
+public class StartWithPrblm {
+
+    static class Node{
+        Node[] children;
+        boolean eow;
+
+        public Node(){
+            children = new Node[26];
+            for(int i=0; i<26; i++){
+                children[i] = null;
+            }
+            eow = false;
+        }
+    }
+
+    static Node root = new Node();
+
+    public static void insert(String word){
+
+        Node head = root;
+        for(int i = 0; i< word.length(); i++){
+            int idx = word.charAt(i)-'a';
+
+            if(head.children[idx] == null){
+                head.children[idx] = new Node();
+            }
+
+            if(i == word.length() - 1){
+                head.children[idx].eow = true;
+            }
+
+
+            head = head.children[idx];
+        }
+    }
+
+    public static boolean startWith(String prefix){
+        Node head = root;
+        for(int i = 0; i<prefix.length(); i++){
+            int idx = prefix.charAt(i) - 'a';
+
+            if(head.children[idx] == null){
+                return  false;
+            }
+
+            head = head.children[idx];
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String words[] = {"apple", "app", "mango", "man", "woman"};
+
+        for(String word : words){
+            insert(word);
+        }
+
+        System.out.println(startWith("app"));
+        System.out.println(startWith("moon"));
+    }   
 }
 ```
 
