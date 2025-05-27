@@ -1094,7 +1094,9 @@ sr | path | prefix
 
 
 ### How this work
-In trie tree we uniquely store the prefix that is if two word having same prefix we store that prefix only once
+In trie tree we **uniquely store the prefix**, that is if two word having same prefix we **store that prefix only once**
+
+
 
 example:\
 consider two words `'there'` and `'their'` who have same prefix `'the'`
@@ -1115,11 +1117,13 @@ from above tree we can say that our prefix `'the'` has only store single time
 
 **Therefor from above example we can say that by using trie data structure we can store duplicate prefix of all the suffix single time**
 
+**this behavior of trie data structure helps us to get all the unique prefix from all of our suffix**
+
 
 ### How to count the number of nodes
-- The approach to count the number of node in trie tree is similar to the count algorithm of binary tree\
+- The approach to count the number of node in trie tree is **similar to** the count algorithm of **binary tree**\
 [to learn about how to count number of node in binary tree](../BinaryTree/readme.md#count-number-of-nodes)
-- the only difference is that we recursively get the count of left and right subtree only but in trie tree we get the count of all the subtree (can be greater that 2) present
+- the only difference is that we **recursively** get the count of left and right subtree only but in trie tree we get the **count of all the subtree** (can be greater that 2) present
 - use loop to traverse over a children array and if at any index of we get a valid node then that means at that index there exist a new subtree
 
 ### Approach
@@ -1142,7 +1146,7 @@ int count = 0;
 ```
 3. traverse over the children array
 ```java
-for(int i = 0; i < 26; i++){
+for(int i = 0; i < 26; i++){    // a-z
     
 }
 ```
@@ -1166,8 +1170,8 @@ for(int i = 0; i < 26; i++){
 ```java 
 return count + 1
 ```
-count: previous count of the node\
-+1 : add the count of root into previous count
+**count:** previous count of the node\
+**+1 :** add the count of root into previous count
 
 7. base case for empty tree (no nodes are present)
 ```java
