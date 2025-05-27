@@ -3,6 +3,7 @@
 2. [Initialization of node class](#initialization-of-node-class)
 3. [Insert](#insert)
 4. [Search Operation](#search-operation)
+5. [Word Break Problem](#word-break-problem)
 
 # Introduction
 - A **Trie** (also called Prefix Tree) is a **tree-like data structure** used to store a set of strings, where each node represents a character of a string.
@@ -508,6 +509,175 @@ public static boolean  search(String key){
 }
 ```
 
+
+[Go To Top](#content)
+
+---
+
+# Word Break Problem
+**given an input String and a dictionary of word, find out if the input String can be broken into a space-separated of dictionary words**
+
+**example:**\
+**words[] = {'i', 'like', 'sam', 'samsung', 'mobile'}**\
+**key = 'ilikesamsumg'**\
+**output: true**
+
+**explanation:**\
+**key: 'ilikesamsung' can break into 'i like samsung' where this all three word ('i', 'like', 'samsung') are present in words[]**
+
+
+### Approach:
+1. break the key letter by letter into two parts
+2. first break the key into two part by separating the first letter
+3. search for the first part in the tree, if it does not present then go back and separate out the first two letter and perform search again
+4. continue step 3 until you find the search for first part and keep on increase the number of letters in first part during each new attempt
+5. once you find the search for first part then recursively perform the same steps (1, 2, 3, 4) for the second part
+6. if we doesn't find any search for our entire second part that means the two partition we have created are not valid therefor we go back to step 3 make new partitions by adding one more letter in first part and performing the search again i.e, repeat  from step 3
+7. if we doesn't find any valid combination then return false
+
+
+### Illustration
+example 1:\
+words[] = {'i', 'like', 'sam', 'samsung', 'mobile'}\
+key = 'ilikesamsung'
+
+**Step 1: word = ilikesamsung**
+- **first break**: `i` -> present 
+- search for second part: `'likesamsung'`
+
+**Step 2: word = likesamsung**
+- **first break**: `l` -> not present
+- **second break**: `li` -> not present
+- **third break**: `lik` -> not present
+- **fourth break**: `like` -> present
+- search for second part: `'samsung'`
+
+**Step 3: word = samsung**
+- **first break**: `s` -> not present
+- **second break**: `sa` -> not present
+- **third break**: `sam` -> present 
+- search for second part: `'sung'`
+
+**Step 4: word = sung**
+- **first break**: `s` -> not present
+- **second break**: `su` -> not present
+- **third break**: `sun` -> not present
+- **fourth break**: `sung` -> not present
+- as this part of the partition in not present in the tree the partition we make in previous step (step 3) is invalid therefor go back to step 3
+
+**Step 5: word = samsung (continue step 3)**
+- previous steps:
+    - **first break**: `s` -> not present
+    - **second break**: `sa` -> not present
+    - **third break**: `sam` -> present but not a valid for partitioning
+- **fourth break**: `sams` -> not present
+- **fifth break**: `samsu` -> not present
+- **sixth break**: `samsun` -> not present
+- **seventh break**: `samsung` ->  present
+- since there is no further partitioning is possible w can say that our key present
+
+example 2:\
+words[] = {'i', 'like', 'sam', 'samsung', 'mobile'}\
+key = 'ilikesung'
+
+**Step 1: word = ilikesung**
+- **first break**: `i` -> present 
+- search for second part: `'likesung'`
+
+**Step 2: word = likesung**
+- **first break**: `l` -> not present
+- **second break**: `li` -> not present
+- **third break**: `lik` -> not present
+- **fourth break**: `like` -> present
+- search for second part: `'sung'`
+
+**Step 3: word = sung**
+- **first break**: `s` -> not present
+- **second break**: `su` -> not present
+- **third break**: `sun` -> not present
+- **fourth break**: `sung` -> not present
+- as this part of the partition in not present in the tree the partition we make in previous step (step 2) is invalid therefor go back to step 2
+
+**Step 4: word = likesung (continue step 2)**
+- previous steps
+    - **first break**: `l` -> not present
+    - **second break**: `li` -> not present
+    - **third break**: `lik` -> not present
+    - **fourth break**: `like` -> present but not valid for partitioning
+- **fifth break**: `likes` -> not present
+- **sixth break**: `likesu` -> not present
+- **seventh break**: `likesun` -> not present
+- **eight break**: `likesung` -> not present
+- as this part of the partition in not present in the tree the partition we make in previous step (step 1) is invalid therefor go back to step 1
+
+**Step 5: word = ilikesung (continue step 1)**
+- previous steps
+    - **first break**: `i` -> present but not valid for partitioning
+- **second break**: `il` -> not present
+- **third break**: `ili` -> not present
+- **fourth break**: `ilik` -> not present
+- **fifth break**: `ilike` -> not present
+- **sixth break**: `ilikes` -> not present
+- **seventh break**: `ilikesu` -> not present
+- **eight break**: `ilikesun` -> not present
+- **ninth break**: `ilikesung` -> not present
+- since there is not match found we can say that key is not present
+
+
+#### Note: return true if both first and second part of the key is present, if any of the missing then return false
+
+### Algorithm:
+1. traverse over the complete kye
+```java
+for(int i = 1; i<= key.length(); i++){
+         
+}
+```
+2. get the first part of the key
+```java
+String firstPart = key.substring(0,i);
+```
+**Note: in `.substring(0,i)` `i` is excluded therefor to get first letter by using `.substring()` method we need range form `0-1` where `i = 1` therefor we initiate `i = 1` in for loop in step 1**
+
+3. get the second part of the key
+```java
+String secondPArt = key.substring(i);
+```
+4. check for  first and second part of key
+```java
+if(search(firstPart) && word(secondPArt)){
+    return true;
+}
+```
+**here `word(secondPArt)` tells us whether or not second part of the key exist or not**
+
+5. if we complete our traversal over the key and doesn't find any math then return false
+```java
+return false;
+```
+6. base case: as empty string is present in every tree
+```java
+if(key.length() == 0){
+    return  true;
+}
+```
+
+### code
+```java
+public static boolean word(String key){
+    if(key.length() == 0){
+        return  true;
+    }
+    for(int i = 1; i<= key.length(); i++){
+        String firstPart = key.substring(0,i);
+        String secondPArt = key.substring(i);
+        if(search(firstPart) && word(secondPArt)){
+            return true;
+        }
+    }
+    return false;
+}
+```
 
 [Go To Top](#content)
 
