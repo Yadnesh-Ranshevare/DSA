@@ -6,6 +6,7 @@
 5. [Word Break Problem](#word-break-problem)
 6. [start with problem](#starts-with-problem)
 7. [Count unique Substring](#count-unique-substring)
+8. [Longest Word With All Prefix](#longest-word-with-all-prefix)
 
 
 # Introduction
@@ -1053,7 +1054,7 @@ public class StartWithPrblm {
 
 - combine all the unique prefix\
 form above table: `'a', 'ab', 'aba', 'abab', 'ababa', 'b', 'ba', 'bab', 'baba', ''`\
-this uniquely combined prefix are our unique substrings which is the actual ans of our question
+this uniquely combined prefix are our unique substrings which is the actual answer of our question
 
 ### Why use this Approach
 
@@ -1075,9 +1076,9 @@ from above table we get:\
  /
 a*
 ```
-As you can see from in above tree number of nodes is `10`
+As you can see from in above tree number of nodes is `10` which is exactly equal to the number of substring
 
-each node from the root represent the unique prefix
+this happen because each node from the root represent the unique prefix
 sr | path | prefix
 --- | --- | ---
 1 | (root) | " " 
@@ -1269,6 +1270,423 @@ public class CountUniqueSubString {
 ### Output
 ```
 10
+```
+
+
+[Go To Top](#content)
+
+---
+
+# Longest Word With All Prefix
+
+**Find the longest string in the words such that every prefix of it is also in the words**
+
+**words[] = {'a', 'banana', 'app', 'appl', 'ap', 'apply', 'apple'}**\
+**output = 'apple'**
+
+**Explanation:**\
+**All possible prefix of word `'apple'` is as follow `'a', 'ap', 'app', 'appl', 'apple'` and this all prefix are also present in the words as well**\
+**if there is no word satisfying the condition then print empty string**
+
+**why not choose `'apply'`**\
+**if you arrange `'apple'` and `'apply'` in lexicographical (ascending) order then `'apple'` comes first that why we choose the `'apple'`**
+
+**Tie breaker condition:**\
+**arrange words in lexicographical (ascending) order words that come first will be our answer**
+
+### Trie tree for given data
+**words[] = {'a', 'banana', 'app', 'appl', 'ap', 'apply', 'apple'}**
+
+```
+        (root)
+         / \
+        a*  b
+       /     \
+      p*      a
+     /         \ 
+    p*          n
+   /             \
+  l*              a  
+ / \               \ 
+e*  y*              n
+                     \
+                      a* 
+```
+- from above representation we can see that for word `'apple'` and `'apply'` each node from the root has its endOfWOrd flag set to true
+
+- that says all the prefix of word `'apple'` and `'apply'` already exist in the tree
+- we use this property of trie data structure to find our longest word of all prefix
+
+### Approach 1
+1. from root we goes on finding the child who has its endOfWord flag set to true
+2. once we find our first chid we go to that child and add its respective character to our `answer` String
+3. we continue step 1 and 2 until there is no more child present or there is no further child with endOfWord flag set to true
+
+lets consider a trie tree
+```
+        (root)
+         / \
+        a*  b
+       /     \
+      p*      a
+     /         \ 
+    p*          n
+   /             \
+  l*              a  
+ / \               \ 
+e*  y*              n
+                     \
+                      a* 
+```
+**Step 1: root**
+- children[0] != null && eow = true
+- index 0 -> 'a'
+- ans = 'a'
+
+**Step 2: a**
+- children[15] != null && eow = true
+- index 15 -> 'p'
+- ans = 'ap'
+
+**Step 3: p**
+- children[15] != null && eow = true
+- index 15 -> 'p'
+- ans = 'app'
+
+**Step 4: p**
+- children[11] != null && eow = true
+- index 11 -> 'l'
+- ans = 'appl'
+
+**Step 4: p**
+- children[4] != null && eow = true
+- index 4 -> 'e'
+- ans = 'apple'
+- here as you can see there are two nodes satisfying the condition `children[i] != null && eow = true` but here we only consider the node that **we found first for i in range 0-26** that way we can maintain our lexicographic (ascending) order
+
+
+although this approach work for most of the cases it fails when at some point there are multiple child node satisfying the condition `children[i] != null && eow = true` as in this approach we only consider the first matching node which might fails to give largest string of all prefix
+
+**Lets consider another trie tree for words:**\
+**words[] = {'a', 'banana', 'app', 'appl', 'ap', 'apply', 'apple', 'b', 'ba', 'ban', 'bana', 'banan'}**
+
+
+```
+        (root)
+         / \
+        a*  b*
+       /     \
+      p*      a*
+     /         \ 
+    p*          n*
+   /             \
+  l*              a*  
+ / \               \ 
+e*  y*              n*
+                     \
+                      a* 
+```
+
+from this approach both `'a'` and `'b'` are satisfying the condition `children[i] != null && eow = true` but we ignore the child `'b'`  as `'a'` came first \
+therefor our final ans become: `'apple'` (not the longest string)\
+actual answer: `'banana'` (longest string)
+
+to solve this problem we use another approach
+
+### Approach 2
+in this approach we have two empty string variable one known as temperer variable and another as our answer variable
+
+1. from root we goes on finding the child who has its endOfWord flag set to true
+2. once we find our first chid we go to that child and add its respective character to our `temporary` String variable
+3. then we compare our answer string with temporary string and if at any point temporary string becomes greater then our answer string ew replace answer string with temporary string
+4. we continue step 1, 2 and 3 until there is no more child present or there is no further child with endOfWord flag set to true
+5. once we reach the end we backtrace to previous node and reapply all the steps form step 1 for the remaining child of that previous node also remove the current character from th temporary variable 
+
+lets consider a tree
+
+```
+        (root)
+         / \
+        a*  b*
+       /     \
+      p*      a*
+     /         \ 
+    p*          n*
+   /             \
+  l*              a*  
+ / \               \ 
+e*  y*              n*
+                     \
+                      a* 
+```
+**Step 1: root**
+- children[0] != null && eow = true
+- index 0 -> 'a'
+- `temp = 'a'` and `ans = ''`
+- `ans < temp`
+- therefor `ans = 'a'`
+
+**Step 2: a**
+- children[15] != null && eow = true
+- index 15 -> 'p'
+- `temp = 'ap'` and `ans ='a'`
+- `ans < temp`
+- therefor `ans = 'ap'`
+
+**Step 3: p**
+- children[15] != null && eow = true
+- index 15 -> 'p'
+- `temp = 'app'` and `ans = 'ap'`
+- `ans < temp`
+- therefor `ans = 'app'`
+
+**Step 4: p**
+- children[11] != null && eow = true
+- index 11 -> 'l'
+- `temp = 'appl'` and `ans = 'app'`
+- `ans < temp`
+- therefor `ans = 'appl'`
+
+**Step 5: l**
+- children[4] != null && eow = true
+- index 4 -> 'e'
+- `temp = 'apple'` and `ans = 'appl'`
+- `ans < temp`
+- therefor `ans = 'apple'`
+
+**Step 6: e**
+- no further node present 
+- `temp = 'appl'`
+- backtrack to node l (step 5)
+
+**Step 7: l**
+- children[24] != null && eow = true
+- index 24 -> 'y'
+- `temp = 'apply'` and `ans = 'apple'`
+- `ans = temp` (not less than)
+- therefor `ans = 'apple'` (remains same)
+
+**Step 8: y**
+- no further node present 
+- `temp = 'appl'`
+- backtrack to node l (step 5)
+
+**Step 9: l**
+- no further node present 
+- `temp = 'app'`
+- backtrack to node p (step 4)
+
+**Step 9: p**
+- no further node present 
+- `temp = 'ap'`
+- backtrack to node p (step 3)
+
+**Step 9: p**
+- no further node present 
+- `temp = 'a'`
+- backtrack to node a (step 2)
+
+**Step 9: a**
+- no further node present 
+- `temp = ''`
+- backtrack to node root (step 1)
+
+**Step 10: root**
+- children[1] != null && eow = true
+- index 1 -> 'b'
+- `temp = 'b'` and `ans = 'apple'`
+- `ans > temp` 
+- therefor `ans = 'apple'` (remains same)
+
+**Step 11: b**
+- children[0] != null && eow = true
+- index 0 -> 'a'
+- `temp = 'ba'` and `ans = 'apple'`
+- `ans > temp` 
+- therefor `ans = 'apple'` (remains same)
+
+**Step 12: a**
+- children[12] != null && eow = true
+- index 12 -> 'n'
+- `temp = 'ban'` and `ans = 'apple'`
+- `ans > temp` 
+- therefor `ans = 'apple'` (remains same)
+
+**Step 13: n**
+- children[0] != null && eow = true
+- index 0 -> 'a'
+- `temp = 'bana'` and `ans = 'apple'`
+- `ans > temp` 
+- therefor `ans = 'apple'` (remains same)
+
+**Step 14: a**
+- children[12] != null && eow = true
+- index 12 -> 'n'
+- `temp = 'banan'` and `ans = 'apple'`
+- `ans = temp` (not greater than)
+- therefor `ans = 'apple'` (remains same)
+
+**Step 15: n**
+- children[0] != null && eow = true
+- index 0 -> 'a'
+- `temp = 'banana'` and `ans = 'apple'`
+- `ans < temp` 
+- therefor `ans = 'banana'` 
+
+**Step 16: a**
+- no further node present 
+- `temp = 'banan'`
+- backtrack to node n (step 15)
+
+
+**Note: as you can see there in other subtree we continue to backtrace to until er hit the root ans at root there is no further child and thats the end of our code**\
+**therefor at root**\
+**temp = ' '**\
+**ans = 'banana'**
+
+
+### Algorithm
+**Note: we are using java `StringBuilder` class to solve this problem** 
+1. declare the static answer string variable
+```java
+public static String ans = "";
+```
+2. at root traverse over the children array
+```java
+for(int i=0; i<26; i++){
+        
+}
+``` 
+3. check condition `root.children[i] != null && root.children[i].eow == true`
+```java
+for(int i=0; i<26; i++){
+    if(root.children[i] != null && root.children[i].eow == true){
+        // condition is true
+    }
+}
+```
+4. append the current character in temporary string if condition is true
+```java
+temp.append((char)(i+'a')); 
+```
+(char)(0 + 'a') = 'a'\
+(char)(1 + 'a') = 'b'\
+(char)(25 + 'a') = 'z'
+
+
+5. compare with answer string
+```java
+if(temp.length() > ans.length()){
+    ans = temp.toString();
+}
+```
+6. recursively do the same for child subtree
+```java
+longestWord(root.children[i], temp);
+```
+7. delete the current character before returning form the recursive call
+```java
+temp.deleteCharAt(temp.length() - 1);
+```
+### Code
+```java
+public static String ans = "";
+
+public static void longestWord(Node root, StringBuilder temp){
+    if(root == null){   // base case for empty tree
+        return;
+    }
+
+    for(int i=0; i<26; i++){
+        if(root.children[i] != null && root.children[i].eow == true){
+            temp.append((char)(i+'a'));
+
+            if(temp.length() > ans.length()){
+                ans = temp.toString();
+            }
+
+            longestWord(root.children[i], temp);
+
+            temp.deleteCharAt(temp.length() - 1);
+        }
+    }
+}
+```
+
+### Complete code
+```java
+public class LongestWordPrefix {
+
+    static class Node{
+        Node[] children;
+        boolean eow;
+
+        public Node(){
+            children = new Node[26];
+            for(int i=0; i<26; i++){
+                children[i] = null;
+            }
+            eow = false;
+        }
+    }
+
+    static Node root = new Node();
+
+    public static void insert(String word){
+
+        Node head = root;
+        for(int i = 0; i< word.length(); i++){
+            int idx = word.charAt(i)-'a';
+
+            if(head.children[idx] == null){
+                head.children[idx] = new Node();
+            }
+
+            if(i == word.length() - 1){
+                head.children[idx].eow = true;
+            }
+
+            head = head.children[idx];
+        }
+    }
+
+
+    public static String ans = "";
+
+    public static void longestWord(Node root, StringBuilder temp){
+        if(root == null){
+            return;
+        }
+
+        for(int i=0; i<26; i++){
+            if(root.children[i] != null && root.children[i].eow == true){
+                temp.append((char)(i+'a'));
+
+                if(temp.length() > ans.length()){
+                    ans = temp.toString();
+                }
+                longestWord(root.children[i], temp);
+                temp.deleteCharAt(temp.length() - 1);
+            }
+        }
+
+    }
+
+    public static void main(String[] args) {
+        String words[] = {"a", "banana", "app", "appl", "ap", "apply", "apple"};
+
+        for(String word : words){
+            insert(word);
+        }
+
+        longestWord(root, new StringBuilder(""));
+        System.out.println(ans);
+    }   
+}
+```
+### Output
+```
+apple
 ```
 
 
