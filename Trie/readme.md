@@ -1365,7 +1365,7 @@ e*  y*              n
 - here as you can see there are two nodes satisfying the condition `children[i] != null && eow = true` but here we only consider the node that **we found first for i in range 0-26** that way we can maintain our lexicographic (ascending) order
 
 
-although this approach work for most of the cases it fails when at some point there are multiple child node satisfying the condition `children[i] != null && eow = true` as in this approach we only consider the first matching node which might fails to give largest string of all prefix
+although this approach work for most of the cases it fails when at some point there are multiple child node satisfying the condition `children[i] != null && eow = true`, as in this approach we only consider the first matching node which might fails to give largest string of all prefix
 
 **Lets consider another trie tree for words:**\
 **words[] = {'a', 'banana', 'app', 'appl', 'ap', 'apply', 'apple', 'b', 'ba', 'ban', 'bana', 'banan'}**
@@ -1398,9 +1398,9 @@ in this approach we have two empty string variable one known as temperer variabl
 
 1. from root we goes on finding the child who has its endOfWord flag set to true
 2. once we find our first chid we go to that child and add its respective character to our `temporary` String variable
-3. then we compare our answer string with temporary string and if at any point temporary string becomes greater then our answer string ew replace answer string with temporary string
+3. then we compare our answer string with temporary string and if at any point temporary string becomes greater then our answer string we replace answer string with temporary string
 4. we continue step 1, 2 and 3 until there is no more child present or there is no further child with endOfWord flag set to true
-5. once we reach the end we backtrace to previous node and reapply all the steps form step 1 for the remaining child of that previous node also remove the current character from th temporary variable 
+5. once we reach the end we backtrace to previous node and reapply all the steps form step 1 for the remaining child of that previous node also remove the current character from our temporary variable 
 
 lets consider a tree
 
@@ -1539,7 +1539,7 @@ e*  y*              n*
 - backtrack to node n (step 15)
 
 
-**Note: as you can see there in other subtree we continue to backtrace to until er hit the root ans at root there is no further child and thats the end of our code**\
+**Note: as you can see there in other subtree we continue to backtrace to until we hit the root as at root there is no further child node hence our code ends here**\
 **therefor at root**\
 **temp = ' '**\
 **ans = 'banana'**
