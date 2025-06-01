@@ -133,7 +133,7 @@ ArrayList<Edge> arr[] = new ArrayList[n];   //Array of ArrayList of size n
     - `arr[1]` = Edges of node 1
     - `arr[2]` = Edges of node 2 
     - `arr[3]` = Edges of node 3
-- therefor the data store at each index of arr
+- therefor the data store at each index of arr is as follow:
     - `arr[0]` = {0, 2}
     - `arr[1]` = {{1, 2}, {1, 3}}
     - `arr[2]` = {{2, 0}, {2, 1}, {2, 3}}
@@ -161,13 +161,13 @@ static class Edge{
 ArrayList<Edge> graph[] = new ArrayList[V];     // V is a total number of vertex
 ```
 - Even though our graph Array is of type ArrayList at first by default before adding any data there exist a null value at each index (we cannot add any data at null)
-- therefor create a empty ArrayList of type Edge at each index of the Array, soo that we can start adding data into it
+- therefor create a empty ArrayList of type Edge at each index of that Array, soo that we can start adding data into it
 ```java
 for (int i = 0; i< graph.length; i++){
     graph[i] = new ArrayList<Edge>();
 }
 ```
-- now we use `.add()` method to add the edges in our Adjacency list
+- now as at each index of graph array there exist a ArrayList we can use `.add()` method to add the edges at each index of our Array to form our Adjacency list
 - for node 0
 ```java
 graph[0].add(new Edge(0, 2));
