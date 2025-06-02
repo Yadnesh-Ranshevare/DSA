@@ -1,6 +1,6 @@
 # Content
 1. [Introduction](#introduction)
-2. [Storing a graph](#storing-a-graph)
+2. Storing a graph
     1. [Adjacency List](#adjacency-list)
 
 
@@ -78,15 +78,19 @@ D → C
 
 ---
 
-# Storing a graph
+<!-- # Storing a graph
 
 there are 4 different ways of storing a graph i.e,
 1. [Adjacency List](#adjacency-list)
 2. Adjacency Matrix
 3. Edge List
-4. 2D Matrix (Implicit Graph)
+4. 2D Matrix (Implicit Graph) -->
 
 # Adjacency List
+1. [Implementation for unweighted graph](#implementation-for-unweighted-graph)
+2. [How to get neighbor](#how-to-get-the-neighboring-nodes)
+
+## Implementation for unweighted graph
 - this method is also known as List of Lists
 - here we give each node a index from 0 to n-1 where n is total number of vertex 
 - now for each node we maintain the list which contains two things source and destination with general syntax as follow: `{source, Destination}`
@@ -114,7 +118,7 @@ Here we have already assign a index to each node, and that index represent that 
 **Note: in java you can implement the Adjacency list by using `hashMap`, `ArrayList of ArrayList` and `Array of ArrayList`. In above example we have implemented `Array of ArrayList`**
 
 
-## How to create the Array of ArrayList?
+### How to create the Array of ArrayList?
 - syntax of declaring Integer Array in java is as follow
 ```java
 int arr[] = new int[n]  // array of int of size n
@@ -140,7 +144,7 @@ ArrayList<Edge> arr[] = new ArrayList[n];   //Array of ArrayList of size n
     - `arr[3]` = {{3, 1}, {3, 2}}
 - Now this arr Array is our Adjacency list for our graph
 
-## Structure of Edge
+### Structure of Edge
 **Note: in our example we have unweighted edges, therefor we only store the source and destination for particular edge**
 
 ```java
@@ -155,7 +159,7 @@ static class Edge{
 }
 ```
 
-## How to add edges into the Adjacency list?
+### How to add edges into the Adjacency list?
 - first create our Array of ArrayList
 ```java
 ArrayList<Edge> graph[] = new ArrayList[V];     // V is a total number of vertex
@@ -190,7 +194,7 @@ graph[3].add(new Edge(3, 2));
 ```
 **Note: each index of graph array represent a separate node who might have multiple edges**
 
-## Complete Code
+### Complete Code
 ```java
 import java.util.ArrayList;
 
@@ -229,6 +233,156 @@ public class AdjacencyList{
     }
 }
 ```
+
+## How to get the neighboring nodes
+
+**Note: in graph getting the neighboring nodes is most use algorithm, and in adjacency list method time complexity for getting the neighboring node is `O[E]` where E is number of edges. As this time complexity is faster than most of the other implementation and is only implemented in adjacency list we can say that adjacency list implementation of graph is the optimal implementation**
+
+1. as each index in  Adjacency list represent its respective node, to get the neighbors of specific node we go to its specific index in Adjacency list
+2. we get the ArrayList present at that index and traverse over it using for loop
+```java
+// printing the neighbor of node 2
+for(int i = 0; i<graph[2].size(); i++){
+    
+}
+```
+3. at each index we get one Edge
+```java
+// printing the neighbor of node 2
+for(int i = 0; i<graph[2].size(); i++){
+    Edge e = graph[2].get(i);
+}
+```
+3. Edge contains two thing first is source i.e, current node whose neighbor we are trying to find and second is destination that is all of its neighboring nodes
+4. As we only want to get the neighboring node we print the destination form each index
+```java
+// printing the neighbor of node 2
+for(int i = 0; i<graph[2].size(); i++){
+    Edge e = graph[2].get(i);
+    System.out.print(e.dest+" ");
+}
+```
+#### Complete Code
+```java
+import java.util.ArrayList;
+
+public class AdjacencyList{
+    static class Edge{
+        int src;
+        int dest;
+
+        public Edge(int s, int d){
+            this.src = s;
+            this.dest = d;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[0].add(new Edge(0, 2));
+
+        graph[1].add(new Edge(1, 2));
+        graph[1].add(new Edge(1, 3));
+
+        graph[2].add(new Edge(2, 0));
+        graph[2].add(new Edge(2, 1));
+        graph[2].add(new Edge(2, 3));
+
+        graph[3].add(new Edge(3, 1));
+        graph[3].add(new Edge(3, 2));
+    }
+    public static void main(String[] args) {
+        int V = 4;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        // printing the neighbor of node 2
+        for(int i = 0; i<graph[2].size(); i++){
+            Edge e = graph[2].get(i);
+            System.out.print(e.dest+" ");
+        }
+    }
+}
+```
+**Output:**
+```
+0 1 3
+```
+
+## Adjacency List for Weighted graph
+- before you learn about this algorithm you must know how to implemented [adjacency list for unweighted graph](#implementation-for-unweighted-graph)
+
+- our whole approach and code remains exactly same we just add an extra field weight into our Edge class
+
+- Therefor the general syntax for list maintain by each node becomes as `{source, Destination, Weight}`
+
+**Complete Code**
+```java
+import java.util.ArrayList;
+
+public class AdjacencyListForWeightedGraph{
+    static class Edge{
+        int src;
+        int dest;
+        int wt;     // extra field weight
+
+        public Edge(int s, int d, int wt){
+            this.src = s;
+            this.dest = d;
+            this.wt = wt;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[0].add(new Edge(0, 2, 2));    // passing weight while adding the age into our graph
+
+        graph[1].add(new Edge(1, 2, 10));
+        graph[1].add(new Edge(1, 3, 0));
+
+        graph[2].add(new Edge(2, 0, 2));
+        graph[2].add(new Edge(2, 1, 10));
+        graph[2].add(new Edge(2, 3, -1));
+
+        graph[3].add(new Edge(3, 1, 0));
+        graph[3].add(new Edge(3, 2, -1));
+    }
+    public static void main(String[] args) {
+        int V = 4;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        // printing the neighbor of node 2
+        for(int i = 0; i<graph[2].size(); i++){
+            Edge e = graph[2].get(i);
+            System.out.println(e.dest+" , " + e.wt);    // printing wt along with neighbor nodes
+        }
+    }
+}
+```
+**Output:**
+```
+0 , 2
+1 , 10
+3 , -1
+```
+**Graph use in above example code**
+```
+0 ——(2)—— 2 ——(-1)—— 3
+          \         /
+          (10)    (0)
+            \     / 
+             \   /
+               1
+```
+
+
 
 [Go To Top](#content)
 
