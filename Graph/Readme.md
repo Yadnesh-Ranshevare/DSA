@@ -2,6 +2,9 @@
 1. [Introduction](#introduction)
 2. Storing a graph
     1. [Adjacency List](#adjacency-list)
+    2. [Adjacency Matrix](#adjacency-matrix)
+    3. [Edge List](#edge-list)
+    4. [Implicit Graph](#implicit-graph)
 
 
 # Introduction
@@ -89,6 +92,7 @@ there are 4 different ways of storing a graph i.e,
 # Adjacency List
 1. [Implementation for unweighted graph](#implementation-for-unweighted-graph)
 2. [How to get neighbor](#how-to-get-the-neighboring-nodes)
+3. [implementation for weighted graph](#adjacency-list-for-weighted-graph)
 
 ## Implementation for unweighted graph
 - this method is also known as List of Lists
@@ -382,6 +386,164 @@ public class AdjacencyListForWeightedGraph{
                1
 ```
 
+
+
+[Go To Top](#content)
+
+---
+
+# Adjacency Matrix
+- An Adjacency Matrix is another way to represent a graph, using a 2D array (or matrix) of size `V x V`, where `V` is the number of vertices in the graph.
+- for every `i, j` value:
+    1. for unweighted graph
+        - `[i, j] = 0`: edge from `i` to `j` does't exist
+        - `[i, j] = 1`: edge from `i` to `j` exist
+    3. for weighted graph
+        - `[i, j] = 0`: edge from `i` to `j` does't exist
+        - `[i, j] = n`: edge from `i` to `j` exist, also n is a weight of that edge
+
+## Example for unweighted graph
+```
+0    3
+ \  / \
+  2 —— 1
+```
+From the diagram, the connections (edges) are:
+- 0 — 2 ------> [0, 2] & [2, 0] = 1
+- 2 — 1 ------> [2, 1] & [1, 2] = 1
+- 1 — 3 ------> [1, 3] & [3, 1] = 1
+- 2 — 3 ------> [2, 3] & [3, 2] = 1
+
+Therefor Adjacency Matrix:
+
+|  Nodes     | 0 | 1 | 2 | 3 |
+| ----- | - | - | - | - |
+| **0** | 0 | 0 | 1 | 0 |
+| **1** | 0 | 0 | 1 | 1 |
+| **2** | 1 | 1 | 0 | 1 |
+| **3** | 0 | 1 | 1 | 0 |
+
+## Example for weighted graph
+**Now assign some weights (just for illustration):**
+| Edge  | Weight |
+| ----- | ------ |
+| 0 — 2 | 5      |
+| 2 — 1 | 3      |
+| 1 — 3 | 4      |
+| 2 — 3 | 2      |
+```
+0 ——(5)—— 2 ——(2)——  3
+          \         /
+          (3)     (4)
+            \     / 
+             \   /
+               1
+```
+
+From the diagram, the connections (edges) are:
+- 0 — 2 ------> [0, 2] & [2, 0] = 5
+- 2 — 1 ------> [2, 1] & [1, 2] = 3
+- 1 — 3 ------> [1, 3] & [3, 1] = 4
+- 2 — 3 ------> [2, 3] & [3, 2] = 2
+
+
+
+**Weighted Adjacency Matrix:**
+
+|     Nodes  | 0 | 1 | 2 | 3 |
+| ----- | - | - | - | - |
+| **0** | 0 | 0 | 5 | 0 |
+| **1** | 0 | 0 | 3 | 4 |
+| **2** | 5 | 3 | 0 | 2 |
+| **3** | 0 | 4 | 2 | 0 |
+
+
+
+## Disadvantage
+1. **Wastes Space for Sparse Graphs**
+
+    - Takes `O[V²]` space (V is number of vertex) regardless of the number of edges.
+    - Even if the graph has very few edges (sparse), the matrix will still have lots of zeros.
+    - For example, a graph with 1000 vertices but only 10 edges will still use a 1000×1000 matrix — most entries are 0.
+2. **Slow to List Neighbors**
+
+    - To get all neighbors of a vertex v, you have to scan the entire row, which takes `O[V]` (V is number of vertex) time.
+    - In adjacency list, it’s only `O[number of neighbors]` (much faster for sparse graphs).
+
+**Note: because of this two disadvantage using ADjacency matrix in any solution is inefficient therefor we are not covering the code implementation of Adjacency Matrix**
+
+
+[Go To Top](#content)
+
+---
+# Edge List
+An Edge List is the simplest way to represent a graph.\
+It’s just a list of all edges, where each edge connects two vertices — and can also store weights if needed.
+
+**Format:**\
+Each edge is represented as:
+
+- For unweighted graphs: `(u, v)`
+- For weighted graphs: `(u, v, weight)`
+
+
+```
+0    3
+ \  / \
+  2 —— 1
+```
+Edges from the diagram:
+
+- 0 — 2
+- 2 — 1
+- 1 — 3
+- 2 — 3
+- 0 — 3
+
+Therefor **Edge List** = `{[0, 2], [2, 1], [1, 3], [2, 3], [0, 3]}`
+
+**Note: each edge added only once i.e, edge [0, 2] is similar to edge [2, 0]**
+
+[Go To Top](#content)
+
+---
+
+# Implicit Graph
+
+here you have given a 2D matrix and each block of this matrix is a node of a graph also adjacent cells of each block is a neighbors of that block
+
+for n = 3\
+therefor our 2D(3 x 3) array/matrix look like:
+|  | | |
+|---|---|---|
+| | | |
+| | | |
+
+lets give temporary numbering to each block
+| 1 | 2| 3|
+|---|---|---|
+|4 |5 |6 |
+| 7| 8|9 |
+
+here block `1, 2, 3, 4, 5, 6, 7, 8, 9` are each individual Node of a graph also neighbor of each block is as follow
+| block | neighbors |
+|--- | ---|
+| 1 | 2, 4
+| 2 | 1, 3, 5
+| 3 | 2, 6
+| 4 | 1, 5, 7
+|5 | 2, 4, 6, 8
+| 6 | 3, 5, 9
+| 7 | 4, 8
+| 8 | 5, 7, 9
+| 9 | 6, 8
+
+- In implicit graph each node can have maximum of 4 neighbors
+- Lets assume i am at node `[i, j]` in our implicit graph therefor for this node:   
+    1. `[i-1, j]`: upper neighbor 
+    2. `[i+1, j]`: lower neighbor
+    3. `[i, j-1]`: left neighbor
+    4. `[i, j+1]`: right neighbor
 
 
 [Go To Top](#content)
