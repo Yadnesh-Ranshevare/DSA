@@ -5,6 +5,8 @@
     2. [Adjacency Matrix](#adjacency-matrix)
     3. [Edge List](#edge-list)
     4. [Implicit Graph](#implicit-graph)
+3. Graph Traversal
+    1. [Breadth first Search(BFS)](#breadth-first-searchbfs)
 
 
 # Introduction
@@ -544,6 +546,95 @@ here block `1, 2, 3, 4, 5, 6, 7, 8, 9` are each individual Node of a graph also 
     2. `[i+1, j]`: lower neighbor
     3. `[i, j-1]`: left neighbor
     4. `[i, j+1]`: right neighbor
+
+
+[Go To Top](#content)
+
+---
+# Breadth first Search(BFS)
+- BFS is a graph traversal algorithm that explores all the neighboring nodes first before going deeper into the graph.
+- Unlike tree here we don't have any starting point, Therefor we chose any one node as our starting point
+- Here we go to all of the neighbor of current node first
+- it is a indirect **level order traversa**l (traversal algorithm of binary tree)\
+[click here to learn Level order traversal in binary tree](#level-order-traversal)
+
+**Example:**
+```
+  0
+ / \
+1   2
+|   |
+3---4
+ \ /
+  5
+  |
+  6
+```
+1. assume starting Node:- `0`, BFS = `0`
+```
+0
+```
+2. go to all of the neighbor of `0` i.e, at `1 & 2`, Therefor BFS = `0, 1, 2`
+```
+  0
+ / \
+1   2
+```
+3. go to the neighbor of `1` i.e, `3`, Therefor BFS = `0, 1, 2, 3`
+```
+  0
+ / \
+1   2
+|   
+3
+```
+4. before you going to the neighbor of `3` first visit the neighbor of `2`
+5. go to the neighbor of `2` i.e, `4`, Therefor BFS = `0, 1, 2, 3, 4`
+```
+  0
+ / \
+1   2
+|   |
+3   4
+```
+6. go to the neighbor of `3` i.e, `4 & 5`but `4` has already visited (in step 5), Therefor BFS = `0, 1, 2, 3, 4, 5`
+```
+  0
+ / \
+1   2
+|   |
+3---4
+ \ 
+  5
+```
+
+
+
+7. go to the neighbor of `4` i.e, `3 & 5`but `3 & 5` has already visited (3 in step 3, 5 in step 6), Therefor BFS = `0, 1, 2, 3, 4, 5`
+```
+  0
+ / \
+1   2
+|   |
+3---4
+ \ /
+  5
+```
+
+8. go to the neighbor of `5` i.e, `6`, Therefor BFS = `0, 1, 2, 3, 4, 5, 6`
+```
+  0
+ / \
+1   2
+|   |
+3---4
+ \ /
+  5
+  |
+  6
+```
+
+**Therefor final BFS Sequence =** `0, 1, 2, 3, 4, 5, 6`
 
 
 [Go To Top](#content)
