@@ -637,6 +637,323 @@ here block `1, 2, 3, 4, 5, 6, 7, 8, 9` are each individual Node of a graph also 
 **Therefor final BFS Sequence =** `0, 1, 2, 3, 4, 5, 6`
 
 
+## Approach
+
+**Note: you must know about [Adjacency list](#adjacency-list) before learning this solution**
+- we use queue and array to solve this problem
+- Queue:
+    - we have also use in level order traversal in binary search tree to maintain the level of the tree
+    - here also we use this queue to maintain the level of graph\
+    [click here to learn Level order traversal in binary tree](#level-order-traversal)
+    - at first queue has only one value which is our starting node
+    - we perform the pop operation on this queue and which ever node it is we visit that node
+- Visited Array:
+    - it is use to store the visited nodes
+    - size of array is equal to total number of vertex
+    - each index represent its respective node
+    - at first our whole array is filled with `False`
+    - once we visit any node we set that index to `True`
+    - `arr[i] = false`: Node `i` has not visited
+    - `arr[i] = true`: Node `i` has visited
+- before we visit any new Array we first check its visited Array flag
+    - `flag = True` : skip that node
+    - `flag = False` : visit that node
+- Whenever we visit a node we perform 3 simple step
+    1. print the current node
+    2. set that node flag as true in visited array
+    3. push the neighbor of current node into the queue
+
+
+## Step by step Illustration
+
+consider a graph
+```
+  0
+ / \
+1   2
+|   |
+3---4
+ \ /
+  5
+  |
+  6
+```
+**Step 1 : initialize**
+- start with node `0`
+- vis: `[false, false, false, false, false, false, false]`
+- q: `[0]` 
+- output: `""`
+
+**step 2 : visit 0 (q.remove = 0)**
+- `vis[0]` = `false`
+    - print(0)
+    - `vis[0]` = `true`
+    - neighbor of 0: `1, 2`
+- q: `[1, 2]`
+- vis: `[true, false, false, false, false, false, false]`
+- output: `"0"`
+
+**step 3 : visit 1 (q.remove = 1)**
+- `vis[1]` = `false`
+    - print(1)
+    - `vis[1]` = `true`
+    - neighbor of 1: `0, 3`
+- q: `[2, 0, 3]`
+- vis: `[true, true, false, false, false, false, false]`
+- output: `"0 1"`
+
+**step 4 : visit 2 (q.remove = 2)**
+- `vis[2]` = `false`
+    - print(2)
+    - `vis[2]` = `true`
+    - neighbor of 2: `0, 4`
+- q: `[0, 3, 0, 4]`
+- vis: `[true, true, true, false, false, false, false]`
+- output: `"0 1 2"`
+
+**step 5 : visit 0 (q.remove = 0)**
+- `vis[0]` = `true` 
+    - skip it
+- q: `[0, 4]`
+- vis: `[true, true, true, false, false, false, false]`
+- output: `"0 1 2"`
+
+**step 6 : visit 3 (q.remove = 3)**
+- `vis[3]` = `false`
+    - print(3)
+    - `vis[3]` = `true`
+    - neighbor of 3: `1, 4, 5`
+- q: `[0, 4, 1, 4, 5]`
+- vis: `[true, true, true, true, false, false, false]`
+- output: `"0 1 2 3"`
+
+**step 7 : visit 0 (q.remove = 0)**
+- `vis[0]` = `true` 
+    - skip it
+- q: `[4, 1, 4, 5]`
+- vis: `[true, true, true, false, false, false, false]`
+- output: `"0 1 2 3"`
+
+**step 8 : visit 4 (q.remove = 4)**
+- `vis[4]` = `false`
+    - print(4)
+    - `vis[4]` = `true`
+    - neighbor of 4: `2, 3, 5`
+- q: `[1, 4, 5, 2, 3, 5]`
+- vis: `[true, true, true, true, false, false, false]`
+- output: `"0 1 2 3 4"`
+
+**step 9 : visit 1 (q.remove = 1)**
+- `vis[1]` = `true` 
+    - skip it
+- q: `[4, 5, 2, 3, 5]`
+- vis: `[true, true, true, true, false, false, false]`
+- output: `"0 1 2 3 4"`
+
+**step 10 : visit 4 (q.remove = 4)**
+- `vis[4]` = `true` 
+    - skip it
+- q: `[5, 2, 3, 5]`
+- vis: `[true, true, true, true, false, false, false]`
+- output: `"0 1 2 3 4"`
+
+**step 11 : visit 5 (q.remove = 5)**
+- `vis[5]` = `false`
+    - print(5)
+    - `vis[5]` = `true`
+    - neighbor of 5: `3, 4, 6`
+- q: `[2, 3, 5, 3, 4, 6]`
+- vis: `[true, true, true, true, true, true, false]`
+- output: `"0 1 2 3 4 5"`
+
+**step 12 : visit 2, 3, 5, 3, 4**
+- all have `vis[i]` = `true`
+    - skip them all
+- q: `[6]`
+- vis: `[true, true, true, true, true, true, false]`
+- output: `"0 1 2 3 4 5"`
+
+**step 13 : visit 6 (q.remove = 6)**
+- `vis[6]` = `false`
+    - print(6)
+    - `vis[6]` = `true`
+    - neighbor of 6: `5`
+- q: `[5]`
+- vis: `[true, true, true, true, true, true, true]`
+- output: `"0 1 2 3 4 5 6"`
+
+
+**step 10 : visit 5 (q.remove = 5)**
+- `vis[5]` = `true` 
+    - skip it
+- q: `[]`
+- vis: `[true, true, true, true, true, true, true]`
+- output: `"0 1 2 3 4 5 6"`
+
+**as queue is empty our approach ends, therefor we can say that we iterate util our queue get empty**
+
+## Algorithm:
+1. create the queue and boolean visited array
+```java
+Queue<Integer> q = new LinkedList<>();
+boolean vis[] = new boolean[V];
+``` 
+**since array is of boolean type by default instead of null it consist of false**
+2. add the starting node into the queue
+```java
+q.add(0)
+```
+3. iterate until queue gets empty
+```java
+while(!q.isEmpty()){
+    
+}
+```
+4. get the current visited node
+```java
+while(!q.isEmpty()){
+    int curr = q.remove();      
+}
+```
+5. check the whether current node has visited or not
+```java
+while(!q.isEmpty()){
+    int curr = q.remove();
+    if(vis[curr] == false){
+           // has not been visited     
+    }
+}
+```
+6. print the current node and set its flag to true
+```java
+while(!q.isEmpty()){
+    int curr = q.remove();
+    if(vis[curr] == false){
+        System.out.print(curr + " ");
+        vis[curr] = true;
+    }
+}
+```
+7. get all the neighbor of current node and add that node into the queue\
+[to learn about how to get all the neighbor](#how-to-get-the-neighboring-nodes)
+```java
+while(!q.isEmpty()){
+    int curr = q.remove();
+    if(vis[curr] == false){
+        System.out.print(curr + " ");
+        vis[curr] = true;
+        for(int i =0; i < graph[curr].size(); i++){
+            Edge e = graph[curr].get(i);
+            q.add(e.dest);
+        }
+    }
+}
+```
+
+### Code
+```java
+public static void bfs(ArrayList<Edge> graph[], int V){
+    Queue<Integer> q = new LinkedList<>();
+    boolean vis[] = new boolean[V];
+
+    q.add(0);
+
+    while(!q.isEmpty()){
+        int curr = q.remove();
+        if(vis[curr] == false){
+            System.out.print(curr + " ");
+            vis[curr] = true;
+            for(int i =0; i < graph[curr].size(); i++){
+                Edge e = graph[curr].get(i);
+                q.add(e.dest);
+            }
+        }
+    }
+}
+```
+
+## Complete Code
+```java
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class BFS{
+    static class Edge{
+        int src;
+        int dest;
+
+        public Edge(int s, int d){
+            this.src = s;
+            this.dest = d;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[0].add(new Edge(0, 1));
+        graph[0].add(new Edge(0, 2));
+        
+        graph[1].add(new Edge(1, 3));
+        graph[1].add(new Edge(1, 0));
+        
+        graph[2].add(new Edge(2, 4));
+        graph[2].add(new Edge(2, 0));
+        
+        graph[3].add(new Edge(3,1));
+        graph[3].add(new Edge(3,4));
+        graph[3].add(new Edge(3,5));
+        
+        graph[4].add(new Edge(4,2));
+        graph[4].add(new Edge(4,3));
+        graph[4].add(new Edge(4,5));
+        
+        graph[5].add(new Edge(5,3));
+        graph[5].add(new Edge(5,4));
+        graph[5].add(new Edge(5,6));
+        
+        graph[6].add(new Edge(6,5));   
+    }
+
+    public static void bfs(ArrayList<Edge> graph[], int V){
+        Queue<Integer> q = new LinkedList<>();
+        boolean vis[] = new boolean[V];
+
+        q.add(0);
+
+        while(!q.isEmpty()){
+            int curr = q.remove();
+            if(vis[curr] == false){
+                System.out.print(curr + " ");
+                vis[curr] = true;
+                for(int i =0; i < graph[curr].size(); i++){
+                    Edge e = graph[curr].get(i);
+                    q.add(e.dest);
+                }
+            }
+        }
+    }
+    public static void main(String[] args) {
+        int V = 7;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        bfs(graph, V);
+    }
+}
+```
+## Output
+```
+0 1 2 3 4 5 6 
+```
+
+**Note: time complexity of the solution is `O[V + E]` where `V` is total number of `vertex` and `E` is total number of `edges`** 
+
+
+
 [Go To Top](#content)
 
 ---
