@@ -7,6 +7,7 @@
     4. [Implicit Graph](#implicit-graph)
 3. Graph Traversal
     1. [Breadth first Search(BFS)](#breadth-first-searchbfs)
+    2. [Depth First Search(DFS)](#depth-first-search-dfs)
 
 
 # Introduction
@@ -1099,6 +1100,96 @@ public class BFS{
 
 **Note: time complexity of the solution is `O[V + E]` where `V` is total number of `vertex` and `E` is total number of `edges`** 
 
+
+
+[Go To Top](#content)
+
+---
+# Depth First Search (DFS)
+- DFS (Depth-First Search) is a graph traversal algorithm that explores as far as possible along each branch before backtracking. It is like **going deep** into the graph before coming back.
+- Here we recursively goes to the first neighbor of each node 
+
+**Example:**
+```
+  0
+ / \
+1   2
+|   |
+3---4
+ \ /
+  5
+  |
+  6
+```
+1. assume starting Node:- `0`, DFS = `0`
+```
+0
+```
+2. go to first neighbor of Node `0` i.e, `1` therefor DFS = `0 1`
+```
+0
+|
+1
+```
+3. go to first neighbor of Node `1` i.e, `0` but `0` has already visited, goes to second Node i.e, `3`, therefor DFS = `0 1 3`
+```
+  0
+ /
+1
+|
+3
+```
+4. go to first neighbor of Node `3` i.e, `1` but `1` has already visited, goes to second Node i.e, `4`, therefor DFS = `0 1 3 4`
+```
+  0
+ /
+1
+|
+3---4
+``` 
+5. go to first neighbor of Node `4` i.e, `2` therefor DFS = `0 1 3 4 2`
+ ```
+  0
+ /
+1   2
+|   |
+3---4
+```
+6. go to first neighbor of Node `2` i.e, `0` but `0` has already visited, goes to second Node i.e, `4` but `4` has also visited and there is no other neighbor present. Therefor backtrack to Node `4`,  DFS = `0 1 3 4 2`
+```
+  0
+ / \
+1   2
+|   |
+3---4
+```
+7. we have already visited the first neighbor of Node `4` (step 5), go to its second neighbor i.e, `3` but `3` has already visited, go to third neighbor i.e, `5`. Therefor DFS = `0 1 3 4 2 5`
+```
+  0
+ / \
+1   2
+|   |
+3---4
+   /
+  5 
+```
+8. go to the first neighbor of the Node `5` i.e, `3` but `3` has already visited, go to second child i.e, `4`but `4` was also already visited,, go to third child i.e, `6`. Therefor DFS = `0 1 3 4 2 5 6`
+```
+  0
+ / \
+1   2
+|   |
+3---4
+ \ /
+  5
+  |
+  6 
+```
+9. go to first neighbor of Node `6` i.e, `5` but `5` has already visited and is no further child present therefor backtrack to Node `5`
+10. no further child for Node `5` therefor backtrack to Node `4`, no further child for Node `4` therefor backtrack to Node `3`, no further child for Node `3` therefor backtrack to Node `1`, no further child for Node `1` therefor backtrack to Node `0`,  
+11. we have already visited the first child of Node `0`, go to second child i.e, `2` but `2` has already visited and is no further child present therefor return for DFS function
+
+final DFS sequence = `0 1 3 4 2 5 6`
 
 
 [Go To Top](#content)
