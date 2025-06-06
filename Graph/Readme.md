@@ -950,6 +950,153 @@ public class BFS{
 0 1 2 3 4 5 6 
 ```
 
+## Disconnected graph
+- The graph is broken into two or more separate parts, and there's no path between some pairs of nodes.
+
+- In outer word graph is divided into different component
+
+**Example:**
+```
+Component 1:         Component 2:
+   1                     3
+  / \                     \
+ 0   2                     4
+
+```
+- In above example although `component 1` and `component 2` are separate they are consider as single graph
+
+- Therefor our graph consist of vertex `0, 1, 2, 3, 4`
+- in disconnected graph our original BFS algorithm fails at it only search for neighboring Node and will print only one component at a time
+    - `start = 0`: output = `"0 1 2"`
+    - `start = 4`: output = `"4 3"`
+    - in both of this cases the output string is not a valid for our disconnected graph
+- to solve this we update our code little 
+
+**Update:**
+1. before you return from the BFS function check for un-visited node
+2. if there is any un-visited node make that node our new start and perform the BFS again for that node
+
+**Example:**
+1. perform BFS for starting node 0
+    - Output = `"0 1 2"`
+    - q = `[]`
+    - vis = `[true, true, true, false, false]`
+2. check whether for unvisited node with the help of vis array
+    - as `vis[3]` = `false`
+    - this says node 3 is unvisited
+    - preform the BFS with starting node `3`
+3. after performing the BFS with starting node `3`
+    - Output = `"0 1 2 3 4"`
+    - q = `[]`
+    - vis = `[true, true, true, true, true]`
+4. as all the index of vis array is filled with `true` that says all node have been visited therefor BFS complete
+
+
+**How to check for unvisited Node**
+
+just add one for loop which will traverse over the vis array and check for `vis[i] == false`
+```java
+for(int i = 0; i< V;i++){
+    if(vis[i] == false){
+        // call BFS again
+    }
+}
+```
+
+**Changes in code**
+1. function will accept the few more argument i.e,
+    1. graph
+    2. number of vertex
+    3. starting node
+    4. vis array
+
+**Note we have move the vis array from the BFS function to main function to avoid the loss of data during the function recalling**
+
+2. call the BFS Function for all the unvisited Nodes
+```java
+for(int i = 0; i< V;i++){
+    if(vis[i] == false){
+        bfs(graph, V, i,vis);
+    }
+}
+```
+**Note: in previous approach we have call this function without for loop ,here we have calling it within the for loop soo that it will call the BFS for starting index `i = 0` to avoid the extra line of function call**
+
+**Updated code with disconnected graph**
+```java
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class BFS{
+    static class Edge{
+        int src;
+        int dest;
+
+        public Edge(int s, int d){
+            this.src = s;
+            this.dest = d;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[0].add(new Edge(0, 1));
+        
+        graph[1].add(new Edge(1, 2));
+        graph[1].add(new Edge(1, 0));
+        
+        graph[2].add(new Edge(2, 1));
+        
+        graph[3].add(new Edge(3, 4));
+        
+        graph[4].add(new Edge(4, 3));
+    }
+
+    public static void bfs(ArrayList<Edge> graph[], int V, int start, boolean vis[]){
+        Queue<Integer> q = new LinkedList<>();
+    
+        q.add(start);
+
+        while(!q.isEmpty()){
+            int curr = q.remove();
+            if(vis[curr] == false){
+                System.out.print(curr + " ");
+                vis[curr] = true;
+                for(int i =0; i < graph[curr].size(); i++){
+                    Edge e = graph[curr].get(i);
+                    q.add(e.dest);
+                }
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        int V = 5;
+
+        ArrayList<Edge> graph[] = new ArrayList[V];
+
+        createGraph(graph);
+
+        boolean vis[] = new boolean[V];
+
+        for(int i = 0; i< V;i++){
+            if(vis[i] == false){
+                bfs(graph, V, i,vis);
+            }
+        }
+    }
+}
+```
+**Output:**
+```
+0 1 2 3 4
+```
+
+
 **Note: time complexity of the solution is `O[V + E]` where `V` is total number of `vertex` and `E` is total number of `edges`** 
 
 
