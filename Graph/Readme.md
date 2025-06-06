@@ -1185,6 +1185,8 @@ public class BFS{
   |
   6 
 ```
+**Some extra steps because of recursion**
+
 9. go to first neighbor of Node `6` i.e, `5` but `5` has already visited and is no further child present therefor backtrack to Node `5`
 10. no further child for Node `5` therefor backtrack to Node `4`, no further child for Node `4` therefor backtrack to Node `3`, no further child for Node `3` therefor backtrack to Node `1`, no further child for Node `1` therefor backtrack to Node `0`,  
 11. we have already visited the first child of Node `0`, go to second child i.e, `2` but `2` has already visited and is no further child present therefor return for DFS function
