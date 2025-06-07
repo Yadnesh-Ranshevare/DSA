@@ -8,6 +8,7 @@
 3. Graph Traversal
     1. [Breadth first Search(BFS)](#breadth-first-searchbfs)
     2. [Depth First Search(DFS)](#depth-first-search-dfs)
+4. [All Path From Source to Target](#all-path-from-source-to-target)
 
 
 # Introduction
@@ -1622,6 +1623,294 @@ Component 1:         Component 2:
  0   2                     4
 ```
 **Note: time complexity of the solution is `O[V + E]` where `V` is total number of `vertex` and `E` is total number of `edges`** 
+
+
+[Go To Top](#content)
+
+---
+# All Path From Source to Target
+**For given graph print all the path from source to target**\
+**Example:**\
+given graph
+```
+  0
+ / \
+1   2
+|   |
+3---4
+ \ /
+  5
+  |
+  6 
+```
+
+source: 0\
+target: 5
+
+Output:
+```
+0 1 3 4 5
+0 1 3 5
+0 2 4 3 5
+0 2 4 5
+```
+
+## Approach
+
+- to solve this problem we use modified version of DFS algorithm\
+[to learn about DFS](#depth-first-search-dfs)
+- in original DFS we travel over the whole graph, but in its modified version we specify when to end our traversal
+```java
+if(curr == tar){ // current == targeted
+    return;
+}
+```
+- now here we want to print each path individually, therefor instead of printing the path node by node, we maintain a separate variable for path and print that variable once we reach the target 
+```java
+if(curr == tar){
+    System.out.println(path);   // print the path variable
+    return;
+}
+```
+- we start with `path = ""` and update this path variable every time we visit a new node or backtrack from current node
+    - if we `visit` a node `add` that node into the into the path variable
+    - if we `backtrack` from the node `remove` that node form the path variable
+
+## Step by step illustration
+for given graph, source = 0; target = 5
+```
+  0
+ / \
+1   2
+|   |
+3---4
+ \ /
+  5
+  |
+  6 
+```
+**Step 1 : visit 0**
+- path = `"0"`
+
+**Step 2 : visit 1**
+- path = `"0 1"`
+
+**Step 3 : visit 3**
+- path = `"0 1 3"`
+
+**Step 4 : visit 4**
+- path = `"0 1 3 4"`
+
+**Step 5 : visit 2**
+- path = `"0 1 3 4 2"`
+- as `0` is already visited we cannot travel to the `0`
+- return -> `2` we get remove from the path
+
+**Step 6 : visit 4 (Continue from step 4)**
+- path = `"0 1 3 4"`
+
+
+**Step 7 : visit 5**
+- path = `"0 1 3 4 5"`
+- current node = target Node
+    - print(path) -> output: `0 1 3 4 5`
+    - return -> remove `5` from path
+
+**Step 8 : visit 4 (continue from step 6)**
+- path = `"0 1 3 4"`
+- there is no more node left Therefor
+    - return -> remove `4` from path 
+
+**Step 9 : visit 3 (continue from step 3)**
+- path = `"0 1 3"`
+
+**Step 10 : visit 5**
+- path = `"0 1 3 5"`
+- current node = target Node
+    - print(path) -> output: `0 1 3 5`
+    - return -> remove `5` from path
+
+- **This algorithm similarly goes on for to produce two more output i.e, `0 2 4 3 5` and `0 2 4 5`**
+- Therefor final outputs:
+    1. `0 1 3 4 5`
+    2. `0 1 3 5`
+    3. `0 2 4 3 5`
+    4. `0 2 4 5`
+
+## How to use visited Array
+- we cannot use vis array in traditional way as we want to visit the one node more than one time to find all the possible paths
+- if we follow traditional vis array approach then according our above example when we produce output = `0 1 3 4 5` we have set the `4` vis array flag to `true`, now at the time of producing output = `0 2 4 3 5` we have `4` via array flag to `true`\
+That says we cannot traverse to node `4` and cannot generate the output = `0 2 4 3 5` and `0 2 4 5`
+
+**Therefor to solve this problem**
+- we update the way we set the vis  array flag
+- **we set the current node vis array flag to `true` once we go to its neighbor node and again set it to `false` once we backtrack from current node**
+- **Why do this?**
+    - once we backtrack from Node `4` we set that node vis array flag to `false` that is we can visit Node `4` allowing us to produce output = `0 2 4 3 5` and `0 2 4 5`
+- **Do we really have to use vis Array?**\
+yes! for 2 simple reason:
+    1. to avoid trapping in cycle:\
+    in our example check for `step 5` as if we have visited `0` again we might have trapped in a cycle vis array avoid this condition from happening
+    2. to avoid going back to current node\
+    in our example check for `step 6` after `2` next neighbor of node `4` is `3`, is we don't have vis array we travel back to `3` creating un-consistency
+    - Therefor in general we can say that **before** travailing to any neighbor we need to make sure that edge has not been visited first and to do that we need vis array
+
+## Algorithm
+1. travel over the given graph from source 
+```java
+for(int i =0;i<graph[curr].size(); i++){
+
+}
+```
+2. check whether the neighbor you are trying to travel has been visited or not
+```java
+for(int i =0;i<graph[curr].size(); i++){
+    Edge e = graph[curr].get(i);
+    if(!vis[e.dest]){
+        // neighbor was not visited
+    }
+}
+```
+3. set the vis array flag to true for current node
+```java
+for(int i =0;i<graph[curr].size(); i++){
+    Edge e = graph[curr].get(i);
+    if(!vis[e.dest]){
+        vis[curr] = true;
+    }
+} 
+```
+4. make the recursive call for neighbor, also update the path variable
+```java
+for(int i =0;i<graph[curr].size(); i++){
+    Edge e = graph[curr].get(i);
+    if(!vis[e.dest]){
+        vis[curr] = true;
+        printAllPath(graph, vis, e.dest, path+e.dest, tar);
+    }
+}
+```
+5. before returning from the current recursion stack make sure to set the vis array flag to false
+```java
+for(int i =0;i<graph[curr].size(); i++){
+    Edge e = graph[curr].get(i);
+    if(!vis[e.dest]){
+        vis[curr] = true;
+        printAllPath(graph, vis, e.dest, path+e.dest, tar); // adding neighbor node into the path aoo that once you backtrack to this node you will get you original path back
+        vis[curr] = false;
+    }
+}
+```
+6. base case: print the path once reach the target and return
+```java
+if(curr == tar){
+    System.out.println(path);
+    return;
+}
+```
+## Code
+```java
+public static void printAllPath(ArrayList<Edge> graph[], boolean vis[], int curr, String path, int tar){
+    if(curr == tar){
+        System.out.println(path);
+        return;
+    }
+
+    for(int i =0;i<graph[curr].size(); i++){
+        Edge e = graph[curr].get(i);
+        if(!vis[e.dest]){
+            vis[curr] = true;
+            printAllPath(graph, vis, e.dest, path+e.dest, tar);
+            vis[curr] = false;
+        }
+    }
+}
+```
+
+## Complete code
+```java
+import java.util.ArrayList;
+
+public class AllPathFromSrcToTar{
+    static class Edge{
+        int src;
+        int dest;
+
+        public Edge(int s, int d){
+            this.src = s;
+            this.dest = d;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[0].add(new Edge(0, 1));
+        graph[0].add(new Edge(0, 2));
+        
+        graph[1].add(new Edge(1, 3));
+        graph[1].add(new Edge(1, 0));
+        
+        graph[2].add(new Edge(2, 4));
+        graph[2].add(new Edge(2, 0));
+        
+        graph[3].add(new Edge(3,1));
+        graph[3].add(new Edge(3,4));
+        graph[3].add(new Edge(3,5));
+        
+        graph[4].add(new Edge(4,2));
+        graph[4].add(new Edge(4,3));
+        graph[4].add(new Edge(4,5));
+        
+        graph[5].add(new Edge(5,3));
+        graph[5].add(new Edge(5,4));
+        graph[5].add(new Edge(5,6));
+        
+        graph[6].add(new Edge(6,5)); 
+    }
+
+    public static void printAllPath(ArrayList<Edge> graph[], boolean vis[], int curr, String path, int tar){
+        if(curr == tar){
+            System.out.println(path);
+            return;
+        }
+
+        for(int i =0;i<graph[curr].size(); i++){
+            Edge e = graph[curr].get(i);
+            if(!vis[e.dest]){
+                vis[curr] = true;
+                printAllPath(graph, vis, e.dest, path+e.dest, tar);
+                vis[curr] = false;
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        int V = 7;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        boolean vis[] = new boolean[V];
+
+        int src = 0;
+        int tar = 5;
+
+        printAllPath(graph, vis, src, String.valueOf(src), tar);
+        
+    }
+}
+```
+## Output:
+```
+01345
+0135
+02435
+0245
+```
+
+**Note: time complexity for this code is `O[v^v]` where V is number of vertex**
 
 
 [Go To Top](#content)
