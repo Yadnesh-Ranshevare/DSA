@@ -1106,6 +1106,7 @@ public class BFS{
 
 ---
 # Depth First Search (DFS)
+**Before you learn about the DFS you must also know about [BFS](#breadth-first-searchbfs)**
 - DFS (Depth-First Search) is a graph traversal algorithm that explores as far as possible along each branch before backtracking. It is like **going deep** into the graph before coming back.
 - Here we recursively goes to the first neighbor of each node 
 
@@ -1192,6 +1193,435 @@ public class BFS{
 11. we have already visited the first child of Node `0`, go to second child i.e, `2` but `2` has already visited and is no further child present therefor return for DFS function
 
 final DFS sequence = `0 1 3 4 2 5 6`
+
+## Approach
+
+**Note: you must know about [Adjacency list](#adjacency-list) before learning this solution**
+- we use array to solve this problem
+- Visited Array:
+    - it is use to store the visited nodes
+    - size of array is equal to total number of vertex
+    - each index represent its respective node
+    - at first our whole array is filled with `False`
+    - once we visit any node we set that index to `True`
+    - `arr[i] = false`: Node `i` has not visited
+    - `arr[i] = true`: Node `i` has visited
+- before we visit any new Array we first check its visited Array flag
+    - `flag = True` : skip that node
+    - `flag = False` : visit that node
+- Whenever we visit a node we perform 3 simple step
+    1. print the current node
+    2. set that node flag as true in visited array
+    3. make recursive call for the neighbor of current node
+
+## Step by step illustration
+consider a graph
+```
+  0
+ / \
+1   2
+|   |
+3---4
+ \ /
+  5
+  |
+  6
+```
+
+**Step 1 : initialize**
+
+- start with node `0`
+- vis: `[false, false, false, false, false, false, false]`
+- `vis[0]` = `false`
+- output: `""`
+- visit `0`
+
+**step 2 : visit 0**
+- print `0`
+    - output: `"0"`
+- `vis[0]` = `true`
+    - vis: `[true, false, false, false, false, false, false]`
+- first neighbor of `0` is `1`
+    - `vis[1]` = `false`
+    - visit `1`
+
+**step 3 : visit 1**
+- print `1`
+    - output: `"0 1"`
+- `vis[1]` = `true`
+    - vis: `[true, true, false, false, false, false, false]`
+- first neighbor of `1` is `0`
+    - `vis[0]` = `true`
+    - skip it
+- second neighbor of `1` is `3`
+    - `vis[3]` = `false`
+    - visit `3`
+
+**step 4 : visit 3**
+- print `3`
+    - output: `"0 1 3"`
+- `vis[3]` = `true`
+    - vis: `[true, true, false, true, false, false, false]`
+- first neighbor of `3` is `1`
+    - `vis[1]` = `true`
+    - skip it
+- second neighbor of `3` is `4`
+    - `vis[4]` = `false`
+    - visit `4`
+
+**step 5 : visit 4**
+- print `4`
+    - output: `"0 1 3 4"`
+- `vis[4]` = `true`
+    - vis: `[true, true, false, true, true, false, false]`
+- first neighbor of `4` is `2`
+    - `vis[2]` = `false`
+    - visit `2`
+
+**step 6 : visit 2**
+- print `2`
+    - output: `"0 1 3 4 2"`
+- `vis[2]` = `true`
+    - vis: `[true, true, true, true, true, false, false]`
+- first neighbor of `2` is `0`
+    - `vis[0]` = `true`
+    - skip it
+- second neighbor of `2` is `4`
+    - `vis[4]` = `true`
+    - skip it
+- there is no more neighbor fro node `2` therefor backtrack from Node `2`
+
+**step 7 : visit 4 (continue with step 5)**
+- previous steps:
+    - print `4`
+    - `vis[4]` = `true`
+        - vis: `[true, true, false, true, true, false, false]`
+    - first neighbor of `4` is `2`
+        - `vis[2]` = `false`
+        - visit `2`
+- second neighbor of node `4` is `3`
+    - `vis[3]` = `true`
+    - skip is
+- third neighbor of Node `4` is `5`
+    - `vis[5]` = `false`
+    - visit `5`
+
+**step 8 : visit 5**
+- print `5`
+    - output: `"0 1 3 4 2 5"`
+- `vis[5]` = `true`
+    - vis: `[true, true, true, true, true, true, false]`
+- first neighbor of `5` is `6`
+    - `vis[6]` = `true`
+    - skip it
+- second neighbor of `5` is `4`
+    - `vis[4]` = `true`
+    - skip it
+- third neighbor of `5` is `6`
+    - `vis[6]` = `false`
+    - visit `6`
+
+
+**step 9 : visit 6**
+- print `6`
+    - output: `"0 1 3 4 2 5 6"`
+- `vis[6]` = `true`
+    - vis: `[true, true, true, true, true, true, true]`
+- first neighbor of `6` is `5`
+    - `vis[3]` = `true`
+    - skip it
+- second neighbor of `5` is `4`
+    - `vis[4]` = `true`
+    - skip it
+- third neighbor of `5` is `6`
+    - `vis[6]` = `false`
+    - visit `6`
+- there is no more neighbor fro node `6` therefor backtrack from Node `6`
+
+
+**step 10 : visit 5 (continue with step 8)**
+- previous steps:
+    - print `5`
+    - `vis[5]` = `true`
+        - vis: `[true, true, true, true, true, true, false]`
+    - first neighbor of `5` is `6`
+        - `vis[6]` = `true`
+        - skip it
+    - second neighbor of `5` is `4`
+        - `vis[4]` = `true`
+        - skip it
+    - third neighbor of `5` is `6`
+        - `vis[6]` = `false`
+        - visit `6`
+- there is no more neighbor fro node `5` therefor backtrack from Node `5`
+
+**step 11 : visit 4 (continue with step 7)**
+- previous steps:
+    - print `4`
+    - `vis[4]` = `true`
+        - vis: `[true, true, false, true, true, false, false]`
+    - first neighbor of `4` is `2`
+        - `vis[2]` = `false`
+        - visit `2`
+    - second neighbor of node `4` is `3`
+        - `vis[3]` = `true`
+        - skip is
+    - third neighbor of Node `4` is `5`
+        - `vis[5]` = `false`
+        - visit `5`
+- there is no more neighbor fro node `4` therefor backtrack from Node `4`
+
+**step 12 : visit 3 (continue with step 4)**
+- previous steps:
+    - print `3`
+    - `vis[3]` = `true`
+        - vis: `[true, true, false, true, false, false, false]`
+    - first neighbor of `3` is `1`
+        - `vis[1]` = `true`
+        - skip it
+    - second neighbor of `3` is `4`
+        - `vis[4]` = `false`
+        - visit `4`
+- third neighbor of `3` is `5`
+    - `vis[5]` = `true`
+    - skip it
+- there is no more neighbor fro node `3` therefor backtrack from Node `3`
+
+
+**step 13 : visit 1 (continue with step 3)**
+- previous steps
+    - print `1`
+    - `vis[1]` = `true`
+        - vis: `[true, true, false, false, false, false, false]`
+    - first neighbor of `1` is `0`
+        - `vis[0]` = `true`
+        - skip it
+    - second neighbor of `1` is `3`
+        - `vis[3]` = `false`
+        - visit `3`
+- there is no more neighbor fro node `1` therefor backtrack from Node `1`
+
+
+**step 14 : visit 0(continue with step 2)**
+- previous steps:
+    - print `0`
+    - `vis[0]` = `true`
+        - vis: `[true, false, false, false, false, false, false]`
+    - first neighbor of `0` is `1`
+        - `vis[1]` = `false`
+        - visit `1`
+- second neighbor of node `0` is `2`
+    - `vis[2]` = `true`
+    - skip is
+- there is no more neighbor fro node `0` therefor backtrack from Node `0`
+- once we backtrack for node `0` we complete our function and return to main
+
+**Final output string = `"0 1 3 4  2 5 6"` (step 9)**
+
+## Algorithm
+1. accept the graph, current node and vis array 
+```java
+public static void dfs(ArrayList<Edge> graph[], int curr, boolean  vis[]){
+
+}
+```
+2. print the current Node
+```java
+System.out.print(curr+" ");
+```
+3. set the vis flag of current node to true
+```java
+vis[curr] = true;
+```
+4. get all the neighbor of current node\
+[to learn about how to get all the neighbor](#how-to-get-the-neighboring-nodes)
+```java
+for (int i = 0; i< graph[curr].size(); i++){
+    Edge e = graph[curr].get(i);
+}
+```
+5. check whether neighbor has been visited or not
+```java
+for (int i = 0; i< graph[curr].size(); i++){
+    Edge e = graph[curr].get(i);
+    if(vis[e.dest] == false){
+        // has not been visited
+    }
+}
+```
+6. visit the neighbor by using recursion call
+```java
+for (int i = 0; i< graph[curr].size(); i++){
+    Edge e = graph[curr].get(i);
+    if(vis[e.dest] == false){
+        dfs(graph, e.dest, vis);
+    }
+}
+```
+
+## Code
+```java
+public static void dfs(ArrayList<Edge> graph[], int curr, boolean  vis[]){
+    System.out.print(curr+" ");
+    vis[curr] = true;
+
+    for (int i = 0; i< graph[curr].size(); i++){
+        Edge e = graph[curr].get(i);
+        if(vis[e.dest] == false){
+            dfs(graph, e.dest, vis);
+        }
+    }
+}
+```
+## Complete code
+```java
+import java.util.ArrayList;
+
+public class DFS{
+    static class Edge{
+        int src;
+        int dest;
+
+        public Edge(int s, int d){
+            this.src = s;
+            this.dest = d;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[0].add(new Edge(0, 1));
+        graph[0].add(new Edge(0, 2));
+        
+        graph[1].add(new Edge(1, 3));
+        graph[1].add(new Edge(1, 0));
+        
+        graph[2].add(new Edge(2, 4));
+        graph[2].add(new Edge(2, 0));
+        
+        graph[3].add(new Edge(3,1));
+        graph[3].add(new Edge(3,4));
+        graph[3].add(new Edge(3,5));
+        
+        graph[4].add(new Edge(4,2));
+        graph[4].add(new Edge(4,3));
+        graph[4].add(new Edge(4,5));
+        
+        graph[5].add(new Edge(5,3));
+        graph[5].add(new Edge(5,4));
+        graph[5].add(new Edge(5,6));
+        
+        graph[6].add(new Edge(6,5)); 
+    }
+
+    public static void dfs(ArrayList<Edge> graph[], int curr, boolean  vis[]){
+        System.out.print(curr+" ");
+        vis[curr] = true;
+
+        for (int i = 0; i< graph[curr].size(); i++){
+            Edge e = graph[curr].get(i);
+            if(vis[e.dest] == false){
+                dfs(graph, e.dest, vis);
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        int V = 7;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        boolean vis[] = new boolean[V];
+        dfs(graph, 0, vis);
+    }
+}
+```
+## Output:
+```
+0 1 3 4 2 5 6
+```
+
+## Disconnected graph
+**Note: when we call the `dfs` function for the first time we use for loop to avoid the failure of the algorithm during disconnected graph\
+[click here to learn about disconnected graph and why to you for loop for that](#disconnected-graph)**
+
+- in  `bfs` we use for loop to check for unvisited node here algo in `dfs` we use for loop for same reason to check for unvisited node 
+- if there is any unvisited node that means there is disconnected graph with one unvisited component 
+- to solve this issue we use for loop to check whether we have any unvisited node or not, and if have any perform `dfs` on that unvisited node
+
+```java
+import java.util.ArrayList;
+
+public class DFS{
+    static class Edge{
+        int src;
+        int dest;
+
+        public Edge(int s, int d){
+            this.src = s;
+            this.dest = d;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[0].add(new Edge(0, 1));
+        
+        graph[1].add(new Edge(1, 2));
+        graph[1].add(new Edge(1, 0));
+        
+        graph[2].add(new Edge(2, 1));
+        
+        graph[3].add(new Edge(3, 4));
+        
+        graph[4].add(new Edge(4, 3));
+    }
+
+    public static void dfs(ArrayList<Edge> graph[], int curr, boolean  vis[]){
+        System.out.print(curr+" ");
+        vis[curr] = true;
+
+        for (int i = 0; i< graph[curr].size(); i++){
+            Edge e = graph[curr].get(i);
+            if(vis[e.dest] == false){
+                dfs(graph, e.dest, vis);
+            }
+        }
+    }
+    
+    public static void main(String[] args) {
+        int V = 5;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        boolean vis[] = new boolean[V];
+        for(int i = 0; i< V;i++){
+            if(vis[i] == false){
+                dfs(graph, i, vis);
+            }
+        }
+        
+    }
+}
+```
+**Output:**
+```
+0 1 2 3 4
+```
+**Graph use in above code**
+```
+Component 1:         Component 2:
+   1                     3
+  / \                     \
+ 0   2                     4
+```
+
 
 
 [Go To Top](#content)
