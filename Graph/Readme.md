@@ -1621,7 +1621,7 @@ Component 1:         Component 2:
   / \                     \
  0   2                     4
 ```
-
+**Note: time complexity of the solution is `O[V + E]` where `V` is total number of `vertex` and `E` is total number of `edges`** 
 
 
 [Go To Top](#content)
