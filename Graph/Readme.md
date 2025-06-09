@@ -9,6 +9,8 @@
     1. [Breadth first Search(BFS)](#breadth-first-searchbfs)
     2. [Depth First Search(DFS)](#depth-first-search-dfs)
 4. [All Path From Source to Target](#all-path-from-source-to-target)
+5. Cycle Detection
+    1. [Directed Graph](#cycle-detection-in-directed-graph)
 
 
 # Introduction
@@ -1912,6 +1914,329 @@ public class AllPathFromSrcToTar{
 
 **Note: time complexity for this code is `O[v^v]` where V is number of vertex**
 
+
+[Go To Top](#content)
+
+---
+# Cycle Detection in Directed Graph
+
+**A cycle in a directed graph (digraph) is a path that,
+Starts and ends at the same node.**
+
+Example:
+```
+  graph 1       graph 2
+  
+  1 -> 2        1 -> 2
+  ↓    ↑        ↑    ↓
+  4 -> 3        4 <- 3   
+```
+in above example we can see that graph 1 is non cyclic whereas graph 2 is cyclic
+
+## Approach
+- to solve this problem we modify `DFS` algorithm\
+[click here to learn about DFA](#depth-first-search-dfs)
+- **Why use DFA?**\
+we are using DFA as we want to use it property of going into the depth of the graph by using recursion
+    - **In DFA whenever we visit a new node we make a recursion call, adding that node node into recursion stack and whenever we backtrack from that node we remove that node from the recursion stack**
+    - we will be using this property of recursion to solve this problem
+- Whenever we want to visit a certain node we check whether that node is already present in the recursion stack or not 
+    - Node present in the recursion stack -> we have already visited that node
+    - Node is not present in the recursion stack -> we have not yet visited that node
+- if we have already visited that node that means going to node will take us to a node we have already traverse upon in our past and if you go to that node it will lead to same node again and again trapping us into the cycle
+- therefor we check whether that node is present in our recursion stack or not, if it present then we return true as cycle present and if not then go deeper into the graph to visit the remaining nodes
+
+**EXample:**
+```
+1 -> 2
+↑    ↓
+4 <- 3   
+```
+- **initialization**
+    - recursion stack = `[]`
+    - start from `1`
+    - as `1` is not present in the recursion stack visit `1`
+- **Visit 1**
+    - recursion stack = `[1]`
+    - neighbor of node `1` is `2`
+    - as `2` is not present in the recursion stack visit `2`
+- **visit 2**
+    - recursion stack = `[1 | 2]`
+    - neighbor of node `2` is `3`
+    - as `3` is not present in the recursion stack visit `3` 
+- **visit 3**
+    - recursion stack = `[1 | 2 | 3]`
+    - neighbor of node `3` is `4`
+    - as `4` is not present in the recursion stack visit `4` 
+- **visit 4**
+    - recursion stack = `[1 | 2 | 3 | 4]`
+    - neighbor of node `4` is `1`
+    - as `1` is exist in the recursion stack -> cycle exist
+    - return `true`
+
+### why to use recursion stack instead of visited array
+**visited array also do the same thing keep the track of the visited nodes, but because of the directed nature of the graph using visited array to check wether we have visited any node in past or not to find the cycle may cause some inconsistency**
+
+**Example using `visited array`:**
+
+consider the following `non-cyclic` graph 
+```
+  1 -> 2        
+  ↓    ↑        
+  4 -> 3          
+```
+- **initialization**
+    - vis = `[false, false, false, false]`
+    - start from `1`
+    -  as `vis[1]` = `false` -> node is not yet visited
+- **Visit 1**
+    - vis = `[true, false, false, false]`
+    - first neighbor of `1` is `2`
+    - as `vis[2]` = `false` -> node is not yet visited
+    - visit `2`
+- **Visit 2**
+    - vis = `[true, true, false, false]`
+    - there is no neighbor for node `2`
+    - backtrack to previous node i.e, node `1`
+- **Visit 1**
+    - vis = `[true, true, false, false]`
+    - second neighbor of node `1` is `4`
+    - as `vis[4]` = `false` -> node is not yet visited
+    - visit `4`
+- **Visit 4**
+    - vis = `[true, true, false, true]`
+    - first neighbor of node `4` is `3`
+    - as `vis[3]` = `false` -> node is not yet visited
+    - visit `3`
+- **Visit 3**
+    - vis = `[true, true, true, true]`
+    - first neighbor of node `3` is `2`
+    - as `vis[2]` = `true` -> we have visited node `2` in the past
+    - according to recursion stack approach if we are reaching to any node we have visited in our past will cause cycle to form
+    - therefor here using visited array we get final answer as `cycle present` even though our graph is `non-cyclic`
+
+**Example using `recursion stack:`**
+
+consider the following `non-cyclic` graph 
+```
+  1 -> 2        
+  ↓    ↑        
+  4 -> 3          
+```
+- **initialization**
+    - recursion stack = `[]`
+    - start from `1`
+    - as `1` is not present in the recursion stack visit `1`
+- **Visit 1**
+    - recursion stack = `[1]`
+    - first neighbor of node `1` is `2`
+    - as `2` is not present in the recursion stack visit `2`
+- **visit 2**
+    - recursion stack = `[1 | 2]`
+    - as there is no neighbor for node `2`, backtrack to previous node i.e, `1`
+    - once you backtrack `2` will get remove from the recursion stack
+- **Visit 1**
+    - recursion stack = `[1]`
+    - second neighbor of node `1` is `4`
+    - as `4` is not present in the recursion stack visit `4`
+- **Visit 4**
+    - recursion stack = `[1 | 4]`
+    - neighbor of node `4` is `3`
+    - as `3` is not present in the recursion stack visit `3`
+- **Visit 3**
+    - recursion stack = `[1 | 4 | 3]`
+    - neighbor of node `3` is `2`
+    - as `2` is not present in the recursion stack visit `2`
+- **Visit 2**
+    - recursion stack = `[1 | 4 | 3 | 2]`
+    - as there is no neighbor for node `2` and we have traverse over our whole graph, we will continuously backtrack towards where we have started
+- as during whole traversal there was no node present in the recursion stack we can say that there is `no cycle`
+
+### How to handle recursion stack
+- from the approach we can see that we want to perform the search operation on this recursion stack very frequently
+- The search time complexity of graph is `o[n]` which is quite high fro frequently performing operation
+- To solve this issue we use `Array`, as array has time complexity of `o[1]` which is very low compare to stack
+- Therefor to make this `array(res)` to behave like recursion stack:
+    - this array(res) will be **same as that of visited array** i.e, boolean array of size `V` where `V` is number of vertex and each index of array is initially filled with false.
+    -  `res[i] = true`   -> node `i` is present in recursion stack
+    -  `res[i] = false`   -> node `i` is not present in recursion stack
+    - whenever we visit any node we set that node res flag to `true` to indicate that node in has added into the recursion stack
+    - whenever we backtrack from any node we set that node res flag to `false` to indicate that node in has remove from recursion stack
+
+### Algorithm
+
+1. set the vis and res flag of current node to true
+```java
+vis[curr] = true;
+rec[curr] = true;
+```
+2. get all of the neighbor of the current node\
+[to learn about how to het all neighbor](#how-to-get-the-neighboring-nodes)
+```java
+for(int i = 0; i<graph[curr].size(); i++){
+    Edge e = graph[curr].get(i);
+}
+```
+3. check whether any neighbor present in the recursion stack or not and if it present then return true
+```java
+for(int i = 0; i<graph[curr].size(); i++){
+    Edge e = graph[curr].get(i);
+    if(rec[e.dest]){    // present in recursion stack
+        return  true;
+    }
+}
+```
+4. if neighbor is not present in the recursion stack then check whether we have yet visited that node or not?
+```java
+for(int i = 0; i<graph[curr].size(); i++){
+    Edge e = graph[curr].get(i);
+    if(rec[e.dest]){
+        return  true;
+    }else if(!vis[e.dest]){     // not yet visited
+        
+    }
+}
+```
+5. if neighbor is not yet visited then recursively check whether any cycle present in for that neighbor or not and return true only if it present
+```java
+for(int i = 0; i<graph[curr].size(); i++){
+    Edge e = graph[curr].get(i);
+    if(rec[e.dest]){
+        return  true;
+    }else if(!vis[e.dest]){
+        if(isCyclePresent(graph, vis, e.dest, rec)){
+            return true;
+        }
+    }
+}
+```
+6. Above for loop will return true if any cycle detected, if we successfully reach the outside the for loop then that means no cycle detected 
+7. since no cycle detected backtrack by returning false and removing the current node from recursive stack
+```java
+rec[curr] = false;
+return  false;
+```
+### Code
+```java
+public static boolean isCyclePresent(ArrayList<Edge> graph[], boolean vis[], int curr, boolean rec[]){
+    vis[curr] = true;
+    rec[curr] = true;
+
+    for(int i = 0; i<graph[curr].size(); i++){
+        Edge e = graph[curr].get(i);
+        if(rec[e.dest]){
+            return  true;
+        }else if(!vis[e.dest]){
+            if(isCyclePresent(graph, vis, e.dest, rec)){
+                return true;
+            }
+        }
+    }
+    rec[curr] = false;
+    return  false;
+}
+```
+
+**Note: to avoid the inconsistency caused by disconnected graph we use for loop to call this function**\
+[to learn about disconnected graph and why to use for loop](#disconnected-graph)
+```java
+for(int i = 0; i< V; i++){
+    if(!vis[i]){
+        // call the function
+    }
+}
+```
+before we call the function again we will check whether the current result of first call is true or false
+
+- true -> cycle detected
+- false -> cycle not detected
+
+if result is true then then there is no need to check for remaining graph as cycle already detected. Therefor break through loop
+
+if result is false then then there is we have to check for remaining graph as cycle might present in that remaining portion of the graph
+```java
+for(int i = 0; i< V; i++){
+    if(!vis[i]){
+        if(isCyclePresent(graph, vis, i, rec)){
+            System.out.println("true");
+            break;
+        }
+    }
+}
+```
+### Complete code
+```java
+import java.util.ArrayList;
+
+public class CycleDetectionInDirectedGraph {
+    static class Edge {
+        int src;
+        int dest;
+        public Edge(int s, int d) {
+            this.src = s;
+            this.dest = d;
+        }
+    }
+    static void createGraph(ArrayList<Edge> graph[]) {
+        for(int i=0; i<graph.length; i++) {
+            graph[i] = new ArrayList<>();
+        }
+        graph[0].add(new Edge(0, 2));
+
+        graph[1].add(new Edge(1, 0));
+
+        graph[2].add(new Edge(2, 3));
+
+        graph[3].add(new Edge(3, 0));
+    }  
+
+    public static boolean isCyclePresent(ArrayList<Edge> graph[], boolean vis[], int curr, boolean rec[]){
+        vis[curr] = true;
+        rec[curr] = true;
+
+        for(int i = 0; i<graph[curr].size(); i++){
+            Edge e = graph[curr].get(i);
+            if(rec[e.dest]){
+                return  true;
+            }else if(!vis[e.dest]){
+                if(isCyclePresent(graph, vis, e.dest, rec)){
+                    return true;
+                }
+            }
+        }
+        rec[curr] = false;
+        return  false;
+    }   
+    
+    public static void main(String[] args) {
+        int V = 5;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        boolean vis[] = new boolean[V];
+        boolean rec[] = new boolean[V];
+
+        for(int i = 0; i< V; i++){
+            if(!vis[i]){
+                if(isCyclePresent(graph, vis, i, rec)){
+                    System.out.println("true");
+                    break;
+                }
+            }
+        }
+    }
+}
+```
+### Output:
+```
+true
+```
+### Graph in above example
+```
+0 -> 1
+↑    ↓
+3 <- 2   
+```
 
 [Go To Top](#content)
 
