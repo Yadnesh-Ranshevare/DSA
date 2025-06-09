@@ -1938,12 +1938,12 @@ in above example we can see that graph 1 is non cyclic whereas graph 2 is cyclic
 [click here to learn about DFA](#depth-first-search-dfs)
 - **Why use DFA?**\
 we are using DFA as we want to use it property of going into the depth of the graph by using recursion
-    - **In DFA whenever we visit a new node we make a recursion call, adding that node node into recursion stack and whenever we backtrack from that node we remove that node from the recursion stack**
+    - **In DFA whenever we visit a new node we make a recursion call, adding that node into recursion stack and whenever we backtrack from that node we remove that node from the recursion stack**
     - we will be using this property of recursion to solve this problem
 - Whenever we want to visit a certain node we check whether that node is already present in the recursion stack or not 
     - Node present in the recursion stack -> we have already visited that node
     - Node is not present in the recursion stack -> we have not yet visited that node
-- if we have already visited that node that means going to node will take us to a node we have already traverse upon in our past and if you go to that node it will lead to same node again and again trapping us into the cycle
+- if we have already visited that node, that means going to node will take us to a node we have already traverse upon in our past and if you go to that node it will lead to same node again and again trapping us into the cycle
 - therefor we check whether that node is present in our recursion stack or not, if it present then we return true as cycle present and if not then go deeper into the graph to visit the remaining nodes
 
 **EXample:**
@@ -1975,7 +1975,7 @@ we are using DFA as we want to use it property of going into the depth of the gr
     - return `true`
 
 ### why to use recursion stack instead of visited array
-**visited array also do the same thing keep the track of the visited nodes, but because of the directed nature of the graph using visited array to check wether we have visited any node in past or not to find the cycle may cause some inconsistency**
+**Although visited array do the same thing i.e, keep the track of the visited nodes, but because of the directed nature of the graph using visited array to check wether we have visited any node in past or not to find the cycle may cause some inconsistency**
 
 **Example using `visited array`:**
 
@@ -2013,7 +2013,7 @@ consider the following `non-cyclic` graph
     - first neighbor of node `3` is `2`
     - as `vis[2]` = `true` -> we have visited node `2` in the past
     - according to recursion stack approach if we are reaching to any node we have visited in our past will cause cycle to form
-    - therefor here using visited array we get final answer as `cycle present` even though our graph is `non-cyclic`
+    - therefor as visited array says we have already visited node `2` in past we get final answer as `cycle present` even though our graph is `non-cyclic`
 
 **Example using `recursion stack:`**
 
@@ -2034,7 +2034,7 @@ consider the following `non-cyclic` graph
 - **visit 2**
     - recursion stack = `[1 | 2]`
     - as there is no neighbor for node `2`, backtrack to previous node i.e, `1`
-    - once you backtrack `2` will get remove from the recursion stack
+    - once you backtrack from `2` will get remove from the recursion stack
 - **Visit 1**
     - recursion stack = `[1]`
     - second neighbor of node `1` is `4`
@@ -2055,7 +2055,7 @@ consider the following `non-cyclic` graph
 ### How to handle recursion stack
 - from the approach we can see that we want to perform the search operation on this recursion stack very frequently
 - The search time complexity of graph is `o[n]` which is quite high fro frequently performing operation
-- To solve this issue we use `Array`, as array has time complexity of `o[1]` which is very low compare to stack
+- To solve this issue we use `Array`, as array has search time complexity of `o[1]` which is very low compare to stack
 - Therefor to make this `array(res)` to behave like recursion stack:
     - this array(res) will be **same as that of visited array** i.e, boolean array of size `V` where `V` is number of vertex and each index of array is initially filled with false.
     -  `res[i] = true`   -> node `i` is present in recursion stack
@@ -2146,14 +2146,14 @@ for(int i = 0; i< V; i++){
     }
 }
 ```
-before we call the function again we will check whether the current result of first call is true or false
+before we call the function again we will check whether the result of current call is true or false
 
 - true -> cycle detected
 - false -> cycle not detected
 
 if result is true then then there is no need to check for remaining graph as cycle already detected. Therefor break through loop
 
-if result is false then then there is we have to check for remaining graph as cycle might present in that remaining portion of the graph
+if result is false then then we have to check for remaining graph as cycle might present in that remaining portion of the graph
 ```java
 for(int i = 0; i< V; i++){
     if(!vis[i]){
