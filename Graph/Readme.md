@@ -8,6 +8,7 @@
 3. Graph Traversal
     1. [Breadth first Search(BFS)](#breadth-first-searchbfs)
     2. [Depth First Search(DFS)](#depth-first-search-dfs)
+    3. [Topological Sorting](#topological-sorting)
 4. [All Path From Source to Target](#all-path-from-source-to-target)
 5. Cycle Detection
     1. [Directed Graph](#cycle-detection-in-directed-graph)
@@ -1630,6 +1631,324 @@ Component 1:         Component 2:
 [Go To Top](#content)
 
 ---
+# Topological Sorting
+
+**Note: Topological sorting is used only on `DAG's`(Directed Acyclic Graph)**
+
+Topological Sort is a linear ordering of the vertices of a Directed Acyclic Graph (DAG) such that for every directed edge `u → v`, vertex `u` comes before vertex `v` in the ordering.
+
+#### Example:
+consider a following graph
+
+
+![Graph example](./Image/Screenshot%202025-06-11%20142304.png)
+
+edges in this graph
+```
+a -> b      # u = a and v = b
+b -> c      # u = b and v = c
+a -> c      # u = a and v = c
+c -> d      # u = c and v = d
+```
+for all the edges in the above graph `u` comes before `v`, therefor we can say that above graph s **topologically sorted**.
+
+
+### Topological Sorted Order
+linear sequence of all vertices in a Directed Acyclic Graph (DAG) where each node appears before all nodes it points to.
+
+for above example topological sorted order is: `a b c d`
+
+**Explanation:**
+- in our graph `a` comes before `b` and `c`, therefor in our sequence `a` must appear before `b` and `c`
+- in our graph `b` comes before  `c`, therefor in our sequence `b` must appear before `c`
+- in our graph `c` comes before  `d`, therefor in our sequence `c` must appear before `d`
+
+### Why we need topological sort
+
+**To maintain dependency**
+
+- suppose we have to write a java code for which we have some series of action as follow:
+    1. buy a laptop
+    2. install os
+    3. install code editor
+    4. install java
+    5. write code
+- for us to properly write a code we must have to follow a specific sequence i.e, we cant write a java code without installing java and to install java we need OS 
+
+- hence we can  say that to write java we need both code editor and java installed i.e, without installing code editor and java we cannot write the java code. Therefor we can say that writing code is dependent on installing code editor and installing java it doesn't in which order they get install
+- but to install java and code editor we need OS without which cannot install them both and to install OS we need a laptop
+- Therefor to write a java code our sequence must be: 
+    1. buy a laptop
+    2. install os
+    3. install code editor 
+    4. install java
+    5. write code
+
+- lets assume each Vertex of the graph represent the single action then our graph structure is like:
+
+![graph image](./Image/TP.png)
+
+**Note: this graph is always a Directed Acyclic Graph (DAG)**
+
+- as node `1` come before `2` -> action `1(buying a laptop)` must perform before `2(installing OS)`
+- as node `2` come before `3` and `4` -> action `2(installing OS)` must perform before `3(installing code editor)` and `4(installing java)`
+
+- since installing code editor and installing java are two independent thing they are not dependent on each other therefor  we can have them at single level i.e, we can first install java then the code editor or we can first install code editor then java in both of the cases our final goal can be achievable
+
+- as node `3` and `4` come before node `5` -> action `3(installing code editor)` and `4(installing java)` must perform before `5(writing java code)`
+- as we need both code editor and java installed to write the java code
+
+- for this graph our topological sorted order is :
+```
+1 2 3 4 5
+    or
+1 2 4 3 5
+```
+as it doesn't matter which action we perform `action 3(install code editor)` or `action 4(install java)`
+
+- but order cannot be:
+```
+1 2 3 5 4
+```
+as we cannot perform `action 5(write java code)` before `action 4(install java)`
+
+- this topological order tells us how our dependency is, like for order `1 2 3 4 5`
+    - to perform `action 3(install code editor)` we must have to complete `action 1(buy laptop) & 2(install OS)` as `1` and `2` came before `3`
+
+### Approach
+1. to solve this problem we use modified version of [DFS](#depth-first-search-dfs) and [Stack Data structure](../stack/readme.md)
+2. from the above explanation we can  make the conclusion that says we need to print the vertex first then its neighbor
+3. Although DFS do the same i.e, print the vertex first then its neighbor, it start from the random vertex which may cause some inconsistency
+4. therefor to solve this issue we need to store the vertexes separately and in topological order
+5. to do that we use stack: **whenever we return from the DFS code we push the current node into the stack**
+```java
+public static void topSort(ArrayList<Edge> graph[], int curr, boolean  vis[], Stack<Integer> stack){
+    vis[curr] = true;
+
+    for (int i = 0; i< graph[curr].size(); i++){
+        Edge e = graph[curr].get(i);
+        if(vis[e.dest] == false){
+            topSort(graph, e.dest, vis, stack);
+        }
+    }
+    // all os the above code is a code of DFS
+    stack.push(curr);   // push the current node into the stack 
+}
+```
+#### Why to push node into the stack
+consider a graph with topological order: `5 4 2 3 1 0`
+
+![graph image](./Image/tp-approach.png)
+
+from above graph we can say that `5` came before `2 3 1`, therefor somehow if we manage to push the `5` in the stack while `2 3 1` are at the bottom of the stack then we can abel to store our topological sequence
+
+- from this observation we can say that before we push current node into the stack we have to push all of  its neighbor into the stack first
+- this is possible because of the recursive approach of the DFS algorithm
+- we recursively reach the node `1` by traversing over `2, 3`, now as we return on the way we push `1, 3, 2` into the stack where `2` is on top of the `3` and `1`
+- now if we try to print our stack(Last In First Out) we get sequence as follow: `2 3 1`
+
+### Step by Step Illustration
+![graph image](./Image/tp-approach.png)
+
+**Initialize:**
+- vis = `[false, false, false, false, false, false]`
+- stack = `[]`
+- start with vertex `0`
+
+**Step 1 : Visit 0:**
+- `vis[0]` = `true`
+    - vis = `[true, false, false, false, false, false]`
+- vertex `0` has zero neighbor 
+- push `0` into the stack
+- stack = `[0]`
+- return
+
+As vertex `1` is not visited yet we visit `1`
+
+**Step 2 : Visit 1:**
+- `vis[1]` = `true`
+    - vis = `[true, true, false, false, false, false]`
+- vertex `1` has zero neighbor 
+- push `1` into the stack
+- stack = `[0 | 1]`
+- return
+
+As vertex `2` is not visited yet we visit `2`
+
+**Step 3 : Visit 2:**
+- `vis[2]` = `true`
+    - vis = `[true, true, true, false, false, false]`
+- neighbor of `2` is `3`
+- visit `3`
+
+**Step 4 : visit 3**
+- `vis[3]` = `true`
+    - vis = `[true, true, true, true, false, false]`
+- neighbor of `3` is `1`, but `1` is `already visited`
+- Therefor push `3` into the stack
+- stack = `[0 | 1 | 3]`
+- return
+
+**Step 5 : Visit 2 (continue with step 3):**
+- previous steps:
+    - `vis[2]` = `true`
+        - vis = `[true, true, true, false, false, false]`
+    - neighbor of `2` is `3`
+    - visit `3`
+- vertex `2` has no neighbor left
+- Therefor push `2` into the stack
+- stack = `[0 | 1 | 3 | 2]`
+- return
+
+As vertex `4` is not visited yet we visit `4`
+
+**Step 6 : Visit 4:**
+- `vis[4]` = `true`
+    - vis = `[true, true, true, true, true, false]`
+- neighbor of `4` is `0` and `1`, since both `0` and `1` is already visited
+- push `4` into the stack
+- stack = `[0 | 1 | 3 | 2 | 4]`
+- return
+
+As vertex `5` is not visited yet we visit `5`
+
+**Step 7 : Visit 5:**
+- `vis[5]` = `true`
+    - vis = `[true, true, true, true, true, true]`
+- neighbor of `5` is `0` and `2`, since both `0` and `2` is already visited
+- push `5` into the stack
+- stack = `[0 | 1 | 3 | 2 | 4 | 5]`
+- return
+
+**Step 8: print the stack**
+- since stack follow LIFO(Last In First Out) approach the vertex which is added last will be print first
+- therefor our final topological sequence is: `5 4 2 3 1 0`
+
+### Algorithm:
+- our algorithm for this problem remain the same as that of the DFS algorithm
+- only difference is  instead of printing the current node we push tat node before we backtrack
+- once we complete our code we just print the stack
+```java
+while(!stack.isEmpty()){
+    System.out.print(stack.pop()+" ");
+}
+```
+
+### Code
+```java
+// this is the same code snippet as that of the DFS algorithm
+public static void topSort(ArrayList<Edge> graph[], int curr, boolean  vis[], Stack<Integer> stack){
+    vis[curr] = true;   // removed the print statement 
+
+    for (int i = 0; i< graph[curr].size(); i++){
+        Edge e = graph[curr].get(i);
+        if(vis[e.dest] == false){
+            topSort(graph, e.dest, vis, stack);
+        }
+    }
+    stack.push(curr);   // added the statement to push the curr node into the stack
+}
+
+// function to print the stack
+public static void printTopSort(ArrayList<Edge> graph[]){
+    boolean vis[] = new boolean[graph.length];
+    Stack<Integer> stack = new Stack<>();
+
+    for(int i = 0; i< graph.length;i++){
+        if(vis[i] == false){
+            topSort(graph, i, vis,stack);
+        }
+    }
+
+    // print the stack
+    while(!stack.isEmpty()){
+        System.out.print(stack.pop()+" ");
+    }
+}
+```
+
+### Complete code
+```java
+import java.util.ArrayList;
+import java.util.Stack;
+
+public class TopologicalSort{
+    static class Edge{
+        int src;
+        int dest;
+
+        public Edge(int s, int d){
+            this.src = s;
+            this.dest = d;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[2].add(new Edge(2, 3));
+
+        graph[3].add(new Edge(3, 1));
+
+        graph[4].add(new Edge(4, 0));
+        graph[4].add(new Edge(4, 1));
+
+        graph[5].add(new Edge(5, 0));
+        graph[5].add(new Edge(5, 2));
+    }
+
+    public static void topSort(ArrayList<Edge> graph[], int curr, boolean  vis[], Stack<Integer> stack){
+        vis[curr] = true;
+
+        for (int i = 0; i< graph[curr].size(); i++){
+            Edge e = graph[curr].get(i);
+            if(vis[e.dest] == false){
+                topSort(graph, e.dest, vis, stack);
+            }
+        }
+        stack.push(curr);
+    }
+    
+    public static void printTopSort(ArrayList<Edge> graph[]){
+        boolean vis[] = new boolean[graph.length];
+        Stack<Integer> stack = new Stack<>();
+
+        for(int i = 0; i< graph.length;i++){
+            if(vis[i] == false){
+                topSort(graph, i, vis,stack);
+            }
+        }
+
+        while(!stack.isEmpty()){
+            System.out.print(stack.pop()+" ");
+        }
+    }
+
+    public static void main(String[] args) {
+        int V = 6;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        printTopSort(graph);   
+    }
+}
+```
+### Output
+```
+5 4 2 3 1 0
+```
+**Note: time complexity of the solution is `O[V + E]` where `V` is total number of `vertex` and `E` is total number of `edges`**
+
+[Go To Top](#content)
+
+---
+
+
+
+
+
 # All Path From Source to Target
 **For given graph print all the path from source to target**\
 **Example:**\
