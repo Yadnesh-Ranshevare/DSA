@@ -2329,7 +2329,8 @@ To find the back edge you must have to find the neighbor who satisfy the conditi
 ```java
 vis[curr] = true;
 ```
-2. get all the neighbor of the current node
+2. get all the neighbor of the current node\
+[click here to learn about how to get the neighbor of any node](#how-to-get-the-neighboring-nodes)
 ```java
 for (int i = 0; i< graph[curr].size(); i++){
     Edge e = graph[curr].get(i);
@@ -2833,7 +2834,7 @@ from this graph we can say that there is a indirect edge between `s` and `u` wit
 ```
 s ----- u
 ```
-- **direct edge:** there is no node in between
+- **direct edge:** there is no node in between (between two neighbor there exist a direct edge)
 
 example: consider a graph
 ```
@@ -2852,7 +2853,7 @@ dis[u] = 1
 ```java
 dis[u] + wt = 3
 ``` 
-- now if you compare current  distance and newly found distance (vie `u`) then we can say that as `current distance (5)` > `new distance (3)` 
+- now if you compare current  distance and newly found distance (vie `u`) then we can say that `current distance (5)` > `new distance (3)` 
 ```java
 dis[v] + wt < dis[v]
 ```
