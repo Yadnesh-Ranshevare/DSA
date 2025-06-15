@@ -3123,12 +3123,20 @@ consider a graph with source node `0`
    - vis = `[true, false, false, false, false, false]`
    - neighbor = `1` and `2`
    - for `1`
+        - `dis[source]` = `0`
+        
         - wt = `2`
+        - `dis[source] + weight` = `2`
+        - `dis[destination]` = `infinite`
         - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
     - PQ = `[(node = 1, dis = 2)]`
     - dis = `[0, 2, infinite, infinite, infinite, infinite]`
    - for `2`
+        - `dis[source]` = `0`
+
         - wt = `4`
+        - `dis[source] + weight` = `4`
+        - `dis[destination]` = `infinite`
         - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
     - PQ = `[ (node = 1, dis = 2) | (node = 2, dis = 4) ]`
     - dis = `[0, 2, 4, infinite, infinite, infinite]`
@@ -3137,12 +3145,20 @@ consider a graph with source node `0`
    - vis = `[true, true, false, false, false, false]`
    - neighbor = `2` and `3`
    - for `2`
+        - `dis[source]` = `2`
+
         - wt = `1`
+        - `dis[source] + weight` = `3`
+        - `dis[destination]` = `4`
         - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
     - PQ = `[ (node = 2, dis = 3) | (node = 2, dis = 4) ]`
     - dis = `[0, 2, 3, infinite, infinite, infinite]`
    - for `3`
+        - `dis[source]` = `2`
+
         - wt = `7`
+        - `dis[source] + weight` = `9`
+        - `dis[destination]` = `infinite`
         - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
     - PQ = `[(node = 2, dis = 3) | (node = 2, dis = 4) | (node = 3, dis = 7)]`
     - dis = `[0, 2, 3, 9, infinite, infinite]`
@@ -3151,7 +3167,11 @@ consider a graph with source node `0`
    - vis = `[true, true, true, false, false, false]`
    - neighbor = `4`
    - for `4`
+        - `dis[source]` = `3`
+
         - wt = `3`
+        - `dis[source] + weight` = `6`
+        - `dis[destination]` = `infinite`
         - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
     - PQ = `[ (node = 2, dis = 4) | (node = 4, dis = 6) | (node = 3, dis = 9) ]`
     - dis = `[0, 2, 3, 9, 6, infinite]`
@@ -3165,12 +3185,20 @@ consider a graph with source node `0`
    - vis = `[true, true, true, false, true, false]`
    - neighbor = `3` and `5`
    - for `3`
+        - `dis[source]` = `6`
+
         - wt = `2`
+        - `dis[source] + weight` = `8`
+        - `dis[destination]` = `9`
         - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
     - PQ = `[(node = 3, dis = 8)| (node = 3, dis = 9) ]`
     - dis = `[0, 2, 3, 8, 6, infinite]`
     - for `5`
+        - `dis[source]` = `6`
+        
         - wt = `5`
+        - `dis[source] + weight` = `11`
+        - `dis[destination]` = `infinite`
         - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
     - PQ = `[(node = 3, dis = 8)| (node = 3, dis = 9) | (node = 5, dis = 11) ]`
     - dis = `[0, 2, 3, 8, 6, 11]`
@@ -3179,7 +3207,12 @@ consider a graph with source node `0`
    - vis = `[true, true, true, true, true, false]`
    - neighbor = `5`
     - for `5`
+        - `dis[source]` = `8`
+
         - wt = `1`
+        - `dis[source] + weight` = `9`
+        - `dis[destination]` = `11
+        `
         - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
     - PQ = `[(node = 3, dis = 8)| (node = 3, dis = 9) | (node = 5, dis = 9) | (node = 5, dis = 11) ]`
     - dis = `[0, 2, 3, 8, 6, 9]`
