@@ -2869,14 +2869,600 @@ if (distance[u] + weight(u, v) < distance[v]) {
 }
 ```
 
+### Priority Queue
+
+**To solve dijkstra's algorithm we use priority queue**
+
+**before learning about priority queue make sure you know about the [Queue data structure](../Queue/Readme.md)**
+
+- **A priority queue is a special type of queue where each element has a priority, and the element with the highest priority is served first.**\
+example: \
+Queue has two element 1(high priority) and 3(low priority) then no matter in which order they have inserted into the queue, whenever we perform the pop operation on queue the element with high priority will pop first
+
+- It  also follow FIFO approach
+
+- **by default lower values has higher priority i.e, `1` has high priority that `5`**
+
+- element with higher priority will always comes first irrespective of their order of insertion
+
+Example:\
+consider a empty queue 
+```
+q = []
+```
+1. **add 1**
+```
+q = [1]
+```
+2. **add 5**
+```
+q = [1 | 5]
+```
+3. **add 7**
+```
+q = [1 | 5 | 7]
+```
+4. **add 0 (high priority)**
+```
+q = [0 | 1 | 5 | 7]
+```
+
+
+5. **add 3**
+```
+q = [0 | 1 | 3 | 5 | 7]
+```
+
+### Approach
+ we use greedy approach to solve this problem
+
+![graph image](./Image/Dijkstra.png)
+
+let say in above graph our source node is `0`, therefor at first we have following data with us
+- **dis = `[0, infinite, infinite, infinite, infinite, infinite]`**\
+as we are starting from node `0` we can say that distance between `0-0` is `0`, whereas we don't know the distance between `0 and other` nodes that why we assume it to be `infinite`
+- **vis = `[false, false, false, false, false, false]`**\
+as we have not yet visited any node, each node represent whether we have visited that node or not
+
+**For Dijkstra's algorithm we perform two simple steps**
+1. we search for any unvisited node with shortest distance 
+2. once we find that node we visit that node and find its neighbor and perform relaxation for each neighbor 
+
+### Illustration
+- **Initialization:**
+    - dis = `[0, infinite, infinite, infinite, infinite, infinite]`
+    - vis = `[false, false, false, false, false, false]`
+
+- **step 1 : visit 0 (unvisited node with shortest distance)**
+    - `vis[0]` = `true`
+    - neighbor of `0` = `1` and `2`
+    - for neighbor `1`
+        - source = `0`
+        - destination = `1`
+        - weight = `2`
+        - relaxation:
+            - `dis[source]` = `0`
+
+            - `dis[source] + weight` = 0 + 2 = `2`
+
+            - `dis[destination]` = `infinite`
+
+            - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - for neighbor `2`
+        - source = `0`
+        - destination = `2`
+        - weight = `4`
+        - relaxation:
+            - `dis[source]` = `0`
+
+             - `dis[source] + weight` = 0 + 4 = `4`
+
+            - `dis[destination]` = `infinite`
+
+            - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - update:
+        - dis = `[0, 2, 4, infinite, infinite, infinite]`
+        - vis = `[true, false, false, false, false, false]`
+- **step 2 : visit 1 (unvisited node with shortest distance)**
+    - `vis[1]` = `true`
+    - neighbor of `1` = `2` and `3`
+    - for neighbor `2`
+        - source = `1`
+        - destination = `2`
+        - weight = `1`
+        - relaxation:
+            - `dis[source]` = `2`
+
+            - `dis[source] + weight` = 2 + 1 = `3`
+
+            - `dis[destination]` = `4`
+
+            - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - for neighbor `3`
+        - source = `2`
+        - destination = `3`
+        - weight = `7`
+        - relaxation:
+            - `dis[source]` = `2`
+
+            - `dis[source] + weight` = 2 + 7 = `9`
+
+            - `dis[destination]` = `infinite`
+
+            - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - update:
+        - dis = `[0, 2, 3, 9, infinite, infinite]`
+        - vis = `[true, true, false, false, false, false]`
+
+
+- **step 3 : visit 2 (unvisited node with shortest distance)**
+    - `vis[2]` = `true`
+    - neighbor of `2` = `4`
+    - for neighbor `4`
+        - source = `2`
+        - destination = `4`
+        - weight = `3`
+        - relaxation:
+            - `dis[source]` = `3`
+
+            - `dis[source] + weight` = 3 + 3 = `6`
+
+            - `dis[destination]` = `infinite`
+
+            - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - update:
+        - dis = `[0, 2, 3, 9, 6, infinite]`
+        - vis = `[true, true, true, false, false, false]`
+
+- **step 4 : visit 4 (unvisited node with shortest distance)**
+    - `vis[4]` = `true`
+    - neighbor of `4` = `3` and `5`
+    - for neighbor `3`
+        - source = `4`
+        - destination = `3`
+        - weight = `2`
+        - relaxation:
+            - `dis[source]` = `6`
+
+            - `dis[source] + weight` = 6 + 2 = `8`
+
+            - `dis[destination]` = `9`
+
+            - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - for neighbor `5`
+        - source = `4`
+        - destination = `5`
+        - weight = `5`
+        - relaxation:
+            - `dis[source]` = `6`
+
+            - `dis[source] + weight` = 6 + 5 = `11`
+
+            - `dis[destination]` = `infinite`
+
+            - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - update:
+        - dis = `[0, 2, 3, 8, 6, 11]`
+        - vis = `[true, true, true, false, true, false]`
+
+
+- **step 5 : visit 3 (unvisited node with shortest distance)**
+    - `vis[3]` = `true`
+    - neighbor of `3` =  `5`
+    - for neighbor `5`
+        - source = `3`
+        - destination = `5`
+        - weight = `1`
+        - relaxation:
+            - `dis[source]` = `8`
+
+            - `dis[source] + weight` = 8 + 1 = `9`
+
+            - `dis[destination]` = `11`
+
+            - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - update:
+        - dis = `[0, 2, 3, 8, 6, 9]`
+        - vis = `[true, true, true, true, true, false]`
+
+- **step 5 : visit 5 (unvisited node with shortest distance)**
+    - `vis[5]` = `true`
+    - there is no neighbor of node `5`
+    - update:
+        - dis = `[0, 2, 3, 8, 6, 9]`
+        - vis = `[true, true, true, true, true, true]`
+
+### How to search for unvisited node with shortest distance?
+
+**To find the unvisited node with shortest distance we solve this Dijkstra's algorithm by modifying the [BFS algorithm](#breadth-first-searchbfs)**
+
+- here instead of using normal queue we use priority queue, where we consider distance as priority, therefor whenever we perform the remove operation we get node having shortest distance (in BFS we check whether the node is visited or not before executing this operation)
+- to do that we create the separate class name Pair, which hold the current node and its distance from the source
+```java
+public static class Pair{
+    int node;
+    int dis;    
+    public Pair(int node, int dis){
+        this.node = node;
+        this.dis = dis;
+    }
+}
+```
+- currently our priority queue doesn't know about the priority whether it is a node value or a dis value
+- to do that we update our code by implementing the `Comparable<>` interface and override its function name `compareTo()` which is responsible for comparing the two value of queue
+```java
+public static class Pair implements Comparable<Pair>{
+    int node;
+    int dis;
+    public Pair(int node, int dis){
+        this.node = node;
+        this.dis = dis;
+    }
+    @Override
+    public int compareTo(Pair p2){
+        return this.dis - p2.dis;
+    }
+}
+```
+- now whenever we update any distance of any node we add that node into our priority Queue to check whether its neighbor can have the shortest path through it or not
+
+
+### Illustration
+
+consider a graph with source node `0`
+
+![graph example](./Image/Dijkstra.png)
+
+
+- **Initialization:**
+    - dis = `[0, infinite, infinite, infinite, infinite, infinite]`
+    - vis = `[false, false, false, false, false, false]`
+    - PQ = `[(node = 0, dis = 0)]`
+
+- **step 1 : visit 0 (PQ.remove = 0)**
+   - vis = `[true, false, false, false, false, false]`
+   - neighbor = `1` and `2`
+   - for `1`
+        - wt = `2`
+        - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - PQ = `[(node = 1, dis = 2)]`
+    - dis = `[0, 2, infinite, infinite, infinite, infinite]`
+   - for `2`
+        - wt = `4`
+        - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - PQ = `[ (node = 1, dis = 2) | (node = 2, dis = 4) ]`
+    - dis = `[0, 2, 4, infinite, infinite, infinite]`
+
+- **step 2 : visit 1 (PQ.remove = 1)**
+   - vis = `[true, true, false, false, false, false]`
+   - neighbor = `2` and `3`
+   - for `2`
+        - wt = `1`
+        - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - PQ = `[ (node = 2, dis = 3) | (node = 2, dis = 4) ]`
+    - dis = `[0, 2, 3, infinite, infinite, infinite]`
+   - for `3`
+        - wt = `7`
+        - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - PQ = `[(node = 2, dis = 3) | (node = 2, dis = 4) | (node = 3, dis = 7)]`
+    - dis = `[0, 2, 3, 9, infinite, infinite]`
+
+- **step 3 : visit 2 (PQ.remove = 2)**
+   - vis = `[true, true, true, false, false, false]`
+   - neighbor = `4`
+   - for `4`
+        - wt = `3`
+        - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - PQ = `[ (node = 2, dis = 4) | (node = 4, dis = 6) | (node = 3, dis = 9) ]`
+    - dis = `[0, 2, 3, 9, 6, infinite]`
+
+- **step 4 : visit 2 (PQ.remove = 2)**
+   - `vis[2]` = `true` -> skip
+    - PQ = `[(node = 4, dis = 6) | (node = 3, dis = 9) ]`
+    - dis = `[0, 2, 3, 9, 6, infinite]`
+
+- **step 5 : visit 4 (PQ.remove = 4)**
+   - vis = `[true, true, true, false, true, false]`
+   - neighbor = `3` and `5`
+   - for `3`
+        - wt = `2`
+        - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - PQ = `[(node = 3, dis = 8)| (node = 3, dis = 9) ]`
+    - dis = `[0, 2, 3, 8, 6, infinite]`
+    - for `5`
+        - wt = `5`
+        - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - PQ = `[(node = 3, dis = 8)| (node = 3, dis = 9) | (node = 5, dis = 11) ]`
+    - dis = `[0, 2, 3, 8, 6, 11]`
+
+- **step 6 : visit 3 (PQ.remove = 3)**
+   - vis = `[true, true, true, true, true, false]`
+   - neighbor = `5`
+    - for `5`
+        - wt = `1`
+        - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
+    - PQ = `[(node = 3, dis = 8)| (node = 3, dis = 9) | (node = 5, dis = 9) | (node = 5, dis = 11) ]`
+    - dis = `[0, 2, 3, 8, 6, 9]`
+
+- **step 7 : visit 3 (PQ.remove = 3)**
+   - `vis[3]` = `true` -> skip
+    - PQ = `[(node = 3, dis = 9) | (node = 5, dis = 9) | (node = 5, dis = 11) ]`
+    - dis = `[0, 2, 3, 8, 6, 9]`
+
+- **step 8 : visit 3 (PQ.remove = 3)**
+   - `vis[3]` = `true` -> skip
+    - PQ = `[ (node = 5, dis = 9) | (node = 5, dis = 11) ]`
+    - dis = `[0, 2, 3, 8, 6, 9]`
+
+- **step 9 : visit 5 (PQ.remove = 5)**
+   - vis = `[true, true, true, true, true, true]`
+   - there is no neighbor of node `5`
+    - PQ = `[ (node = 5, dis = 11) ]`
+    - dis = `[0, 2, 3, 8, 6, 9]`
+- - **step 10 : visit 5 (PQ.remove = 5)**
+   - `vis[3]` = `true` -> skip
+    - PQ = `[]`
+    - dis = `[0, 2, 3, 8, 6, 9]`
+
+### Algorithm
+1. create the priority queue, distance array and visited array
+```java
+PriorityQueue<Pair> pq = new PriorityQueue<>();
+int dis[] = new int[graph.length];
+boolean vis[] = new boolean[graph.length];
+```
+2. add infinite at each index of the dis array except source (by default will add `0` for source)
+```java
+for(int i = 0; i< graph.length; i++){
+    if(i != src){
+        dis[i] = Integer.MAX_VALUE; // infinite
+    }
+}
+```
+3. add source into the PQ with dis = `0`
+```java
+pq.add(new Pair(src,0));
+```
+4. start with BFS, by getting the current node
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();   
+}
+```
+5. check whether current node is visited or not?
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+    if(!vis[curr.node]){
+        // not yet visited
+    }
+}
+```
+6. set current node visited flag to true 
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+    if(!vis[curr.node]){
+        vis[curr.node] = true;
+    }
+}
+```
+7. get the all the neighbors of the current node\
+[click here to learn about hoe to get the neighbor of curr node ](#how-to-get-the-neighboring-nodes)
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+    if(!vis[curr.node]){
+        vis[curr.node] = true;
+        for(int i = 0; i< graph[curr.node].size(); i++){
+            Edge e = graph[curr.node].get(i);
+        }
+    }
+}
+```
+8. get the source, destination and weight for the current neighbor
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+    if(!vis[curr.node]){
+        vis[curr.node] = true;
+        for(int i = 0; i< graph[curr.node].size(); i++){
+            Edge e = graph[curr.node].get(i);
+            int u = e.src;
+            int v = e.dest;
+            int wt = e.wt;
+        }
+    }
+}
+```
+9. Apply relaxation
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+    if(!vis[curr.node]){
+        vis[curr.node] = true;
+        for(int i = 0; i< graph[curr.node].size(); i++){
+            Edge e = graph[curr.node].get(i);
+            int u = e.src;
+            int v = e.dest;
+            int wt = e.wt;
+            if(dis[u] + wt < dis[v]){
+                dis[v] = dis[u] + wt;
+            }
+        }
+    }
+}
+```
+10. since you have change the distance of current neighbor add that neighbor into the PQ
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+    if(!vis[curr.node]){
+        vis[curr.node] = true;
+        for(int i = 0; i< graph[curr.node].size(); i++){
+            Edge e = graph[curr.node].get(i);
+            int u = e.src;
+            int v = e.dest;
+            int wt = e.wt;
+            if(dis[u] + wt < dis[v]){
+                dis[v] = dis[u] + wt;
+                pq.add(new Pair(v, dis[v]));
+            }
+        }
+    }
+}
+```
+11. print the dis array to display the all shortest paths from source
+```java
+for(int i = 0; i< dis.length; i++){
+    System.out.print(dis[i] + " ");
+}
+```
+### Code
+```java
+public static void Dijkstra(ArrayList<Edge> graph[], int src){
+    PriorityQueue<Pair> pq = new PriorityQueue<>();
+    int dis[] = new int[graph.length];
+    boolean vis[] = new boolean[graph.length];
+
+    for(int i = 0; i< graph.length; i++){
+        if(i != src){
+            dis[i] = Integer.MAX_VALUE; 
+        }
+    }
+
+    pq.add(new Pair(src,0));
+
+    while(!pq.isEmpty()){
+        Pair curr = pq.remove();
+        if(!vis[curr.node]){
+            vis[curr.node] = true;
+            for(int i = 0; i< graph[curr.node].size(); i++){
+                Edge e = graph[curr.node].get(i);
+                int u = e.src;
+                int v = e.dest;
+                int wt = e.wt;
+                if(dis[u] + wt < dis[v]){
+                    dis[v] = dis[u] + wt;
+                    pq.add(new Pair(v, dis[v]));
+                }
+            }
+        }
+    }
+
+    for(int i = 0; i< dis.length; i++){
+        System.out.print(dis[i] + " ");
+    }
+}
+```
+### Complete code
+```java
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+public class DijkstraAlgorithm{
+    static class Edge{
+        int src;
+        int dest;
+        int wt;
+
+        public Edge(int s, int d, int wt){
+            this.src = s;
+            this.dest = d;
+            this.wt = wt;
+        }
+    }
+
+    public static class Pair implements Comparable<Pair>{
+        int node;
+        int dis;
+        public Pair(int node, int dis){
+            this.node = node;
+            this.dis = dis;
+        }
+
+        @Override
+        public int compareTo(Pair p2){
+            return this.dis - p2.dis;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[0].add(new Edge(0, 1, 2));
+        graph[0].add(new Edge(0, 2, 4));
+
+        graph[1].add(new Edge(1, 3, 7));
+        graph[1].add(new Edge(1, 2, 1));
+
+        graph[2].add(new Edge(2, 4, 3));
+
+        graph[3].add(new Edge(3, 5, 1));
+
+        graph[4].add(new Edge(4, 3, 2));
+        graph[4].add(new Edge(4, 5, 5));
+    }
+
+    public static void Dijkstra(ArrayList<Edge> graph[], int src){
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        int dis[] = new int[graph.length];
+        boolean vis[] = new boolean[graph.length];
+
+        for(int i = 0; i< graph.length; i++){
+            if(i != src){
+                dis[i] = Integer.MAX_VALUE; // infinite
+            }
+        }
+
+        pq.add(new Pair(src,0));
+
+        while(!pq.isEmpty()){
+            Pair curr = pq.remove();
+            if(!vis[curr.node]){
+                vis[curr.node] = true;
+                for(int i = 0; i< graph[curr.node].size(); i++){
+                    Edge e = graph[curr.node].get(i);
+                    int u = e.src;
+                    int v = e.dest;
+                    int wt = e.wt;
+                    if(dis[u] + wt < dis[v]){
+                        dis[v] = dis[u] + wt;
+                        pq.add(new Pair(v, dis[v]));
+                    }
+                }
+            }
+        }
+
+        for(int i = 0; i< dis.length; i++){
+            System.out.print(dis[i] + " ");
+        }
+    } 
+    public static void main(String[] args) {
+        int V = 6;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        Dijkstra(graph, 0);
+    }
+}
+```
+### output
+```
+0 2 3 8 6 9
+```
+**Note: time complexity of the solution is `O[E + E logV]` where `V` is total number of vertex and `E` is total number of edges**\
+**`E logV` is because of the uses of priority queue**
+
+   
 
 
 [Go To Top](#content)
 
 ---
-
-
-
-
 
 
