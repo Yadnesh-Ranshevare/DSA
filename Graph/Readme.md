@@ -13,6 +13,7 @@
     1. [Directed Graph](#cycle-detection-in-directed-graph)
     2. [Undirected Graph](#cycle-detection-in-undirected-graph)
 6. [Topological Sorting](#topological-sorting)
+7. [Dijkstra's Algorithm](#dijkstras-algorithm)
 
 
 # Introduction
@@ -2309,7 +2310,7 @@ in our example `edge[2, 3]` is a back edge
 Therefor the condition to detect the cycle in undirected graph is as follow:\
 **There must exist at least one back edge**
 
-To find the back edge you ust have to find the neighbor who satisfy the condition : **already visited and is not a parent**
+To find the back edge you must have to find the neighbor who satisfy the condition : **already visited and is not a parent**
 
 
 ### Approach
@@ -2790,6 +2791,90 @@ public class TopologicalSort{
 [Go To Top](#content)
 
 ---
+
+# Dijkstra's Algorithm
+
+it is algorithm to find the shortest **distance** from source to all the vertex in weighted graph
+
+Example:\
+consider a graph
+
+![graph image](./Image/Dijkstra.png)
+
+now assuming source as `0` our shortest distance for each node is as follow:
+- node `0` : `0` 
+- node `1` : `2` 
+- node `2` : `3` (0 -> 1 -> 2)
+- node `3` : `8` (0 -> 1 -> 2 -> 4 -> 3)
+- node `4` : `6` (0 -> 1 -> 2 -> 4)
+- node `5` ; `9` (0 -> 1 -> 2 -> 4 -> 3 -> 5)
+
+therefor as a output we get a array in which at each index represent the destination and hold's the value of shortest distance
+
+**actual output of the Dijkstra's algorithm:** `[0, 2, 3, 8, 6, 9]`
+
+at index `2` we have `3` that means shortest distance between source (`0`) and node `2`(destination) is `3`
+
+### Relaxation
+
+relaxation is the process of updating the shortest known distance to a vertex if a shorter path is found through another vertex.
+
+![graph image](./Image/relaxation.png)
+
+- in above example we have a graph where source is `S` and destination is `V` and an another node `u`
+- between `S` and `V, u` there is indirect edge, whereas between `u` and `V` there is direct edge
+- **indirect Edge:** the edge may consist some nodes on the way
+
+example: consider a graph
+```
+s —— a —— b —— u
+```
+from this graph we can say that there is a indirect edge between `s` and `u` with node `a` and `b` in between
+```
+s ----- u
+```
+- **direct edge:** there is no node in between
+
+example: consider a graph
+```
+s —— a —— b —— u
+```
+between node `s - a`, `a - b` and `b - u` there is a direct edge
+- if we have found that current distance between `S` and `V` is `5`
+```java
+dis[v] = 5
+``` 
+- shortest distance between `S` and `u` is `1`
+```java
+dis[u] = 1
+``` 
+- since `u` is a neighbor of `V` with edge weight `2` therefor there exist a path between `S` and `V` vie `u` with distance `1 + 2 = 3`
+```java
+dis[u] + wt = 3
+``` 
+- now if you compare current  distance and newly found distance (vie `u`) then we can say that as `current distance (5)` > `new distance (3)` 
+```java
+dis[v] + wt < dis[v]
+```
+- since new distance is shorter than current distance we update the current distance by assigning the value of shortest distance to current distance
+```java
+dis[v] = dis[u] + wt
+```
+
+**Condition of Relaxation:**
+```java
+if (distance[u] + weight(u, v) < distance[v]) {
+    distance[v] = distance[u] + weight(u, v);
+}
+```
+
+
+
+[Go To Top](#content)
+
+---
+
+
 
 
 
