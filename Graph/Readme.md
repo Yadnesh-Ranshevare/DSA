@@ -2914,7 +2914,7 @@ q = [0 | 1 | 3 | 5 | 7]
 ```
 
 ### Approach
- we use greedy approach to solve this problem
+ **we use greedy approach to solve this problem**
 
 ![graph image](./Image/Dijkstra.png)
 
@@ -2924,9 +2924,10 @@ as we are starting from node `0` we can say that distance between `0-0` is `0`, 
 - **vis = `[false, false, false, false, false, false]`**\
 as we have not yet visited any node, each node represent whether we have visited that node or not
 
-**For Dijkstra's algorithm we perform two simple steps**
+**For Dijkstra's algorithm we perform three simple steps**
 1. we search for any unvisited node with shortest distance 
-2. once we find that node we visit that node and find its neighbor and perform relaxation for each neighbor 
+3. set its visited flag to true
+3. once we find that node we visit that node and find its neighbor and perform relaxation for each neighbor to check whether we have shorter distance for that neighbor vie current node or not  
 
 ### Illustration
 - **Initialization:**
@@ -3077,7 +3078,9 @@ as we have not yet visited any node, each node represent whether we have visited
 **To find the unvisited node with shortest distance we solve this Dijkstra's algorithm by modifying the [BFS algorithm](#breadth-first-searchbfs)**
 
 - here instead of using normal queue we use priority queue, where we consider distance as priority, therefor whenever we perform the remove operation we get node having shortest distance (in BFS we check whether the node is visited or not before executing this operation)
-- to do that we create the separate class name Pair, which hold the current node and its distance from the source
+- adding only distance may create some inconsistency as we don't which node that distance belongs to (two nodes may have similar distance)
+- therefor along with distance we have to store the node to which tht distance belongs to
+- to do that we create the separate class name Pair, which hold the pair of current node and its distance from the source
 ```java
 public static class Pair{
     int node;
@@ -3104,7 +3107,24 @@ public static class Pair implements Comparable<Pair>{
     }
 }
 ```
-- now whenever we update any distance of any node we add that node into our priority Queue to check whether its neighbor can have the shortest path through it or not
+
+- `implements Comparable<Pair>:` This means the class must define how two Pair objects should be compared. Useful for sorting.
+```java
+@Override
+public int compareTo(Pair p2){
+    return this.dis - p2.dis;
+}
+```
+- This method tells how to compare two Pair objects.
+- It compares based on the dis field.
+    - If `this.dis < p2.dis`, it returns `negative` ⇒ `this` is smaller.
+    - If `this.dis > p2.dis`, it returns `positive` ⇒ `this` is larger.
+    - If equal, returns 0.
+- `compareTo()`: will decide in which order pair will be arrange in priority queue
+    - `this.dis - p2.dis:` ascending order
+    - `p2.dis - this.dis:` descending order
+
+now whenever we update any distance of any node we add that node into our priority Queue to check whether its neighbor can have the shortest path through its updated distance or not or not
 
 
 ### Illustration
@@ -3195,7 +3215,7 @@ consider a graph with source node `0`
     - dis = `[0, 2, 3, 8, 6, infinite]`
     - for `5`
         - `dis[source]` = `6`
-        
+
         - wt = `5`
         - `dis[source] + weight` = `11`
         - `dis[destination]` = `infinite`
@@ -3211,8 +3231,7 @@ consider a graph with source node `0`
 
         - wt = `1`
         - `dis[source] + weight` = `9`
-        - `dis[destination]` = `11
-        `
+        - `dis[destination]` = `11`
         - as `dis[source] + weight < dis[destination]` -> `dis[destination] = dis[source] + weight`
     - PQ = `[(node = 3, dis = 8)| (node = 3, dis = 9) | (node = 5, dis = 9) | (node = 5, dis = 11) ]`
     - dis = `[0, 2, 3, 8, 6, 9]`
