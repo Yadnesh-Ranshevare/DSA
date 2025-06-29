@@ -3643,12 +3643,25 @@ from above graph we can say that:
 - final answer:\
 dis = `[0, 2, -2, 0, 4]`
 
-#### Why V - 1 times?
+### Why V - 1 times?
 The longest possible shortest path between two vertices can have at most V - 1 edges.
+
+**longest possible shortest path:** The maximum number of edges that any valid shortest path can have in a graph without cycles.
+
+```
+0 -(a)- 1
+ \     /
+ (b) (c) 
+   \ /
+    2
+```
+in above graph example longest possible shortest path between vertex 0 and 1 can be `0-2-1` which consist of `2(v-1)` edges 
+
+hence we can say that, In a graph with V vertices, the longest path that doesn't revisit any vertex (i.e., no cycles) can have at most V - 1 edges.
 
 therefor if our final answer update after V-1 iteration then there exist a cycle (negative cycle)
 
-**Note: bellman ford algorithm id not applicable to negative cyclic graph**
+**Note: bellman ford algorithm is not applicable to negative cyclic graph**
 
 ![graph](./Image/bellman-ford-negative-graph.png)
 
