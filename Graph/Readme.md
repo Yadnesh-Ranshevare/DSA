@@ -16,6 +16,8 @@
 7. Shortest Path Algorithm
     - [Dijkstra's Algorithm](#dijkstras-algorithm)
     - [Bellman Ford Algorithm](#bellman-ford-algorithm)
+8. [Minimum spanning tree(MST)](#minimum-spanning-treemst)
+    - [Prim’s Algorithm](#prims-algorithm)
 
 
 # Introduction
@@ -3898,6 +3900,319 @@ public class BellmanFord{
 0 2 -2 0 4
 ```
 **Note: the time complexity for the solution is `O[v*E]` where V is number of vertex and E is number of edge**
+
+
+[Go To Top](#content)
+
+---
+# Minimum Spanning Tree(MST)
+**A minimum spanning tree(MST) or minimum weight spanning tree is a subset of the edges of a connected, edge-weighted undirected graph that connects all the vertices together, without any cycle and with the minimum possible edge weight**
+
+**Note: since we have no cycle present in MST we can consider it as tree like structure**
+
+### properties of MST:
+1. we have the subgraph of the original graph
+2. all the vertex form the original graph are present in this subgraph
+3. all the vertex are connected in the subgraph
+4. there is no cycle present in this subgraph
+5. total edge weight of the subgraph if minimum
+
+![graph](./Image/MST_example.jpg)
+
+
+**Note: A graph can have the multiple spanning tree, but we will only consider that tree who has minimum total edge wight**
+
+![graph](./Image/spanning-tree-example.png)
+
+in above graph we have two spanning tree but we only consider red tree as MST because it has minimum total edge weight
+
+### MST can be applied on:
+
+| Property       | Description                                         |
+| -------------- | --------------------------------------------------- |
+| **Undirected** | MST is only defined for undirected graphs.          |
+| **Connected**  | Every node must be reachable from every other node.(graph cannot be the [disconnected graph](#disconnected-graph)) |
+| **Weighted**   | Each edge must have a weight (cost/value).          |
+
+
+
+### Algorithms to find MST
+- [Prim’s Algorithm](#prims-algorithm) – Greedy, grows the MST from one node.
+- Kruskal’s Algorithm – Greedy, sorts edges by weight.
+
+[Go To Top](#content)
+
+---
+# Prim's Algorithm
+make sure you know about the [Dijkstra's Algorithm](#dijkstras-algorithm) before you learn prim's algorithm
+
+- in prims algorithm we have two sets through which we find our minimum cost
+- in first set (also known as MST set) we store all non visited node wheres in second set (also known as non-MST set) we store all the visited node 
+- we take a node from non-MST set and place it into the MST set
+- then we find all the neighbor of the node that present in MST set
+- out of all the neighbor we only accept those node who are present in the non-MST set and has minimum cost
+
+Example:
+
+![graph](./Image/primsAlgorithm.png)
+
+from above example:
+- MSt set = `[]`
+- non-MST set = `[0, 1, 2, 3]`
+
+as we start from node `0` we remove that node for the non-MSt set and place in into the MST set
+- MST set = `[0]`
+- non-MST set = `[1, 2, 3]`
+
+```
+0
+```
+
+neighbor of `0` who are present in the non-MST set: `1, 3, 2`
+- neighbor 1 (from 0) -> cost = 10
+- neighbor 2 (from 0) -> cost = 15
+- neighbor 3 (from 0) -> cost = 30
+
+out of `1, 3, 2` neighbor with minimum cost is `1` with cost = `10`, therefor move `1` from non-MST set to MST set
+
+- MST set = `[0, 1]`
+- non-MST set = `[2, 3]`
+```
+1 ---(10)--- 0
+```
+
+neighbor of `0 and 1` who are present in the non-MST set: `3, 2`
+- neighbor 2 (from 0) -> cost = 15
+- neighbor 3 (from 0) -> cost = 30
+- neighbor 3 (from 1) -> cost = 40
+
+out of `3, 2` neighbor with minimum cost is `2` with cost = `15`, therefor move `2` from non-MST set to MST set
+
+- MST set = `[0, 1, 2]`
+- non-MST set = `[3]`
+
+
+```
+1 ---(10)--- 0 ---(15)--- 2
+```
+
+neighbor of `0, 1 and 2` who are present in the non-MST set: `3`
+- neighbor 3 (from 0) -> cost = 30
+- neighbor 3 (from 1) -> cost = 40
+- neighbor 3 (from 2) -> cost = 50
+
+out of this three neighbors we have  neighbor `3(from 0)` with minimum cost = `30`, therefor move `3` from non-MST set to MST set
+
+- MST set = `[0, 1, 2, 3]`
+- non-MST set = `[]`
+
+```
+1 ---(10)--- 0 ---(15)--- 2
+             |
+            (30)
+             |
+             3
+```
+as non-MST set becomes empty prims algorithm ends, with MST with minimum cost = `10 + 15 + 30` = `55`
+
+### how to implement MST set
+- from above example we can see that MST set keeps the track of sll the visited Nodes
+- in [Dijkstra's Algorithm](#dijkstras-algorithm) we have vis array that do the same thing
+- **vis Array:** a boolean type of array that keep the track of visited nodes
+- `vis[i]` = `true`
+    - node `i` has been already visited
+    - node `i` is present in MST set
+- `vis[i]` = `false`
+    - node `i` is not yet visited
+    - node `i` is not present in MST set
+
+### How to implement non-MST set
+- from previous example we can say that non-MST set is use to get the neighbor having minimum cost which is not present in the MST set
+- we can use priority queue to do this task
+
+
+#### Priority Queue
+
+**before learning about priority queue make sure you know about the [Queue data structure](../Queue/Readme.md)**
+
+- **A priority queue is a special type of queue where each element has a priority, and the element with the highest priority is served first.**\
+example: \
+Queue has two element 1(high priority) and 3(low priority) then no matter in which order they have inserted into the queue, whenever we perform the pop operation on queue the element with high priority will pop first
+
+- It  also follow FIFO approach
+
+- **by default lower values has higher priority i.e, `1` has high priority that `5`**
+
+- element with higher priority will always comes first irrespective of their order of insertion
+
+Example:\
+consider a empty queue 
+```
+q = []
+```
+1. **add 1**
+```
+q = [1]
+```
+2. **add 5**
+```
+q = [1 | 5]
+```
+3. **add 7**
+```
+q = [1 | 5 | 7]
+```
+4. **add 0 (high priority)**
+```
+q = [0 | 1 | 5 | 7]
+```
+
+
+5. **add 3**
+```
+q = [0 | 1 | 3 | 5 | 7]
+```
+
+#### Why use priority queue
+1. we will consider the cost of neighbor as a priority
+2. therefor whenever we perform the remove operation we will get the node with minimum cost
+3. we use vis array to check whether that node is present in the non-MST set or not
+    - `vis[i]` = true  -> node `i` is not present in the non-MST set
+    - `vis[i]` = false -> node `i` is present in the non-MST set
+4. we will only add node `i` in this priority queue if that node is present  in the non-MST set (`vis[i]` = `false`)
+#### How to implement priority queue
+
+- adding only cost may create some inconsistency as we don't which node that cost belongs to (two nodes may have similar cost)
+- therefor along with cost we have to store the node to which tht cost belongs to
+- to do that we create the separate class name Pair, which hold the pair of current node and its cost from the source
+```java
+public static class Pair{
+    int node;
+    int cost;    
+    public Pair(int node, int cost){
+        this.node = node;
+        this.cost = cost;
+    }
+}
+```
+- currently our priority queue doesn't know about the priority whether it is a node value or a cost value
+- to do that we update our code by implementing the `Comparable<>` interface and override its function name `compareTo()` which is responsible for comparing the two value of queue
+```java
+public static class Pair implements Comparable<Pair>{
+    int node;
+    int cost;
+    public Pair(int node, int cost){
+        this.node = node;
+        this.cost = cost;
+    }
+    @Override
+    public int compareTo(Pair p2){
+        return this.cost - p2.cost;
+    }
+}
+```
+
+- `implements Comparable<Pair>:` This means the class must define how two Pair objects should be compared. Useful for sorting.
+```java
+@Override
+public int compareTo(Pair p2){
+    return this.cost - p2.cost;
+}
+```
+- This method tells how to compare two Pair objects.
+- It compares based on the dis field.
+    - If `this.cost < p2.cost`, it returns `negative` ⇒ `this` is smaller.
+    - If `this.cost > p2.cost`, it returns `positive` ⇒ `this` is larger.
+    - If equal, returns 0.
+- `compareTo()`: will decide in which order pair will be arrange in priority queue
+    - `this.cost - p2.cost:` ascending order
+    - `p2.cost - this.cost:` descending order
+
+### How to get the final minimum cost
+- we keep the separate variable to keep the track of the cost
+- during each time we get the neighbor with minimum cost we add that cost into this cost variable
+- finally we print this variable to get our final answer
+
+### Step by step illustration
+
+![graph](./Image/primsAlgorithm.png)
+
+**initialization: start from node 0**
+- vis = `[false, false, false, false]`
+- pq = `[(node = 0, cost = 0)]`
+- cost = 0
+
+**pq.remove() = 0**
+- curr = `{node = 0, cost = 0}`
+- `vis[curr.node]` == `false`   -> node present in non-MST set
+    - `vis[curr.node]` = `true` -> remove that node from non-MST set and place it into the MST set
+    - cost = `cost + curr.cost` = `0 + 0` = `0`
+    - neighbor of `0` are: `1, 2, 3`
+    - `vis[1]` == false -> present in non-MST set -> add in pq
+    - `vis[2]` == false -> present in non-MST set -> add in pq
+    - `vis[3]` == false -> present in non-MST set -> add in pq
+- update:
+    - vis = `[true, false, false, false]`
+    - pq = `[(node = 1, cost = 10) | (node = 2, cost = 15) | (node = 3, cost = 30) ]`
+    - cost = 0
+
+**pq.remove() = 1**
+- curr = `{node = 1, cost = 10}`
+- `vis[curr.node]` == `false`   -> node present in non-MST set
+    - `vis[curr.node]` = `true` -> remove that node from non-MST set and place it into the MST set
+    - cost = `cost + curr.cost` = `0 + 10` = `10`
+    - neighbor of `1` are: `0, 3`
+    - `vis[0]` == true -> not present in non-MST set -> don't add in pq
+    - `vis[3]` == false -> present in non-MST set -> add in pq
+- update:
+    - vis = `[true, true, false, false]`
+    - pq = `[(node = 2, cost = 15) | (node = 3, cost = 30) | (node = 3, cost = 40)]`
+    - cost = 10
+
+**pq.remove() = 2**
+- curr = `{node = 2, cost = 15}`
+- `vis[curr.node]` == `false`   -> node present in non-MST set
+    - `vis[curr.node]` = `true` -> remove that node from non-MST set and place it into the MST set
+    - cost = `cost + curr.cost` = `10 + 15` = `25`
+    - neighbor of `2` are: `0, 3`
+    - `vis[0]` == true -> not present in non-MST set -> don't add in pq
+    - `vis[3]` == false -> present in non-MST set -> add in pq
+- update:
+    - vis = `[true, true, true, false]`
+    - pq = `[(node = 3, cost = 30) | (node = 3, cost = 40) | (node = 3, cost = 50)]`
+    - cost = 25
+
+**pq.remove() = 3**
+- curr = `{node = 3, cost = 30}`
+- `vis[curr.node]` == `false`   -> node present in non-MST set
+    - `vis[curr.node]` = `true` -> remove that node from non-MST set and place it into the MST set
+    - cost = `cost + curr.cost` = `25 + 30` = `55`
+    - neighbor of `3` are: `0, 1, 2`
+    - `vis[0]` == true -> not present in non-MST set -> don't add in pq
+    - `vis[1]` == true -> not present in non-MST set -> don't add in pq
+    - `vis[2]` == true -> not present in non-MST set -> don't add in pq
+- update:
+    - vis = `[true, true, true, true]`
+    - pq = `[(node = 3, cost = 40) | (node = 3, cost = 50)]`
+    - cost = 55
+
+**pq.remove = 3**
+- curr = `{node = 3, cost = 40}`
+- `vis[curr.node]` == `true`   -> node not present in non-MST set
+- skip it
+- vis = `[true, true, true, true]`
+- pq = `[(node = 3, cost = 50)]`
+- cost = 55
+
+**pq.remove = 3**
+- curr = `{node = 3, cost = 50}`
+- `vis[curr.node]` == `true`   -> node not present in non-MST set
+- skip it
+- vis = `[true, true, true, true]`
+- pq = `[]`
+- cost = 55
+
+**As pq get empty our code ends**
 
 
 [Go To Top](#content)
