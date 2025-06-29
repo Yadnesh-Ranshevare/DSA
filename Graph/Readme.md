@@ -13,7 +13,9 @@
     1. [Directed Graph](#cycle-detection-in-directed-graph)
     2. [Undirected Graph](#cycle-detection-in-undirected-graph)
 6. [Topological Sorting](#topological-sorting)
-7. [Dijkstra's Algorithm](#dijkstras-algorithm)
+7. Shortest Path Algorithm
+    - [Dijkstra's Algorithm](#dijkstras-algorithm)
+    - [Bellman Ford Algorithm](#bellman-ford-algorithm)
 
 
 # Introduction
@@ -3510,7 +3512,379 @@ public class DijkstraAlgorithm{
 **Note: time complexity of the solution is `O[E + E logV]` where `V` is total number of vertex and `E` is total number of edges**\
 **`E logV` is because of the uses of priority queue**
 
+**Dijkstra’s algorithm fails (gives incorrect results) when the graph contains negative weight edges** 
+
    
+
+
+[Go To Top](#content)
+
+---
+# Bellman Ford Algorithm
+
+- just like [dijkstra's Algorithm](#dijkstras-algorithm) this is a algorithm to find the shortest **distance** from source to all the vertex in weighted graph
+
+- Make sure you know about the [dijkstra's Algorithm](#dijkstras-algorithm) before you learn this algorithm
+
+- in Dijkstra's algorithm we use greedy Approach but in this bellman ford algorithm we use dynamic programming approach to solve this problem
+
+- to solve this problem we first find all of the edges ans for each edge we perform [relaxation](#relaxation)
+
+- we repeat this step V-1 times to cover all of the possible route, where V is total number of vertex
+
+**Example:**
+
+![graph](./Image/bellman_ford.png)
+
+from above graph we can say that:
+- V = 5
+- src = 0
+- dis = `[0, infinite, infinite, infinite infinite]`
+
+**first iteration**
+- edge (0-1)
+    - relaxation:
+        - src = 0 -> `dis[src]` = 0
+        - des = 1 -> `dis[des]` = infinite
+        - wt = 2
+        - `dis[src] + wt < dis[des]` -> `dis[des]` = `dis[src] + wt`
+    - dis = `[0, 2, infinite, infinite, infinite]`
+
+- edge (0-2)
+    - relaxation:
+        - src = 0 -> `dis[src]` = 0
+        - des = 2 -> `dis[des]` = infinite
+        - wt = 4
+        - `dis[src] + wt < dis[des]` -> `dis[des]` = `dis[src] + wt`
+    - dis = `[0, 2, 4, infinite, infinite]`
+
+- edge (1-2)
+    - relaxation:
+        - src = 1 -> `dis[src]` = 2
+        - des = 2 -> `dis[des]` = 4
+        - wt = -4
+        - `dis[src] + wt < dis[des]` -> `dis[des]` = `dis[src] + wt`
+    - dis = `[0, 2, -2, infinite, infinite]`
+
+- edge (2-3)
+    - relaxation:
+        - src = 2 -> `dis[src]` = -2
+        - des = 3 -> `dis[des]` = infinite
+        - wt = 2
+        - `dis[src] + wt < dis[des]` -> `dis[des]` = `dis[src] + wt`
+    - dis = `[0, 2, -2, 0 ,infinite]`
+
+- edge (3-4)
+    - relaxation:
+        - src = 3 -> `dis[src]` = 0
+        - des = 4 -> `dis[des]` = infinite
+        - wt = 4
+        - `dis[src] + wt < dis[des]` -> `dis[des]` = `dis[src] + wt`
+    - dis = `[0, 2, -2, 0, 4]`
+
+- edge (4-1)
+    - relaxation:
+        - src = 4 -> `dis[src]` = 4
+        - des = 1 -> `dis[des]` = 0
+        - wt = -1
+        - `dis[src] + wt > dis[des]` -> do nothing
+    - dis = `[0, 2, -2, 0, 4]`
+
+**second iteration**
+- edge (0-1)
+    - relaxation:
+        - src = 0 -> `dis[src]` = 0
+        - des = 1 -> `dis[des]` = 2
+        - wt = 2
+        - `dis[src] + wt = dis[des]` -> do nothing
+    - dis = `[0, 2, -2, 0, 4]`
+
+- edge (0-2)
+    - relaxation:
+        - src = 0 -> `dis[src]` = 0
+        - des = 2 -> `dis[des]` = -2
+        - wt = 4
+        - `dis[src] + wt > dis[des]` -> do nothing
+    - dis = `[0, 2, -2, 0, 4]`
+
+- edge (1-2)
+    - relaxation:
+        - src = 1 -> `dis[src]` = 2
+        - des = 2 -> `dis[des]` = -2
+        - wt = -4
+        - `dis[src] + wt = dis[des]` -> do nothing
+    - dis = `[0, 2, -2, 0, 4]`
+
+- edge (2-3)
+    - relaxation:
+        - src = 2 -> `dis[src]` = -2
+        - des = 3 -> `dis[des]` = 0
+        - wt = 2
+        - `dis[src] + wt = dis[des]` -> do nothing
+    - dis = `[0, 2, -2, 0, 4]`
+
+- edge (3-4)
+    - relaxation:
+        - src = 3 -> `dis[src]` = 0
+        - des = 4 -> `dis[des]` = 4
+        - wt = 4
+        - `dis[src] + wt = dis[des]` -> do nothing
+    - dis = `[0, 2, -2, 0, 4]`
+
+- edge (4-1)
+    - relaxation:
+        - src = 4 -> `dis[src]` = 4
+        - des = 1 -> `dis[des]` = 0
+        - wt = -1
+        - `dis[src] + wt > dis[des]` -> do nothing
+    - dis = `[0, 2, -2, 0, 4]`
+
+- we perform this steps two more times (total 4 -> V-1)
+- final answer:\
+dis = `[0, 2, -2, 0, 4]`
+
+#### Why V - 1 times?
+The longest possible shortest path between two vertices can have at most V - 1 edges.
+
+therefor if our final answer update after V-1 iteration then there exist a cycle (negative cycle)
+
+**Note: bellman ford algorithm id not applicable to negative cyclic graph**
+
+![graph](./Image/bellman-ford-negative-graph.png)
+
+in above example if we see the total weight of the  cycle `1-2-3-4-1` is -8, therefor we can say that cycle `1-2-3-4-1` is a negative cycle
+
+- after V-1 iteration our final answer becomes\
+dis = `[0 -30, -26, -24, -20]`
+- after one more iteration we get\
+dis = `[0 -38, -34, -32, -28]`
+
+- as we an see that our final answer is updated, and it will keep on updating infinitely
+
+- therefor to check whether our graph has any negative cycle or not we perform the algorithm one more time to check whether we can perform the relaxation or not, if we can perform relaxation that means we can update our final answer indicating negative cycle is present
+
+### Algorithm
+**Note: make sure you know about [dijkstra's Algorithm](#dijkstras-algorithm)**
+
+1. create the distance array and initialize it
+```java
+int dis[] = new int[V];
+for(int i =0; i< V ; i++){
+    if(i != src){
+        dis[i] = Integer.MAX_VALUE;
+    }
+}
+```
+
+2. use for loop to repeat the algorithm V-1 times
+```java
+for(int i= 0; i< V-1; i++){
+
+}
+```
+
+3. get all of the edges
+```java
+for(int j = 0; j<V; j++){   // each node
+    for(int k = 0; k< graph[j].size(); k++){    // edges of that node
+        Edge e = graph[j].get(k);
+    }
+}
+```
+
+4. perform relaxation
+```java
+for(int j = 0; j<V; j++){
+    for(int k = 0; k< graph[j].size(); k++){
+        Edge e = graph[j].get(k);
+
+        int u = e.src;
+        int v = e.dest;
+        int wt = e.wt;
+
+        if(dis[u]!= Integer.MAX_VALUE && dis[u] + wt < dis[v]){ // if dis[u] = infinite then dis[u] + wt would result in overflow (because ∞ + wt = overflow)
+            dis[v] = dis[u] + wt;
+        }
+    }
+}
+```
+
+5. perform one more iteration separably to check whether cycle is present or not
+```java
+for(int j = 0; j<V; j++){
+    for(int k = 0; k< graph[j].size(); k++){
+        Edge e = graph[j].get(k);
+        
+        int u = e.src;
+        int v = e.dest;
+        int wt = e.wt;
+        
+        if(dis[u]!= Integer.MAX_VALUE && dis[u] + wt < dis[v]){
+            System.out.println("cycle detected");
+        }
+    }
+}
+```
+5. print the dis array 
+```java
+for(int i =0; i<V;i++){
+    System.out.print(dis[i]+ " ");
+}
+```
+
+### Code
+```java
+public static void BellmanFordAlgo(ArrayList<Edge> graph[], int src, int V){
+    int dis[] = new int[V];
+    for(int i =0; i< V ; i++){
+        if(i != src){
+            dis[i] = Integer.MAX_VALUE;
+        }
+    }
+
+    for(int i= 0; i< V-1; i++){
+        for(int j = 0; j<V; j++){
+            for(int k = 0; k< graph[j].size(); k++){
+                Edge e = graph[j].get(k);
+
+                int u = e.src;
+                int v = e.dest;
+                int wt = e.wt;
+
+                if(dis[u]!= Integer.MAX_VALUE && dis[u] + wt < dis[v]){
+                    dis[v] = dis[u] + wt;
+                }
+            }
+        }
+    }
+    
+    for(int j = 0; j<V; j++){
+        for(int k = 0; k< graph[j].size(); k++){
+            Edge e = graph[j].get(k);
+
+            int u = e.src;
+            int v = e.dest;
+            int wt = e.wt;
+
+            if(dis[u]!= Integer.MAX_VALUE && dis[u] + wt < dis[v]){
+                System.out.println("cycle detected");
+            }
+        }
+    }
+    for(int i =0; i<V;i++){
+        System.out.print(dis[i]+ " ");
+    }
+}
+```
+
+### Complete code
+```java
+import java.util.ArrayList;
+
+public class BellmanFord{
+    static class Edge{
+        int src;
+        int dest;
+        int wt;
+
+        public Edge(int s, int d, int wt){
+            this.src = s;
+            this.dest = d;
+            this.wt = wt;
+        }
+    }
+
+    public static class Pair implements Comparable<Pair>{
+        int node;
+        int dis;
+        public Pair(int node, int dis){
+            this.node = node;
+            this.dis = dis;
+        }
+
+        @Override
+        public int compareTo(Pair p2){
+            return this.dis - p2.dis;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[0].add(new Edge(0, 1, 2));
+        graph[0].add(new Edge(0, 2, 4));
+
+        graph[1].add(new Edge(1, 2, -4));
+
+        graph[2].add(new Edge(2, 3, 2));
+
+        graph[3].add(new Edge(3, 4, 4));
+        
+        graph[4].add(new Edge(4, 1, -1));
+    }
+
+    public static void BellmanFordAlgo(ArrayList<Edge> graph[], int src, int V){
+        int dis[] = new int[V];
+        for(int i =0; i< V ; i++){
+            if(i != src){
+                dis[i] = Integer.MAX_VALUE;
+            }
+        }
+
+        for(int i= 0; i< V-1; i++){
+            for(int j = 0; j<V; j++){
+                for(int k = 0; k< graph[j].size(); k++){
+                    Edge e = graph[j].get(k);
+
+                    int u = e.src;
+                    int v = e.dest;
+                    int wt = e.wt;
+
+                    if(dis[u]!= Integer.MAX_VALUE && dis[u] + wt < dis[v]){
+                        dis[v] = dis[u] + wt;
+                    }
+                }
+            }
+        }
+        
+        for(int j = 0; j<V; j++){
+            for(int k = 0; k< graph[j].size(); k++){
+                Edge e = graph[j].get(k);
+
+                int u = e.src;
+                int v = e.dest;
+                int wt = e.wt;
+
+                if(dis[u]!= Integer.MAX_VALUE && dis[u] + wt < dis[v]){
+                    System.out.println("cycle detected");
+                }
+            }
+        }
+
+        for(int i =0; i<V;i++){
+            System.out.print(dis[i]+ " ");
+        }
+    }
+
+
+
+    public static void main(String[] args) {
+        int V = 5;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        BellmanFordAlgo(graph, 0, V);
+
+    }
+}
+```
+### Output
+```
+0 2 -2 0 4
+```
+**Note: the time complexity for the solution is `O[v*E]` where V is number of vertex and E is number of edge**
 
 
 [Go To Top](#content)
