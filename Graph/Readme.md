@@ -4075,11 +4075,12 @@ q = [0 | 1 | 3 | 5 | 7]
 
 #### Why use priority queue
 1. we will consider the cost of neighbor as a priority
-2. therefor whenever we perform the remove operation we will get the node with minimum cost
+2. therefor whenever we perform the remove operation we will get the node with minimum cost and is present in non-MST set
 3. we use vis array to check whether that node is present in the non-MST set or not
     - `vis[i]` = true  -> node `i` is not present in the non-MST set
     - `vis[i]` = false -> node `i` is present in the non-MST set
-4. we will only add node `i` in this priority queue if that node is present  in the non-MST set (`vis[i]` = `false`)
+4. **we will only add node `i` in this priority queue if that node is present  in the non-MST set (`vis[i]` = `false`) as we want to move the node from non-MST set to MSt set**\
+Note: priority queue act as a bridge between non-MST set to MST set which transfer the node from non-MSt to MST and not the other way, therefor we only add node if it present in the non-MST set 
 #### How to implement priority queue
 
 - adding only cost may create some inconsistency as we don't which node that cost belongs to (two nodes may have similar cost)
@@ -4213,6 +4214,212 @@ public int compareTo(Pair p2){
 - cost = 55
 
 **As pq get empty our code ends**
+
+### Algorithm
+
+1. create priority queue, vis array and cost variable
+```java
+PriorityQueue<Pair> pq = new PriorityQueue<>();
+boolean vis[] = new boolean[graph.length];
+int finalCost = 0;
+```
+2. add the starting node into the priority queue
+```java
+pq.add(new Pair(0,0));
+```
+3. use while loop which will run until our priority queue gets empty
+```java
+while(!pq.isEmpty()){
+
+}
+```
+4. get the current node from the pq
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+}
+```
+5. check whether that node is present in the non-MTS set or not
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+    if(!vis[curr.node]){
+        // present in  non-MST set
+    }
+}
+```
+5. move that node from the non-MST to MST set i.e set its vis flag to true
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+    if(!vis[curr.node]){
+        vis[curr.node] = true; 
+    }
+}
+```
+
+6. update the cost variable
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+    if(!vis[curr.node]){
+        vis[curr.node] = true;
+        finalCost += curr.cost; 
+    }
+}
+```
+7. get the neighbor of the current node\
+[click here to learn about hoe to get the neighbor](#how-to-get-the-neighboring-nodes)
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+    if(!vis[curr.node]){
+        vis[curr.node] = true;
+        finalCost += curr.cost;
+        for(int i = 0; i< graph[curr.node].size(); i++){
+            Edge e = graph[curr.node].get(i);
+            
+        } 
+    }
+}
+```
+8. check whether that nide is present un the non-MST set or not and add into the pq only if it present in the non-MST set
+```java
+while(!pq.isEmpty()){
+    Pair curr = pq.remove();
+    if(!vis[curr.node]){
+        vis[curr.node] = true;
+        finalCost += curr.cost;
+        for(int i = 0; i< graph[curr.node].size(); i++){
+            Edge e = graph[curr.node].get(i);
+            if(!vis[e.dest]){
+                pq.add(new Pair(e.dest, e.wt));
+            }
+        } 
+    }
+}
+```
+
+9. print the final cost of the mst
+```java
+System.out.println("minimum cost of MST = "+ finalCost);
+```
+
+### Code
+```java
+public static void primsAlgo(ArrayList<Edge> graph[]){
+    PriorityQueue<Pair> pq = new PriorityQueue<>();
+    boolean vis[] = new boolean[graph.length];
+    int finalCost = 0;
+
+    pq.add(new Pair(0,0));
+
+    while(!pq.isEmpty()){
+        Pair curr = pq.remove();
+        if(!vis[curr.node]){
+            vis[curr.node] = true;
+            finalCost += curr.cost;
+            for(int i = 0; i< graph[curr.node].size(); i++){
+                Edge e = graph[curr.node].get(i);
+                if(!vis[e.dest]){
+                    pq.add(new Pair(e.dest, e.wt));
+                }
+            } 
+        }
+    }
+    System.out.println("minimum cost of MST = "+ finalCost);
+}
+```
+
+### Complete code
+```java
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+
+public class PrimsAlgorithm{
+    static class Edge{
+        int src;
+        int dest;
+        int wt;
+
+        public Edge(int s, int d, int wt){
+            this.src = s;
+            this.dest = d;
+            this.wt = wt;
+        }
+    }
+
+    public static class Pair implements Comparable<Pair>{
+        int node;
+        int cost;
+        public Pair(int node, int cost){
+            this.node = node;
+            this.cost = cost;
+        }
+
+        @Override
+        public int compareTo(Pair p2){
+            return this.cost - p2.cost;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[0].add(new Edge(0, 1, 10));
+        graph[0].add(new Edge(0, 2, 15));
+        graph[0].add(new Edge(0, 3, 30));
+
+        graph[1].add(new Edge(1, 0, 10));
+        graph[1].add(new Edge(1, 3, 40));
+
+        graph[2].add(new Edge(2, 0, 15));
+        graph[2].add(new Edge(2, 3, 50));
+        
+        graph[3].add(new Edge(3, 1, 40));
+        graph[3].add(new Edge(3, 2, 50));
+    }
+
+    public static void primsAlgo(ArrayList<Edge> graph[]){
+        PriorityQueue<Pair> pq = new PriorityQueue<>();
+        boolean vis[] = new boolean[graph.length];
+        int finalCost = 0;
+
+        pq.add(new Pair(0,0));
+
+        while(!pq.isEmpty()){
+            Pair curr = pq.remove();
+            if(!vis[curr.node]){
+                vis[curr.node] = true;
+                finalCost += curr.cost;
+                for(int i = 0; i< graph[curr.node].size(); i++){
+                    Edge e = graph[curr.node].get(i);
+                    if(!vis[e.dest]){
+                        pq.add(new Pair(e.dest, e.wt));
+                    }
+                } 
+            }
+        }
+        System.out.println("minimum cost of MST = "+ finalCost);
+    }
+
+    public static void main(String[] args) {
+        int V = 6;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        primsAlgo(graph);
+    }
+}
+```
+
+### Output
+```
+minimum cost of MST = 55
+```
+
 
 
 [Go To Top](#content)
