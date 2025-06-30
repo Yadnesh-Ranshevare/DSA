@@ -3947,7 +3947,7 @@ in above graph we have two spanning tree but we only consider red tree as MST be
 make sure you know about the [Dijkstra's Algorithm](#dijkstras-algorithm) before you learn prim's algorithm
 
 - in prims algorithm we have two sets through which we find our minimum cost
-- in first set (also known as MST set) we store all non visited node wheres in second set (also known as non-MST set) we store all the visited node 
+- in first set (also known as MST set) we store all visited node wheres in second set (also known as non-MST set) we store all the non visited node 
 - we take a node from non-MST set and place it into the MST set
 - then we find all the neighbor of the node that present in MST set
 - out of all the neighbor we only accept those node who are present in the non-MST set and has minimum cost
@@ -3960,7 +3960,7 @@ from above example:
 - MSt set = `[]`
 - non-MST set = `[0, 1, 2, 3]`
 
-as we start from node `0` we remove that node for the non-MSt set and place in into the MST set
+as we start from node `0` we remove that node for the non-MST set and place in into the MST set
 - MST set = `[0]`
 - non-MST set = `[1, 2, 3]`
 
@@ -4025,7 +4025,7 @@ as non-MST set becomes empty prims algorithm ends, with MST with minimum cost = 
 - `vis[i]` = `false`
     - node `i` is not yet visited
     - node `i` is not present in MST set
-
+- to move the node form the non-MST set to MST set just change that node vis flag from false to true  
 ### How to implement non-MST set
 - from previous example we can say that non-MST set is use to get the neighbor having minimum cost which is not present in the MST set
 - we can use priority queue to do this task
@@ -4075,12 +4075,12 @@ q = [0 | 1 | 3 | 5 | 7]
 
 #### Why use priority queue
 1. we will consider the cost of neighbor as a priority
-2. therefor whenever we perform the remove operation we will get the node with minimum cost and is present in non-MST set
+2. therefor whenever we perform the remove operation we will get the node with minimum cost 
 3. we use vis array to check whether that node is present in the non-MST set or not
     - `vis[i]` = true  -> node `i` is not present in the non-MST set
     - `vis[i]` = false -> node `i` is present in the non-MST set
 4. **we will only add node `i` in this priority queue if that node is present  in the non-MST set (`vis[i]` = `false`) as we want to move the node from non-MST set to MSt set**\
-Note: priority queue act as a bridge between non-MST set to MST set which transfer the node from non-MSt to MST and not the other way, therefor we only add node if it present in the non-MST set 
+Note: priority queue act as a bridge between non-MST set to MST set which transfer the node from non-MST to MST and not the other way, therefor we only add node in priority queue if it present in the non-MST set 
 #### How to implement priority queue
 
 - adding only cost may create some inconsistency as we don't which node that cost belongs to (two nodes may have similar cost)
@@ -4131,7 +4131,7 @@ public int compareTo(Pair p2){
 
 ### How to get the final minimum cost
 - we keep the separate variable to keep the track of the cost
-- during each time we get the neighbor with minimum cost we add that cost into this cost variable
+- during each time we move the neighbor from non-MST to MST we add that neighbors cost into this cost variable
 - finally we print this variable to get our final answer
 
 ### Step by step illustration
