@@ -4448,7 +4448,7 @@ here component `A, B` is not consider as a strongly connected component as you c
 
 in above example there  are total three strongly connected components i.e 
 - component 1: `{1, 2, 0}`\
-As every vertex is reachable from every other vertex i.e, `1` is retable rom both `2 (2 - 1) and 0 (0 - 2 - 1)`, `2` is reachable from both `1 (1 - 0 - 2) and 0 (2 - 0)`, `0` is reachable from both `1 (1 - 0) and 2 (2 - 1 - 0)`
+As every vertex is reachable from every other vertex i.e, `1` is reachable rom both `2 (2 - 1) and 0 (0 - 2 - 1)`, `2` is reachable from both `1 (1 - 0 - 2) and 0 (2 - 0)`, `0` is reachable from both `1 (1 - 0) and 2 (2 - 1 - 0)`
 - component 2: `{3}`\
 from `3` we can't reach vertex `0` thats way it is a separate component
 
@@ -4563,7 +4563,7 @@ for(int i = 0; i< graph.length; i++){
     }
 } 
 ```
-**Note: in both topological sort and in DFS we use vis array, but instead of creating separate array we want to use same for both topological sorting and DFS and that why we are setting the vis flag of whole graph back to false, as during topological sorting vis flag of every node is been set to true**
+**Note: in both topological sort and in DFS we use vis array, but instead of creating separate array we use same for both topological sorting and DFS, and that why we are setting the vis flag of whole graph back to false, as during topological sorting vis flag of every node is been set to true**
 
 4. get the current node from the stack
 ```java
