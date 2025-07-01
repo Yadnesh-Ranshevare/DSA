@@ -18,6 +18,7 @@
     - [Bellman Ford Algorithm](#bellman-ford-algorithm)
 8. [Minimum spanning tree(MST)](#minimum-spanning-treemst)
     - [Prim’s Algorithm](#prims-algorithm)
+9. [Kosaraju's Algorithm for Strongly Connected Component](#kosarajus-algorithm-for-strongly-connected-component)
 
 
 # Introduction
@@ -4420,6 +4421,324 @@ public class PrimsAlgorithm{
 minimum cost of MST = 55
 ```
 
+
+
+[Go To Top](#content)
+
+---
+# Kosaraju's Algorithm for Strongly Connected Component
+**A strongly connected component (SCC) is a maximal group of vertices such that every vertex is reachable from every other vertex in the group**
+
+### Examples:
+
+```
+A --- B
+```
+here component `A, B` is a strongly connected component as we can reach `A` from `B` and vice versa
+
+
+```
+A → B
+```
+
+here component `A, B` is not consider as a strongly connected component as you can reach `B` from `A` but can't reach the vertex `A` from `B`
+
+
+![graph](./Image/SSC.png)
+
+in above example there  are total three strongly connected components i.e 
+- component 1: `{1, 2, 0}`\
+As every vertex is reachable from every other vertex i.e, `1` is retable rom both `2 (2 - 1) and 0 (0 - 2 - 1)`, `2` is reachable from both `1 (1 - 0 - 2) and 0 (2 - 0)`, `0` is reachable from both `1 (1 - 0) and 2 (2 - 1 - 0)`
+- component 2: `{3}`\
+from `3` we can't reach vertex `0` thats way it is a separate component
+
+- component 2: `{4}`\
+Although we can reach `4` from `3` but we can't go in opposite direction i.e, `3` via `4` thats way vertex `4` is a separate component
+
+**To  solve this problem we combine the [DFS](#depth-first-search-dfs) and [Topological sorting](#topological-sorted-order) Algorithm**
+
+### Approach 
+1. add each vertex into a stack in a topological order
+2. create a graph which is a transpose of actual graph
+3. Do DFS on the stack nodes on to the transpose graph, during each successful DFS we get a one strongly connected component
+
+
+**Example:**
+
+![graph](./Image/SSC.png)
+
+for this graph our stack is like : \
+s = `[0 | 3 | 4 | 2 | 1]`
+
+transpose graph:
+
+![graph](./Image/transposeGraph.png)
+
+- `s.pop` = `0` apply DFS on vertex `0`
+    - output: `0, 1, 2` -> first strongly connected component
+
+- `s.pop` = `3` apply DFS on vertex `3`
+    - output: `3` -> second strongly connected component
+
+- `s.pop` = `4` apply DFS on vertex `4`
+    - output: `4` -> third strongly connected component
+
+- `s.pop` = `2` vertex `2` is already visited
+    - skip it
+
+- `s.pop` = `1` vertex `1` is already visited
+    - skip it
+- stack becomes empty therefor our approach ends
+
+### hoe to fins the transpose graph
+
+**make sure you know about how to [create the graph using adjacency list](#adjacency-list)**
+
+1. create the new graph of same size
+```java
+ArrayList<Edge> transpose[] = new ArrayList[graph.length];
+```
+2. initialize an empty ArrayList at each index of the graph
+```java
+for (int i = 0; i< graph.length; i++){
+    transpose[i] = new ArrayList<Edge>();
+} 
+```
+3. get all the edges from the original graph\
+[click here to lear about how to get the neighboring nodes](#how-to-get-the-neighboring-nodes)
+```java
+for(int i = 0; i< graph.length; i++){
+    for(int j = 0; j< graph[i].size(); j++){
+        Edge e = graph[i].get(j);
+    }
+}
+```
+4. while adding those edges into the transpose graph make neighbor (dest) as source and source as neighbor (dest) 
+```java
+for(int i = 0; i< graph.length; i++){
+    for(int j = 0; j< graph[i].size(); j++){
+        Edge e = graph[i].get(j);
+        transpose[e.dest].add(new Edge(e.dest, e.src));
+    }
+}
+```
+from above for loop if our original graph has edge like `0 -> 1` that means 
+- `e.src` = `0`
+- `e.dest` = `1`
+
+therefor while adding that edge into the transpose graph we add it like:
+- `src` = `e.dest` = `1`
+- `dest` = `e.src` = `0`
+
+therefor in our transpose graph our edge becomes `1 -> 0`
+
+
+### Algorithm
+1. create the stack and boolean visited array
+```java
+Stack<Integer> s = new Stack<>();
+boolean vis[] = new boolean[graph.length];
+```
+2. apply [topological sorting algorithm](#topological-sorted-order) to get the vertex into the stack in topological order
+```java
+for(int i = 0; i< graph.length; i++){
+    if(!vis[i]){
+        topSort(graph, i, vis, s);
+    }
+}
+```
+3. transpose the given graph
+```java
+ArrayList<Edge> transpose[] = new ArrayList[graph.length];
+
+for (int i = 0; i< graph.length; i++){
+    vis[i] = false;     // set vis flag back to false
+    transpose[i] = new ArrayList<Edge>();
+}
+
+for(int i = 0; i< graph.length; i++){
+    for(int j = 0; j< graph[i].size(); j++){
+        Edge e = graph[i].get(j);
+        transpose[e.dest].add(new Edge(e.dest, e.src));
+    }
+} 
+```
+**Note: in both topological sort and in DFS we use vis array, but instead of creating separate array we want to use same for both topological sorting and DFS and that why we are setting the vis flag of whole graph back to false, as during topological sorting vis flag of every node is been set to true**
+
+4. get the current node from the stack
+```java
+while(!s.isEmpty()){
+    int curr = s.pop();
+}
+```
+4. check whether that node is been visited or not
+```java
+while(!s.isEmpty()){
+    int curr = s.pop();
+    if(!vis[curr]){
+        // not yet visited
+    }
+}
+```
+5. apply DFS if not visited
+```java
+while(!s.isEmpty()){
+    int curr = s.pop();
+    if(!vis[curr]){
+        dfs(transpose, curr, vis);
+    }
+}
+````
+6. go to next line to show the component separately
+```java
+while(!s.isEmpty()){
+    int curr = s.pop();
+    if(!vis[curr]){
+        dfs(transpose, curr, vis);
+        System.out.println();
+    }
+}
+````
+
+### Code
+```java
+public static void KosarajuAlgo(ArrayList<Edge> graph[]){
+    Stack<Integer> s = new Stack<>();
+    boolean vis[] = new boolean[graph.length];
+
+    for(int i = 0; i< graph.length; i++){
+        if(!vis[i]){
+            topSort(graph, i, vis, s);
+        }
+    }
+
+    ArrayList<Edge> transpose[] = new ArrayList[graph.length];
+
+    for (int i = 0; i< graph.length; i++){
+        vis[i] = false;
+        transpose[i] = new ArrayList<Edge>();
+    }
+
+    for(int i = 0; i< graph.length; i++){
+        for(int j = 0; j< graph[i].size(); j++){
+            Edge e = graph[i].get(j);
+            transpose[e.dest].add(new Edge(e.dest, e.src));
+        }
+    }
+
+    while(!s.isEmpty()){
+        int curr = s.pop();
+        if(!vis[curr]){
+            dfs(transpose, curr, vis);
+            System.out.println();
+        }
+    }
+}
+```
+
+### Complete code
+```java
+import java.util.ArrayList;
+import java.util.Stack;
+
+public class Kosaraju{
+    static class Edge{
+        int src;
+        int dest;
+
+        public Edge(int s, int d){
+            this.src = s;
+            this.dest = d;
+        }
+    }
+
+    public static void createGraph(ArrayList<Edge> graph[]){
+        for (int i = 0; i< graph.length; i++){
+            graph[i] = new ArrayList<Edge>();
+        }
+
+        graph[0].add(new Edge(0, 2));
+        graph[0].add(new Edge(0, 3));
+
+        graph[1].add(new Edge(1, 0));
+
+        graph[2].add(new Edge(2, 1));
+        graph[3].add(new Edge(3, 4));
+    }
+
+    // topological sorting
+    public static void topSort(ArrayList<Edge> graph[], int curr, boolean  vis[], Stack<Integer> stack){
+        vis[curr] = true;
+
+        for (int i = 0; i< graph[curr].size(); i++){
+            Edge e = graph[curr].get(i);
+            if(vis[e.dest] == false){
+                topSort(graph, e.dest, vis, stack);
+            }
+        }
+        stack.push(curr);
+    }
+
+    public static void dfs(ArrayList<Edge> graph[], int curr, boolean  vis[]){
+        System.out.print(curr+" ");
+        vis[curr] = true;
+
+        for (int i = 0; i< graph[curr].size(); i++){
+            Edge e = graph[curr].get(i);
+            if(vis[e.dest] == false){
+                dfs(graph, e.dest, vis);
+            }
+        }
+    }
+
+    public static void KosarajuAlgo(ArrayList<Edge> graph[]){
+        Stack<Integer> s = new Stack<>();
+        boolean vis[] = new boolean[graph.length];
+
+        for(int i = 0; i< graph.length; i++){
+            if(!vis[i]){
+                topSort(graph, i, vis, s);
+            }
+        }
+
+        ArrayList<Edge> transpose[] = new ArrayList[graph.length];
+
+        for (int i = 0; i< graph.length; i++){
+            vis[i] = false;
+            transpose[i] = new ArrayList<Edge>();
+        }
+
+        for(int i = 0; i< graph.length; i++){
+            for(int j = 0; j< graph[i].size(); j++){
+                Edge e = graph[i].get(j);
+                transpose[e.dest].add(new Edge(e.dest, e.src));
+            }
+        }
+
+        while(!s.isEmpty()){
+            int curr = s.pop();
+            if(!vis[curr]){
+                dfs(transpose, curr, vis);
+                System.out.println();
+            }
+        }
+
+    }
+    public static void main(String[] args) {
+        int V = 5;
+        ArrayList<Edge> graph[] = new ArrayList[V];
+        createGraph(graph);
+
+        KosarajuAlgo(graph);  
+    }
+}
+```
+### Output
+```
+0 1 2
+3
+4
+```
 
 
 [Go To Top](#content)
