@@ -1,6 +1,7 @@
 # Content
 1. [Introduction](#introduction)
 2. [Bubble Sort](#bubble-sort)
+3. [Selection sort](#selection-sort)
 3. [Quick Sort](#quick-sort)
 
 ---
@@ -193,7 +194,7 @@ public class BubbleSort {
         }
 
         for(int i = 0; i<arr.length;i++){
-            System.out.println(arr[i]);
+            System.out.print(arr[i]);
         }
     }
 }
@@ -210,11 +211,207 @@ output
 * Average Case: **O(n²)**
 * Worst Case: **O(n²)**
 
-**Space Complexity:** **O(1)** (In-place sorting)
+### Space Complexity: O(1) (In-place sorting)
 
 **Key Point to Remember:**
 
 > In Bubble Sort, the **largest (heaviest) unsorted element bubbles up to the end after every pass**. After the first pass, the largest element is fixed at the last index; after the second pass, the second largest element is fixed at the second last index, and so on, until the array is completely sorted.
+
+
+[Go To Top](#content)
+
+---
+# Selection sort
+Selection sort is a simple sorting algorithm that repeatedly finds the smallest element from the unsorted part of a list and places it at the beginning.
+
+### Example
+For an array:
+`[64, 25, 12, 22, 11]`
+
+1. 1st pass:\
+find the smallest element (11) and swap it with the first element.
+    - `[11, 25, 12, 22, 64]`
+2. 2nd pass:\
+find the smallest element in the remaining unsorted part (12) and swap it with the second element.
+    - `[11, 12, 25, 22, 64]`
+3. 3rd pass:\
+find the smallest element in the remaining part (22) and swap it.
+    - `[11, 12, 22, 25, 64]`
+4. Continue until the array is sorted.
+
+### How it work?
+1. we start with assuming first element of array smallest element
+
+    ```
+    smallest = 64
+
+    64 25 12 22 11
+     ^
+    ```
+2. compare the smallest with next element
+    ```
+    smallest = 64
+    
+    64 25 12 22 11
+        ^
+    ```
+    since, 25 < 64 -> smallest = 25
+    ```
+    smallest = 25
+    
+    64 25 12 22 11
+        ^
+    ```
+3. compare with next element
+    ```
+    smallest = 25
+
+    64 25 12 22 11
+          ^
+    ```
+    since, 12 < 25 -> smallest = 12
+    ```
+    smallest = 12
+
+    64 25 12 22 11
+          ^
+    ```
+4. compare with next element
+    ```
+    smallest = 12
+
+    64 25 12 22 11
+              ^
+    ```
+    since, 12 < 22 -> smallest = 12 (no change)
+5. compare with next element
+    ```
+    smallest = 12
+    
+    64 25 12 22 11
+                 ^
+    ```
+    since, 11 < 12 -> smallest = 11
+    ```
+    smallest = 11
+    
+    64 25 12 22 11
+                 ^
+    ```
+6. swap smallest with first element
+    ```
+    smallest = 11
+    
+    11 25 12 22 64
+    ```
+now for second iteration skip the first element i.e, 11 and apply the same algorithm from next element i.e, 2nd element
+
+### Using index 
+instead of storing the values of smallest element we store its index
+
+example:
+- `arr[]` = `[5 3 6]`
+- for iteration `i=0`
+    - `smallest = i = 0` -> first element at index `0`
+    - `j = i + 1 = 1` -> j = with whom we are comparing the smallest
+- start with first element
+    - `arr[smallest]` = `arr[0]` = `5`
+    - `arr[j]` = `arr[1]` = `3`
+    - `arr[smallest]` > `arr[j]` -> update 
+    - `smallest = j` -> `smallest = 1`
+- go to next element `(j++)`
+    - `smallest = 1` ; `j = 2` 
+    - `arr[smallest]` = `arr[1]` = `3`
+    - `arr[j]` = `arr[2]` = `6`
+    - `arr[smallest]` < `arr[j]` -> no update 
+    - `smallest = 1`
+- since we reach the last element -> swap
+    - swap(`arr[smallest]`, `arr[i]`)
+    - swap(`arr[1]`, `arr[0]`)
+    - `arr[]` = `[3 5 6]`
+- into the next iteration `i=1`
+    - `smallest = i = 1` -> In remaining unsorted array first element is at index `1`
+    - `j = i + 1 = 2` -> as first element is consider as smallest we start comparing with next element
+- repeat the same steps until array ends
+
+### Code:
+1. start with first element as  smallest 
+```java
+for (int i = 0; i < arr.length - 1; i++) {
+    int smallest = i;
+}
+```
+2. traverse over the array
+```java
+for (int i = 0; i < arr.length - 1; i++) {
+    int smallest = i;
+    for (int j = i+1; j < arr.length; j++) {
+        // arr[j] is use for comparison
+    }
+}
+```
+3. compare and update the smallest
+```java
+for (int i = 0; i < arr.length - 1; i++) {
+    int smallest = i;
+    for (int j = i+1; j < arr.length; j++) {
+        if (arr[smallest] > arr[j]) {
+            smallest = j;
+        }
+    }
+}
+```
+4. swap once the iteration is complete
+```java
+for (int i = 0; i < arr.length - 1; i++) {
+    int smallest = i;
+    for (int j = i+1; j < arr.length; j++) {
+        if (arr[smallest] > arr[j]) {
+            smallest = j;
+        }
+        int temp = arr[smallest];
+        arr[smallest] = arr[i];
+        arr[i] = temp;
+    }
+}
+```
+
+### Complete Code
+```java
+public class SelectionSort {
+    public static void main(String[] args) {
+        int arr[] = { 7, 8, 3, 1, 2 };
+
+        for (int i = 0; i < arr.length - 1; i++) {
+            int smallest = i;
+            for (int j = i+1; j < arr.length-1; j++) {
+                if (arr[smallest] > arr[j]) {
+                    smallest = j;
+                }
+                int temp = arr[smallest];
+                arr[smallest] = arr[i];
+                arr[i] = temp;
+            }
+        }
+
+        for(int i = 0; i<arr.length;i++){
+            System.out.print(arr[i]);
+        }
+    }
+}
+```
+output:
+```
+13782
+```
+
+### Time Complexity:
+
+* Best Case: **O(n)** (when the array is already sorted and an optimized version is used)
+* Average Case: **O(n²)**
+* Worst Case: **O(n²)**
+
+### Space Complexity: O(1) (In-place sorting)
 
 
 [Go To Top](#content)
