@@ -2,6 +2,7 @@
 1. [Introduction](#introduction)
 2. [Bubble Sort](#bubble-sort)
 3. [Selection sort](#selection-sort)
+4. [Insertion Sort](#insertion-sort)
 3. [Quick Sort](#quick-sort)
 
 ---
@@ -412,6 +413,138 @@ output:
 * Worst Case: **O(n²)**
 
 ### Space Complexity: O(1) (In-place sorting)
+
+
+[Go To Top](#content)
+
+---
+#   Insertion Sort
+Insertion sort is a simple sorting algorithm that builds a sorted list one element at a time. It works much like how you sort playing cards in your hand: you pick up one card and insert it into the correct position among the cards you've already sorted.
+
+### How it works
+For each element in the array (starting from the second element):
+
+1. Take the current element (called the key).
+2. Compare it with the elements before it.
+3. Shift larger elements one position to the right.
+4.  Insert the key into its correct position.
+
+### Example:
+`arr[]` =  `[7, 8, 3, 1, 2]`
+- sorted array: `[7]`
+- unsorted array: `[8, 3, 1, 2]`
+- so we can represent our array as: `[7 | 8 3 1 2]`\
+where left side represent the sorted part and right side represent the unsorted part
+
+for 1st iteration:
+- pick the first element from unsorted array: `key = arr[1] = 8`
+- compare it with last element with sorted array: `7`
+- since `key = 8` > `7` place `8` after `7` in sorted  array
+- current array: `[7 8 | 3 1 2]`
+
+for 2nd iteration:
+- pick the first element from unsorted array: `key = arr[2] = 3`
+- push all the element which is greater than `key = 3`  to the right 
+    - sorted array: `[7 8 expected_place_for_3]`
+    - compare it with last element in sorted array: `8`
+    - since `key = 3` < `8` push the `8` to right
+    - sorted array: `[7 expected_place_for_3 8]`
+    - compare it with the next element in sorted array: `7`
+    - since `key = 3` < `7` push the `7` to right
+    - sorted array: `[expected_place_for_3 7 8]`
+    - since we reach at the end of sorted array stop
+- current array: `[3 7 8 | 1 2]`
+
+similarly for 3rd iteration:
+- pick the first element from unsorted array: `key = arr[3] = 1`
+- push all the element which is greater than `key = 1`  to the right 
+- current array: `[1 3 7 8 | 2]` 
+
+similarly for 4th iteration:
+- pick the first element from unsorted array: `key = arr[4] = 2`
+- push all the element which is greater than `key = 2`  to the right 
+- current array: `[1 2 3 7 8]` 
+
+### Code:
+1. start the iteration form second element in array as first element is assume to be sorted and unsorted array start form second place
+    ```java
+    for (int i = 1; i < arr.length; i++) {  // 2nd element at index 0
+    // arr[i] -> all element except arr[0] which is sorted
+    }
+    ``` 
+2. get the key:
+
+    ```java
+    for (int i = 1; i < arr.length; i++) {
+        int key = arr[i];   // as first element in unsorted array is key
+    }
+    ``` 
+3. access the last element of sorted array
+    ```java
+    for (int i = 1; i < arr.length; i++) {
+        int key = arr[i];
+        int j = i - 1; // since i is the staring index of unsorted array i-1 must be the last index of sorted array
+    }
+    ```
+    
+4. now traverse over the array from last element  and push each and every bigger element to right or until we reach the first element i.e, complete the traversal
+    ```java
+    for (int i = 1; i < arr.length; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && key < arr[j]) {   // arr[j] will be sorted array 
+            // j >= 0 -> traverse until we reach the 1st element i.e, complete our traversal over the sorted array
+            // key < arr[j] -> traverse until sorted array has bigger number, if key became bigger stop
+            arr[j + 1] = arr[j];    // push jth element to j+1 th position i.e, right
+            j--;    // traverse from last to first
+        }
+    }
+    ```
+5. once all the right shift done insert teh key its actual place
+    ```java
+    for (int i = 1; i < arr.length; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && key < arr[j]) {    // we need to move one extra place to left so that we can confirm this condition
+            arr[j + 1] = arr[j];
+            j--;    // because of this we move one place extra left while right shift
+        }
+        arr[j + 1] = key;   // therefore to solve the error we use j+1
+    }
+    ``` 
+
+### Complete code:
+```java
+public class InsertionSort {
+    public static void main(String[] args) {
+        int arr[] = { 7, 8, 3, 1, 2 };
+
+        for (int i = 1; i < arr.length; i++) {
+            int key = arr[i];
+            int j = i - 1;
+            while (j >= 0 && key < arr[j]) {
+                arr[j + 1] = arr[j];
+                j--;
+            }
+            arr[j + 1] = key;
+        }
+
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i]);
+        }
+    }
+}
+```
+output:
+```
+12378
+```
+### Time Complexity
+- Best case: O(n) (when the array is already sorted)
+- Average case: O(n²)
+- Worst case: O(n²) (when the array is in reverse order)
+
+### Space Complexity: O(1) (sorts the array in place)
 
 
 [Go To Top](#content)
