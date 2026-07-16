@@ -18,11 +18,6 @@ Input: x = 120
 Output: 21
 */
 
-/**
- * @param {number} x
- * @return {number}
- */
-
 const INT_MIN = -(2 ** 31);
 const INT_MAX = 2 ** 31 - 1;
 

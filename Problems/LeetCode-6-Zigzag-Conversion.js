@@ -8,11 +8,6 @@ A P L S I I G
 Y   I   R
 */
 
-/**
- * @param {string} s
- * @param {number} numRows
- * @return {string}
- */
 var convert = function(s, numRows) {
     // edge case where input string forms a string line in zig zak pattern 
     if (numRows === 1 || s.length <= numRows) return s;
