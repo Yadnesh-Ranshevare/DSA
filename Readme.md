@@ -46,3 +46,9 @@
     2. [Binary Search Tree](./BinarySearchTree/readme.md)
     3. [Trie tree](./Trie/readme.md)
 6. [Graph](./Graph/Readme.md)
+
+[Solved DSA Problems](./Problems/)
+
+
+# Acknowledgement
+[Apna Collage](http://www.youtube.com/@ApnaCollegeOfficial): Java playlist
